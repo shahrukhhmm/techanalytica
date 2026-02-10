@@ -1,0 +1,26 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboards",
+      "icon": "menu-icon icon-base bx bx-home-smile",
+      "slug": "dashboard",
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Analytics",
+          "slug": "dashboard-analytics"
+        }
+      ]
+    },
+    {
+      "menuHeader": "System Management"
+    },
+    {
+      "name": "Departements",
+      "icon": "menu-icon icon-base bx bx-collection",
+      "slug": "departments",
+      "url": "departments"
+    }
+  ]
+}
