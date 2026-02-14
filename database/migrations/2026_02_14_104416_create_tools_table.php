@@ -12,9 +12,9 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('tools', function (Blueprint $table) {
-      $table->uuid('id')->primary();
-      $table->uuid('vendor_id')->nullable();
-      $table->uuid('tier_id')->nullable();
+      $table->id();
+      $table->foreignId('vendor_id')->nullable()->constrained()->nullOnDelete();
+      $table->foreignId('tier_id')->nullable()->constrained('pricing_tiers')->nullOnDelete();
 
       $table->string('name');
       $table->string('slug')->unique();
@@ -45,9 +45,6 @@ return new class extends Migration
       $table->timestamp('last_edited_at')->nullable();
 
       $table->timestamps();
-
-      $table->foreign('vendor_id')->references('id')->on('vendors')->nullOnDelete();
-      $table->foreign('tier_id')->references('id')->on('pricing_tiers')->nullOnDelete();
 
       $table->index(['status', 'published_at']);
     });

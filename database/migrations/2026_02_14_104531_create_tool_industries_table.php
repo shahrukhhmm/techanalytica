@@ -12,13 +12,10 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('tool_industry', function (Blueprint $table) {
-      $table->uuid('tool_id');
-      $table->uuid('industry_id');
+      $table->foreignId('tool_id')->constrained()->cascadeOnDelete();
+      $table->foreignId('industry_id')->constrained()->cascadeOnDelete();
 
       $table->primary(['tool_id', 'industry_id']);
-
-      $table->foreign('tool_id')->references('id')->on('tools')->cascadeOnDelete();
-      $table->foreign('industry_id')->references('id')->on('industries')->cascadeOnDelete();
     });
   }
 
@@ -27,6 +24,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('tool_industries');
+    Schema::dropIfExists('tool_industry');
   }
 };

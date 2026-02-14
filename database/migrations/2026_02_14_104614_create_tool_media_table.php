@@ -12,14 +12,12 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('tool_media', function (Blueprint $table) {
-      $table->uuid('id')->primary();
-      $table->uuid('tool_id');
+      $table->id();
+      $table->foreignId('tool_id')->constrained()->cascadeOnDelete();
       $table->enum('type', ['screenshot', 'video']);
       $table->string('url');
       $table->integer('sort_order')->default(0);
       $table->timestamps();
-
-      $table->foreign('tool_id')->references('id')->on('tools')->cascadeOnDelete();
     });
   }
 

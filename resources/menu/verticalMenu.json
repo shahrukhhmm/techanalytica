@@ -14,6 +14,18 @@
       ]
     },
     {
+      "url": "/admin/categories",
+      "name": "Categories",
+      "icon": "menu-icon icon-base bx bx-category",
+      "slug": "admin.categories"
+    },
+    {
+      "url": "/admin/industries",
+      "name": "Industries",
+      "icon": "menu-icon icon-base bx bx-buildings",
+      "slug": "admin.industries"
+    },
+    {
       "menuHeader": "System Management"
     },
     {

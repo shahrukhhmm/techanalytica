@@ -12,11 +12,11 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('blogs', function (Blueprint $table) {
-      $table->uuid('id')->primary();
+      $table->id();
       $table->string('title');
       $table->string('slug')->unique();
       $table->longText('body');
-      $table->uuid('author_id');
+      $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
 
       $table->enum('status', ['draft', 'published']);
       $table->timestamp('published_at')->nullable();
@@ -26,8 +26,6 @@ return new class extends Migration
       $table->string('og_image')->nullable();
 
       $table->timestamps();
-
-      $table->foreign('author_id')->references('id')->on('users')->cascadeOnDelete();
     });
   }
 

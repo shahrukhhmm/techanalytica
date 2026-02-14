@@ -12,17 +12,14 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('analytics_events', function (Blueprint $table) {
-      $table->uuid('id')->primary();
-      $table->uuid('tool_id');
-      $table->uuid('vendor_id')->nullable();
+      $table->id();
+      $table->foreignId('tool_id')->constrained()->cascadeOnDelete();
+      $table->foreignId('vendor_id')->nullable()->constrained()->nullOnDelete();
       $table->enum('event_type', ['view', 'cta_click']);
       $table->timestamp('timestamp');
       $table->string('referrer')->nullable();
       $table->string('session_id')->nullable();
       $table->string('device')->nullable();
-
-      $table->foreign('tool_id')->references('id')->on('tools')->cascadeOnDelete();
-      $table->foreign('vendor_id')->references('id')->on('vendors')->nullOnDelete();
 
       $table->index(['tool_id', 'event_type']);
     });

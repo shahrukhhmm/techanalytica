@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-use App\Http\Controllers\dashboard\Analytics;
-use App\Http\Controllers\authentications\LoginBasic;
-use App\Http\Controllers\authentications\RegisterBasic;
-use App\Http\Controllers\authentications\ForgotPasswordBasic;
+use App\Http\Controllers\backend\admin\dashboard\Analytics;
+use App\Http\Controllers\backend\admin\authentications\LoginBasic;
+use App\Http\Controllers\backend\admin\authentications\RegisterBasic;
+use App\Http\Controllers\backend\admin\authentications\ForgotPasswordBasic;
 
 Route::get('/optimize', function () {
   Artisan::call('optimize');
@@ -36,8 +36,10 @@ Route::middleware('auth')->group(function () {
   Route::get('/', [Analytics::class, 'index'])->name('dashboard.analytics');
   Route::get('/dashboard/analytics/pdf', [Analytics::class, 'pdf'])->name('dashboard.analytics.pdf');
 
-
-
-
+  // Category CRUD Routes
+  Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('categories', \App\Http\Controllers\backend\admin\CategoryController::class);
+    Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
+  });
 
 });

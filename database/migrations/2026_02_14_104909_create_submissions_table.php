@@ -12,14 +12,12 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('submissions', function (Blueprint $table) {
-      $table->uuid('id')->primary();
-      $table->uuid('vendor_id');
+      $table->id();
+      $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
       $table->string('tool_name');
       $table->json('fields');
       $table->enum('status', ['draft', 'pending', 'approved', 'rejected']);
       $table->timestamps();
-
-      $table->foreign('vendor_id')->references('id')->on('vendors')->cascadeOnDelete();
     });
   }
 

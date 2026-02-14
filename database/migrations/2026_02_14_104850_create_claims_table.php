@@ -12,15 +12,12 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('claims', function (Blueprint $table) {
-      $table->uuid('id')->primary();
-      $table->uuid('tool_id');
-      $table->uuid('vendor_id');
+      $table->id();
+      $table->foreignId('tool_id')->constrained()->cascadeOnDelete();
+      $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
       $table->enum('status', ['pending', 'approved', 'rejected']);
       $table->text('reason')->nullable();
       $table->timestamps();
-
-      $table->foreign('tool_id')->references('id')->on('tools')->cascadeOnDelete();
-      $table->foreign('vendor_id')->references('id')->on('vendors')->cascadeOnDelete();
     });
   }
 

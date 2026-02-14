@@ -12,17 +12,13 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('industries', function (Blueprint $table) {
-      $table->uuid('id')->primary();
+      $table->id();
       $table->string('name');
       $table->string('slug')->unique();
       $table->text('description')->nullable();
-      $table->uuid('suggested_by_vendor_id')->nullable();
+      $table->foreignId('suggested_by_vendor_id')->nullable()->constrained('vendors')->nullOnDelete();
       $table->boolean('approved')->default(true);
       $table->timestamps();
-
-      $table->foreign('suggested_by_vendor_id')
-        ->references('id')->on('vendors')
-        ->nullOnDelete();
     });
   }
 
