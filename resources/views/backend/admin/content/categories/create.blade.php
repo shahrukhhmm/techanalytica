@@ -13,6 +13,15 @@
 
   <div class="card">
     <div class="card-body">
+      @if(isset($parentCategory))
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+          <i class="bx bx-info-circle me-2"></i>
+          <div>
+            Creating subcategory under: <strong>{{ $parentCategory->name }}</strong>
+          </div>
+        </div>
+      @endif
+      
       <form action="{{ route('admin.categories.store') }}" method="POST">
         @csrf
         
@@ -38,16 +47,21 @@
           <label for="parent_id" class="form-label">Parent Category</label>
           <select class="form-select @error('parent_id') is-invalid @enderror" 
                   id="parent_id" name="parent_id">
-            <option value="">None</option>
+            <option value="">-- Main Category (No Parent) --</option>
             @foreach($categories as $cat)
-              <option value="{{ $cat->id }}" {{ old('parent_id') == $cat->id ? 'selected' : '' }}>
-                {{ $cat->name }}
+              <option value="{{ $cat->id }}" {{ (old('parent_id') ?? (isset($parentCategory) ? $parentCategory->id : null)) == $cat->id ? 'selected' : '' }}>
+                @if($cat->parent_id)
+                  &nbsp;&nbsp;&nbsp;&nbsp;└─ {{ $cat->name }}
+                @else
+                  {{ $cat->name }}
+                @endif
               </option>
             @endforeach
           </select>
           @error('parent_id')
             <div class="invalid-feedback">{{ $message }}</div>
           @enderror
+          <small class="form-text text-muted">Leave empty to create a main category, or select a parent to create a subcategory.</small>
         </div>
 
         <div class="mb-3">

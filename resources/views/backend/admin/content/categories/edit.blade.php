@@ -39,17 +39,22 @@
           <label for="parent_id" class="form-label">Parent Category</label>
           <select class="form-select @error('parent_id') is-invalid @enderror" 
                   id="parent_id" name="parent_id">
-            <option value="">None</option>
+            <option value="">-- Main Category (No Parent) --</option>
             @foreach($categories as $cat)
               <option value="{{ $cat->id }}" 
                       {{ old('parent_id', $category->parent_id) == $cat->id ? 'selected' : '' }}>
-                {{ $cat->name }}
+                @if($cat->parent_id)
+                  &nbsp;&nbsp;&nbsp;&nbsp;└─ {{ $cat->name }}
+                @else
+                  {{ $cat->name }}
+                @endif
               </option>
             @endforeach
           </select>
           @error('parent_id')
             <div class="invalid-feedback">{{ $message }}</div>
           @enderror
+          <small class="form-text text-muted">Leave empty to make this a main category, or select a parent to make it a subcategory.</small>
         </div>
 
         <div class="mb-3">

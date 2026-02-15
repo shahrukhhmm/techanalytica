@@ -11,14 +11,41 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->orderBy('name')->get();
-        return view('backend.admin.content.categories.index', compact('categories'));
+        // Load categories with parent and children count, ordered by parent_id and weight (for table)
+        $categories = Category::with('parent')
+            ->withCount('children')
+            ->orderByRaw('COALESCE(parent_id, id)')
+            ->orderBy('weight')
+            ->orderBy('name')
+            ->get();
+
+        // Load root categories with their children (for hierarchical dropdown)
+        $rootCategories = Category::whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('weight')->orderBy('name');
+            }])
+            ->orderBy('weight')
+            ->orderBy('name')
+            ->get();
+        
+        return view('backend.admin.content.categories.index', compact('categories', 'rootCategories'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $categories = Category::whereNull('parent_id')->orderBy('name')->get();
-        return view('backend.admin.content.categories.create', compact('categories'));
+        // Load all categories for the parent dropdown, ordered by hierarchy
+        $categories = Category::with('parent')
+            ->orderByRaw('COALESCE(parent_id, id)')
+            ->orderBy('name')
+            ->get();
+        
+        // Check if parent_id is provided in query string (for quick subcategory creation)
+        $parentCategory = null;
+        if ($request->has('parent_id')) {
+            $parentCategory = Category::find($request->parent_id);
+        }
+        
+        return view('backend.admin.content.categories.create', compact('categories', 'parentCategory'));
     }
 
     public function store(Request $request)
@@ -40,10 +67,16 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $categories = Category::whereNull('parent_id')
-            ->where('id', '!=', $category->id)
+        // Get all categories except this one and its descendants (to prevent circular references)
+        $descendantIds = $category->getAllDescendants()->pluck('id')->toArray();
+        $excludeIds = array_merge([$category->id], $descendantIds);
+        
+        $categories = Category::with('parent')
+            ->whereNotIn('id', $excludeIds)
+            ->orderByRaw('COALESCE(parent_id, id)')
             ->orderBy('name')
             ->get();
+        
         return view('backend.admin.content.categories.edit', compact('category', 'categories'));
     }
 
@@ -52,7 +85,24 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'parent_id' => 'nullable|exists:categories,id',
+            'parent_id' => [
+                'nullable',
+                'exists:categories,id',
+                function ($attribute, $value, $fail) use ($category) {
+                    if ($value) {
+                        // Prevent setting self as parent
+                        if ($value == $category->id) {
+                            $fail('A category cannot be its own parent.');
+                            return;
+                        }
+                        
+                        // Prevent circular references (setting a descendant as parent)
+                        if ($category->hasDescendant($value)) {
+                            $fail('Cannot set a subcategory as the parent of its ancestor.');
+                        }
+                    }
+                },
+            ],
             'weight' => 'nullable|integer',
         ]);
 
