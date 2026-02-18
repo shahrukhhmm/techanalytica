@@ -54,8 +54,6 @@ class ToolController extends Controller
             'cta_type' => 'nullable|in:website,signup,demo,free_trial,contact_sales',
             'cta_url' => 'nullable|url',
             'status' => 'required|in:draft,pending,published,archived',
-            'published_at' => 'nullable|date',
-            'last_edited_at' => 'nullable|date',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'industries' => 'array',
@@ -66,6 +64,9 @@ class ToolController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
 
+        if ($validated['status'] === 'published') {
+            $validated['published_at'] = now();
+        }
 
         $tool = Tool::create($validated);
 
@@ -116,7 +117,7 @@ class ToolController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
 
-        if ($validated['status'] === 'published' && !$tool->published_at) {
+        if ($validated['status'] === 'published' && ! $tool->published_at) {
             $validated['published_at'] = now();
         }
 
