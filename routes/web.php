@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
   Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', \App\Http\Controllers\backend\admin\CategoryController::class);
     Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
+    Route::resource('tools', \App\Http\Controllers\backend\admin\ToolController::class);
   });
 
 });

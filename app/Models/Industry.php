@@ -18,4 +18,9 @@ class Industry extends Model
     {
         return $this->belongsToMany(Tool::class, 'tool_industry');
     }
+
+    public function suggestedByVendor()
+    {
+        return $this->belongsTo(Vendor::class, 'suggested_by_vendor_id');
+    }
 }

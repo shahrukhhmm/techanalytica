@@ -1,13 +1,13 @@
 @extends('backend.admin.layouts.contentNavbarLayout')
 
-@section('title', 'Industries')
+@section('title', 'Tools')
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold">Industries</h4>
-            <a href="{{ route('admin.industries.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus"></i> Add Industry
+            <h4 class="fw-bold">Tools</h4>
+            <a href="{{ route('admin.tools.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus"></i> Add Tool
             </a>
         </div>
 
@@ -26,25 +26,32 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Slug</th>
-                                <th>Suggested By</th>
+                                <th>Vendor</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($industries as $industry)
+                            @foreach ($tools as $tool)
                                 <tr>
-                                    <td>{{ $industry->name }}</td>
-                                    <td>{{ $industry->slug }}</td>
-                                    <td>{{ $industry->suggestedByVendor->company_name ?? '-' }}</td>
+                                    <td>{{ $tool->name }}</td>
+                                    <td>{{ $tool->slug }}</td>
+                                    <td>{{ $tool->vendor->company_name ?? '-' }}</td>
+                                    <td>{{ $tool->status }}</td>
                                     <td>
-                                        <a href="{{ route('admin.industries.edit', $industry) }}"
-                                            class="btn btn-sm btn-outline-primary"><i class="bx bx-edit"></i></a>
-                                        <form action="{{ route('admin.industries.destroy', $industry) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                        <a href="{{ route('admin.tools.show', $tool->id) }}" class="btn btn-info btn-sm">
+                                            <i class="bx bx-show"></i>
+                                        </a>
+                                        <a href="{{ route('admin.tools.edit', $tool->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.tools.destroy', $tool->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i
-                                                    class="bx bx-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

@@ -9,12 +9,20 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Load categories with parent and children count, ordered by parent_id and weight (for table)
-        $categories = Category::with('parent')
-            ->withCount('children')
-            ->orderByRaw('COALESCE(parent_id, id)')
+        $query = Category::with('parent')->withCount('children');
+
+        // Handle filtering by parent category name if provided in query string
+        if ($request->has('category')) {
+            $parentName = $request->category;
+            $query->whereHas('parent', function ($q) use ($parentName) {
+                $q->where('name', $parentName);
+            });
+        }
+
+        // Load categories with parent and children count
+        $categories = $query->orderByRaw('COALESCE(parent_id, id)')
             ->orderBy('weight')
             ->orderBy('name')
             ->get();
@@ -27,7 +35,7 @@ class CategoryController extends Controller
             ->orderBy('weight')
             ->orderBy('name')
             ->get();
-        
+
         return view('backend.admin.content.categories.index', compact('categories', 'rootCategories'));
     }
 
@@ -38,13 +46,13 @@ class CategoryController extends Controller
             ->orderByRaw('COALESCE(parent_id, id)')
             ->orderBy('name')
             ->get();
-        
+
         // Check if parent_id is provided in query string (for quick subcategory creation)
         $parentCategory = null;
         if ($request->has('parent_id')) {
             $parentCategory = Category::find($request->parent_id);
         }
-        
+
         return view('backend.admin.content.categories.create', compact('categories', 'parentCategory'));
     }
 
@@ -70,13 +78,13 @@ class CategoryController extends Controller
         // Get all categories except this one and its descendants (to prevent circular references)
         $descendantIds = $category->getAllDescendants()->pluck('id')->toArray();
         $excludeIds = array_merge([$category->id], $descendantIds);
-        
+
         $categories = Category::with('parent')
             ->whereNotIn('id', $excludeIds)
             ->orderByRaw('COALESCE(parent_id, id)')
             ->orderBy('name')
             ->get();
-        
+
         return view('backend.admin.content.categories.edit', compact('category', 'categories'));
     }
 
@@ -93,9 +101,10 @@ class CategoryController extends Controller
                         // Prevent setting self as parent
                         if ($value == $category->id) {
                             $fail('A category cannot be its own parent.');
+
                             return;
                         }
-                        
+
                         // Prevent circular references (setting a descendant as parent)
                         if ($category->hasDescendant($value)) {
                             $fail('Cannot set a subcategory as the parent of its ancestor.');

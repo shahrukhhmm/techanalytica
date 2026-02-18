@@ -26,6 +26,12 @@
       "slug": "admin.industries"
     },
     {
+      "name": "Tools",
+      "icon": "menu-icon icon-base bx bx-wrench",
+      "slug": "admin.tools",
+      "url": "/admin/tools"
+    },
+    {
       "menuHeader": "System Management"
     },
     {

@@ -13,12 +13,14 @@ class IndustryController extends Controller
     public function index()
     {
         $industries = Industry::with('suggestedByVendor')->orderBy('name')->get();
+
         return view('backend.admin.content.industries.index', compact('industries'));
     }
 
     public function create()
     {
         $vendors = Vendor::with('user')->get();
+
         return view('backend.admin.content.industries.create', compact('vendors'));
     }
 
@@ -44,6 +46,7 @@ class IndustryController extends Controller
     public function edit(Industry $industry)
     {
         $vendors = Vendor::with('user')->get();
+
         return view('backend.admin.content.industries.edit', compact('industry', 'vendors'));
     }
 
@@ -51,7 +54,7 @@ class IndustryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:industries,slug,' . $industry->id,
+            'slug' => 'nullable|string|max:255|unique:industries,slug,'.$industry->id,
             'description' => 'nullable|string',
             'suggested_by_vendor_id' => 'nullable|exists:vendors,id',
         ]);
