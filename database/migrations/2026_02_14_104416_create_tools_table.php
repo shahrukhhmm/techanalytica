@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('website_url')->nullable();
             $table->json('pricing_structured')->nullable();
             $table->text('pricing_text')->nullable();
-
             $table->enum('cta_type', [
                 'website',
                 'signup',

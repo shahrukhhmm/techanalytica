@@ -32,6 +32,12 @@
       "url": "/admin/tools"
     },
     {
+      "name": "Blogs",
+      "icon": "menu-icon icon-base bx bx-news",
+      "slug": "admin.blogs",
+      "url": "/admin/blogs"
+    },
+    {
       "menuHeader": "System Management"
     },
     {

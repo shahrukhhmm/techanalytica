@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', \App\Http\Controllers\backend\admin\CategoryController::class);
     Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
     Route::resource('tools', \App\Http\Controllers\backend\admin\ToolController::class);
+    Route::resource('blogs', \App\Http\Controllers\backend\admin\BlogController::class);
   });
 
 });
