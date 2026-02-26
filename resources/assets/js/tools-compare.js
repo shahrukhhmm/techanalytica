@@ -35,7 +35,6 @@
 
         const tool1Select = $('#compareTool1');
         const tool2Select = $('#compareTool2');
-        const btnCompare = $('#btnCompareTools');
         const comparisonContainer = document.getElementById('comparisonChartContainer');
         const loadingIndicator = document.getElementById('comparisonLoading');
 
@@ -53,18 +52,6 @@
         $(document).on('change select2:select', '#compareTool2', function (e) {
             console.log("Tool 2 changed event fired. Value:", $(this).val());
             fetchToolData($(this).val(), false);
-        });
-
-        $(document).on('click', '#btnCompareTools', function () {
-            if (currentTool1Data && currentTool2Data) {
-                const chartSection = document.getElementById('radarChartSection');
-                if (chartSection) chartSection.classList.remove('d-none');
-
-                const chartEl = document.getElementById('toolComparisonRadarChart');
-                if (chartEl) chartEl.style.display = 'block';
-
-                renderComparisonChart(currentTool1Data, currentTool2Data);
-            }
         });
 
         async function fetchToolData(toolId, isTool1) {
@@ -110,10 +97,15 @@
             const t1Value = tool1Select.val();
             const t2Value = tool2Select.val();
 
-            if (t1Value && t2Value && t1Value !== t2Value) {
-                btnCompare.removeClass('d-none');
+            if (t1Value && t2Value && t1Value !== t2Value && currentTool1Data && currentTool2Data) {
+                const chartSection = document.getElementById('radarChartSection');
+                if (chartSection) chartSection.classList.remove('d-none');
+
+                const chartEl = document.getElementById('toolComparisonRadarChart');
+                if (chartEl) chartEl.style.display = 'block';
+
+                renderComparisonChart(currentTool1Data, currentTool2Data);
             } else {
-                btnCompare.addClass('d-none');
                 const chartSection = document.getElementById('radarChartSection');
                 if (chartSection) chartSection.classList.add('d-none');
             }
@@ -203,6 +195,8 @@
             const industryNames = tool.industries && tool.industries.length ? tool.industries.map(i => `<span class="badge bg-label-info me-1 mb-1">${i.name}</span>`).join('') : '';
             const ctaTypeDisplay = tool.cta_type ? tool.cta_type.replace('_', ' ').toUpperCase() : 'N/A';
 
+            const ctaTypeLower = tool.cta_type ? tool.cta_type.toLowerCase() : '';
+
             let logoHtml = '';
             if (tool.logo_url) {
                 logoHtml = `<img src="${tool.logo_url}" alt="${tool.name} Logo" class="mb-3 rounded" style="max-height: 80px; max-width: 100%;" onerror="this.onerror=null; this.outerHTML='<div class=\\'mb-3 d-flex align-items-center justify-content-center bg-label-secondary rounded\\' style=\\'height: 80px; width: 80px;\\'><i class=\\'bx bx-wrench fs-2\\'></i></div>';">`;
@@ -241,7 +235,7 @@
                 </div>
                 <hr class="my-3">
                 <div class="d-flex justify-content-center">
-                     ${tool.website_url && tool.cta_type !== 'website' ? `<a href="${tool.website_url}" target="_blank" class="btn btn-outline-primary btn-sm me-2"><i class="bx bx-globe me-1"></i> Website</a>` : ''}
+                     ${tool.website_url && ctaTypeLower !== 'website' ? `<a href="${tool.website_url}" target="_blank" class="btn btn-outline-primary btn-sm me-2"><i class="bx bx-globe me-1"></i> Website</a>` : ''}
                      ${tool.cta_url ? `<a href="${tool.cta_url}" target="_blank" class="btn btn-primary btn-sm">${ctaTypeDisplay}</a>` : ''}
                 </div>
             `;
