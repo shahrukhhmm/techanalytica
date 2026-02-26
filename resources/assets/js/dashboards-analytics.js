@@ -4,7 +4,7 @@
 
 'use strict';
 
-document.addEventListener('DOMContentLoaded', function (e) {
+(function () {
   let cardColor, headingColor, legendColor, labelColor, shadeColor, borderColor, fontFamily;
   cardColor = config.colors.cardColor;
   headingColor = config.colors.headingColor;
@@ -787,7 +787,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const incomeChart = new ApexCharts(incomeChartEl, incomeChartConfig);
     incomeChart.render();
   }
-
   // Expenses Mini Chart - Radial Chart
   // --------------------------------------------------------------------
   const weeklyExpensesEl = document.querySelector('#expensesOfWeek'),
@@ -860,4 +859,226 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const weeklyExpenses = new ApexCharts(weeklyExpensesEl, weeklyExpensesConfig);
     weeklyExpenses.render();
   }
-});
+
+  // --- NEW DASHBOARD GRAPHS ---
+
+  // Parse colors dynamically or use configured ones
+  const successColor = config.colors.success;
+  const infoColor = config.colors.info;
+  const warningColor = config.colors.warning;
+  const dangerColor = config.colors.danger;
+  const secondaryColor = config.colors.secondary;
+
+  // 1. Tools by Category Chart (Donut)
+  const toolsByCategoryChartEl = document.querySelector('#toolsByCategoryChart');
+  if (toolsByCategoryChartEl && typeof dashboardData !== 'undefined') {
+    const toolsByCategoryConfig = {
+      chart: {
+        height: 350,
+        type: 'donut',
+      },
+      labels: dashboardData.categoryNames,
+      series: dashboardData.categoryCounts,
+      colors: [config.colors.primary, successColor, infoColor, warningColor, dangerColor, secondaryColor],
+      stroke: {
+        width: 5,
+        colors: [cardColor]
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val, opt) {
+          return parseInt(val) + "%"
+        }
+      },
+      legend: {
+        show: true,
+        position: 'bottom',
+        fontFamily: fontFamily,
+        labels: {
+          colors: legendColor
+        }
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '65%',
+            labels: {
+              show: true,
+              name: {
+                fontSize: '1rem',
+                fontFamily: fontFamily
+              },
+              value: {
+                fontSize: '1.5rem',
+                fontFamily: fontFamily,
+                color: headingColor,
+                formatter: function (val) {
+                  return parseInt(val)
+                }
+              },
+              total: {
+                show: true,
+                fontSize: '1rem',
+                color: labelColor,
+                label: 'Total Tools',
+                formatter: function (w) {
+                  return w.globals.seriesTotals.reduce((a, b) => {
+                    return a + b
+                  }, 0)
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    const toolsByCategoryChart = new ApexCharts(toolsByCategoryChartEl, toolsByCategoryConfig);
+    toolsByCategoryChart.render();
+  }
+
+  // 2. Tools Status Chart (Bar)
+  const toolsStatusChartEl = document.querySelector('#toolsStatusChart');
+  if (toolsStatusChartEl && typeof dashboardData !== 'undefined') {
+    const toolsStatusConfig = {
+      chart: {
+        height: 350,
+        type: 'bar',
+        toolbar: { show: false }
+      },
+      series: [{
+        name: 'Tools',
+        data: dashboardData.statusCounts
+      }],
+      xaxis: {
+        categories: dashboardData.statuses.map(s => s.charAt(0).toUpperCase() + s.slice(1)), // Capitalize
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: {
+          style: {
+            colors: labelColor,
+            fontFamily: fontFamily
+          }
+        }
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: labelColor,
+            fontFamily: fontFamily
+          }
+        }
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          columnWidth: '40%',
+          distributed: true,
+          startingShape: 'rounded',
+          endingShape: 'rounded'
+        }
+      },
+      colors: [successColor, warningColor, dangerColor, infoColor], // Adjust based on statuses
+      dataLabels: { enabled: false },
+      legend: { show: false },
+      grid: {
+        borderColor: borderColor,
+        strokeDashArray: 7,
+        padding: { top: 0, bottom: -8, left: 20, right: 20 }
+      }
+    };
+    const toolsStatusChart = new ApexCharts(toolsStatusChartEl, toolsStatusConfig);
+    toolsStatusChart.render();
+  }
+
+  // 3. Tools Claimed vs Unclaimed (Pie)
+  const toolsClaimedChartEl = document.querySelector('#toolsClaimedChart');
+  if (toolsClaimedChartEl && typeof dashboardData !== 'undefined') {
+    const toolsClaimedConfig = {
+      chart: {
+        height: 350,
+        type: 'pie',
+      },
+      labels: ['Claimed', 'Unclaimed'],
+      series: [dashboardData.claimedToolsCount, dashboardData.unclaimedToolsCount],
+      colors: [successColor, warningColor],
+      stroke: {
+        width: 5,
+        colors: [cardColor]
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      legend: {
+        show: true,
+        position: 'bottom',
+        fontFamily: fontFamily,
+        labels: {
+          colors: legendColor
+        }
+      }
+    };
+    const toolsClaimedChart = new ApexCharts(toolsClaimedChartEl, toolsClaimedConfig);
+    toolsClaimedChart.render();
+  }
+
+  // 4. Tools Added Trend (Area Chart)
+  const toolsAddedTrendChartEl = document.querySelector('#toolsAddedTrendChart');
+  if (toolsAddedTrendChartEl && typeof dashboardData !== 'undefined') {
+    const toolsAddedTrendConfig = {
+      chart: {
+        height: 300,
+        type: 'area',
+        toolbar: { show: false }
+      },
+      dataLabels: { enabled: false },
+      stroke: {
+        curve: 'smooth',
+        width: 3
+      },
+      series: [{
+        name: 'Tools Added',
+        data: dashboardData.toolsAddedCounts
+      }],
+      xaxis: {
+        categories: dashboardData.months,
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: {
+          style: {
+            colors: labelColor,
+            fontFamily: fontFamily
+          }
+        }
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: labelColor,
+            fontFamily: fontFamily
+          }
+        },
+        min: 0,
+        tickAmount: 4
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.4,
+          gradientToColors: [config.colors.cardColor],
+          opacityTo: 0.4,
+          stops: [0, 100]
+        }
+      },
+      colors: [successColor],
+      grid: {
+        borderColor: borderColor,
+        strokeDashArray: 8,
+        padding: { top: -20, bottom: -8, left: 0, right: 8 }
+      }
+    };
+    const toolsAddedTrendChart = new ApexCharts(toolsAddedTrendChartEl, toolsAddedTrendConfig);
+    toolsAddedTrendChart.render();
+  }
+
+})();

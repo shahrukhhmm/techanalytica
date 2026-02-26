@@ -3,46 +3,154 @@
 @section('title', 'Analytics Dashboard')
 
 @section('vendor-style')
-  @vite('resources/assets/vendor/libs/apex-charts/apex-charts.scss')
+    @vite('resources/assets/vendor/libs/apex-charts/apex-charts.scss')
 @endsection
 
 @section('vendor-script')
-  @vite('resources/assets/vendor/libs/apex-charts/apexcharts.js')
+    @vite('resources/assets/vendor/libs/apex-charts/apexcharts.js')
 @endsection
 
 @section('content')
-
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <form method="GET" action="{{ route('dashboard.analytics') }}" class="d-flex gap-3 flex-grow-1">
-              <div style="min-width: 240px;">
-                <label class="form-label">Department</label>
-                <select name="department_id" class="form-select" onchange="this.form.submit()">
-                  <option value="">All Departments</option>
-                  {{-- @foreach ($departments as $dept)
-                    <option value="{{ $dept->id }}" {{ $selectedDepartment == $dept->id ? 'selected' : '' }}>
-                      {{ $dept->name }}
-                    </option>
-                  @endforeach --}}
-                </select>
-              </div>
-            </form>
-
-            {{-- <a href="{{ route('dashboard.analytics.pdf') . ($selectedDepartment ? '?department_id=' . $selectedDepartment : '') }}"
-              class="btn btn-primary" target="_blank">
-              <i class="bx bx-download"></i> Download PDF
-            </a> --}}
-          </div>
+    <div class="row">
+        <!-- Total Statistics Cards -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="card-info">
+                            <p class="card-text">Total Tools</p>
+                            <div class="d-flex align-items-end mb-2">
+                                <h4 class="card-title mb-0 me-2">{{ $totalTools }}</h4>
+                            </div>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-primary rounded p-2">
+                                <i class="bx bx-wrench bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="card-info">
+                            <p class="card-text">Total Users</p>
+                            <div class="d-flex align-items-end mb-2">
+                                <h4 class="card-title mb-0 me-2">{{ $totalUsers }}</h4>
+                            </div>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-success rounded p-2">
+                                <i class="bx bx-user bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="card-info">
+                            <p class="card-text">Total Vendors</p>
+                            <div class="d-flex align-items-end mb-2">
+                                <h4 class="card-title mb-0 me-2">{{ $totalVendors }}</h4>
+                            </div>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-info rounded p-2">
+                                <i class="bx bx-store-alt bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="card-info">
+                            <p class="card-text">Total Blogs</p>
+                            <div class="d-flex align-items-end mb-2">
+                                <h4 class="card-title mb-0 me-2">{{ $totalBlogs }}</h4>
+                            </div>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-warning rounded p-2">
+                                <i class="bx bx-news bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="row">
-    {{-- <!-- Sales Trend -->
+    <div class="row">
+        <!-- Tools by Category Chart -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Tools by Category</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="toolsByCategoryChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Status Chart -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Tools Status Overview</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="toolsStatusChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Claimed vs Unclaimed Donut -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Tool Claim Status</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="toolsClaimedChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Tools Added Trend Chart -->
+        <div class="col-12 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title m-0 me-2">Tools Added Trend (Last 6 Months)</h5>
+                </div>
+                <div class="card-body">
+                    <div id="toolsAddedTrendChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {{-- <!-- Sales Trend -->
     <div class="col-lg-6 col-12 mb-4">
       <div class="card">
         <div class="card-header">
@@ -103,11 +211,22 @@
         </div>
       </div>
     @endif --}}
-  </div>
+    </div>
 
 @endsection
 @section('page-script')
-  <script>
-
-  </script>
+    <script>
+        // Pass PHP variables to JavaScript
+        const dashboardData = {
+            categoryNames: @json($categoryNames),
+            categoryCounts: @json($categoryCounts),
+            statuses: @json($statuses),
+            statusCounts: @json($statusCounts),
+            claimedToolsCount: {{ $claimedToolsCount }},
+            unclaimedToolsCount: {{ $unclaimedToolsCount }},
+            months: @json($months),
+            toolsAddedCounts: @json($toolsAddedCounts)
+        };
+    </script>
+    @vite('resources/assets/js/dashboards-analytics.js')
 @endsection

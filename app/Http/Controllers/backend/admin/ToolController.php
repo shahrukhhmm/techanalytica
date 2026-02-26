@@ -135,4 +135,11 @@ class ToolController extends Controller
 
         return redirect()->route('admin.tools.index')->with('success', 'Tool deleted successfully.');
     }
+
+    public function compare()
+    {
+        $allTools = Tool::select('id', 'name')->orderBy('name')->get();
+
+        return view('backend.admin.content.tools.compare', compact('allTools'));
+    }
 }

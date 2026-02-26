@@ -4,14 +4,7 @@
       "url": "/",
       "name": "Dashboards",
       "icon": "menu-icon icon-base bx bx-home-smile",
-      "slug": "dashboard",
-      "submenu": [
-        {
-          "url": "/",
-          "name": "Analytics",
-          "slug": "dashboard-analytics"
-        }
-      ]
+      "slug": "dashboard"
     },
     {
       "url": "/admin/categories",
@@ -29,7 +22,18 @@
       "name": "Tools",
       "icon": "menu-icon icon-base bx bx-wrench",
       "slug": "admin.tools",
-      "url": "/admin/tools"
+      "submenu": [
+        {
+          "url": "/admin/tools",
+          "name": "List",
+          "slug": "admin.tools.index"
+        },
+        {
+          "url": "/admin/tools/compare",
+          "name": "Compare Tools",
+          "slug": "admin.tools.compare"
+        }
+      ]
     },
     {
       "name": "Blogs",
