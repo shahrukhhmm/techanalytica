@@ -44,8 +44,12 @@
                                     <td>{{ $blog->published_at ? $blog->published_at->format('Y-m-d H:i') : '-' }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
+                                            <a href="{{ route('admin.blogs.show', $blog) }}"
+                                                class="btn btn-sm btn-outline-info" title="View"><i
+                                                    class="bx bx-show"></i></a>
                                             <a href="{{ route('admin.blogs.edit', $blog) }}"
-                                                class="btn btn-sm btn-outline-primary"><i class="bx bx-edit"></i></a>
+                                                class="btn btn-sm btn-outline-primary" title="Edit"><i
+                                                    class="bx bx-edit"></i></a>
                                             <form action="{{ route('admin.blogs.destroy', $blog) }}" method="POST"
                                                 class="d-inline" onsubmit="return confirm('Are you sure?')">
                                                 @csrf

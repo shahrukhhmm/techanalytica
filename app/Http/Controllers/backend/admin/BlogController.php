@@ -21,6 +21,12 @@ class BlogController extends Controller
         return view('backend.admin.content.blogs.create');
     }
 
+    public function show(Blog $blog)
+    {
+        $blog->load('author');
+        return view('backend.admin.content.blogs.show', compact('blog'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
