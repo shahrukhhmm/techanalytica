@@ -28,16 +28,22 @@ class PricingTierController extends Controller
             'annual_price' => 'nullable|numeric|min:0',
             'features' => 'nullable|array',
             'features.*' => 'nullable|string|max:255',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'nullable|string|max:255',
         ]);
 
-        // Clean features array
+        // Clean features and permissions arrays
         if (isset($validated['features'])) {
             $validated['features'] = array_filter($validated['features']);
         }
 
+        if (isset($validated['permissions'])) {
+            $validated['permissions'] = array_filter($validated['permissions']);
+        }
+
         PricingTier::create($validated);
 
-        return redirect()->route('admin.pricing_tiers.index')->with('success', 'Pricing tier created successfully.');
+        return redirect()->route('admin.pricing-tiers.index')->with('success', 'Pricing tier created successfully.');
     }
 
     public function edit(PricingTier $pricing_tier)
@@ -53,21 +59,27 @@ class PricingTierController extends Controller
             'annual_price' => 'nullable|numeric|min:0',
             'features' => 'nullable|array',
             'features.*' => 'nullable|string|max:255',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'nullable|string|max:255',
         ]);
 
         if (isset($validated['features'])) {
             $validated['features'] = array_filter($validated['features']);
         }
 
+        if (isset($validated['permissions'])) {
+            $validated['permissions'] = array_filter($validated['permissions']);
+        }
+
         $pricing_tier->update($validated);
 
-        return redirect()->route('admin.pricing_tiers.index')->with('success', 'Pricing tier updated successfully.');
+        return redirect()->route('admin.pricing-tiers.index')->with('success', 'Pricing tier updated successfully.');
     }
 
     public function destroy(PricingTier $pricing_tier)
     {
         $pricing_tier->delete();
 
-        return redirect()->route('admin.pricing_tiers.index')->with('success', 'Pricing tier deleted successfully.');
+        return redirect()->route('admin.pricing-tiers.index')->with('success', 'Pricing tier deleted successfully.');
     }
 }

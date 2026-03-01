@@ -50,7 +50,7 @@
       "url": "/admin/pricing-tiers",
       "name": "Pricing Tiers",
       "icon": "menu-icon icon-base bx bx-dollar-circle",
-      "slug": "admin.pricing_tiers"
+      "slug": "admin.pricing-tiers"
     },
     {
       "url": "/admin/blogs",

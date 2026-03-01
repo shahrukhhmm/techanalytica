@@ -13,10 +13,12 @@ class PricingTier extends Model
         'monthly_price',
         'annual_price',
         'features',
+        'permissions',
     ];
 
     protected $casts = [
         'features' => 'array',
+        'permissions' => 'array',
         'monthly_price' => 'decimal:2',
         'annual_price' => 'decimal:2',
     ];

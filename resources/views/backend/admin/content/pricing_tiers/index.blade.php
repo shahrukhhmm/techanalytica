@@ -58,14 +58,27 @@
                             </div>
                             <ul class="list-unstyled mb-0">
                                 @if ($tier->features)
+                                    <li class="mb-2 fw-bold small text-uppercase text-muted">Features:</li>
                                     @foreach ($tier->features as $feature)
                                         <li class="mb-2 d-flex align-items-start">
                                             <i class="bx bx-check text-success me-2 mt-1"></i>
                                             <span>{{ $feature }}</span>
                                         </li>
                                     @endforeach
-                                @else
-                                    <li class="text-muted text-center italic">No features defined.</li>
+                                @endif
+
+                                @if ($tier->permissions)
+                                    <li class="mt-4 mb-2 fw-bold small text-uppercase text-muted">Permissions:</li>
+                                    @foreach ($tier->permissions as $permission)
+                                        <li class="mb-2 d-flex align-items-start">
+                                            <i class="bx bx-lock-open text-primary me-2 mt-1"></i>
+                                            <span>{{ $permission }}</span>
+                                        </li>
+                                    @endforeach
+                                @endif
+
+                                @if (!$tier->features && !$tier->permissions)
+                                    <li class="text-muted text-center italic">No details defined.</li>
                                 @endif
                             </ul>
                         </div>
