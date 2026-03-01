@@ -69,4 +69,9 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new DataTable('#blogs-table');
+        });
+    </script>
 @endsection

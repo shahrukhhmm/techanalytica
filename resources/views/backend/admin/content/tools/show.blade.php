@@ -243,6 +243,64 @@ $class = [
                 </div>
             </div>
         </div>
+
+        <!-- Reviews Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">User Reviews</h5>
+                        <span class="badge bg-label-primary">{{ $tool->reviews_count ?? 0 }} Total</span>
+                    </div>
+                    <div class="card-body">
+                        @if ($tool->reviews && $tool->reviews->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Rating</th>
+                                            <th>Comment</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($tool->reviews as $review)
+                                            <tr>
+                                                <td>
+                                                    {{ $review->user_name }}<br>
+                                                    <small class="text-muted">{{ $review->user_email }}</small>
+                                                </td>
+                                                <td>
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i
+                                                            class="bx {{ $i <= $review->rating ? 'bxs-star text-warning' : 'bx-star text-muted' }}"></i>
+                                                    @endfor
+                                                </td>
+                                                <td><small>{{ Str::limit($review->comment, 100) }}</small></td>
+                                                <td>
+                                                    <span
+                                                        class="badge @if ($review->status == 'approved') bg-label-success @elseif($review->status == 'pending') bg-label-warning @else bg-label-danger @endif">
+                                                        {{ $review->status }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $review->created_at->format('M d, Y') }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-4">
+                                <i class="bx bx-comment-x text-muted mb-2 fs-1"></i>
+                                <p class="text-muted mb-0">No reviews yet for this tool.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 

@@ -31,7 +31,7 @@ class PricingTierSeeder extends Seeder
         ];
 
         foreach ($tiers as $tier) {
-            PricingTier::create($tier);
+            PricingTier::updateOrCreate(['name' => $tier['name']], $tier);
         }
     }
 }

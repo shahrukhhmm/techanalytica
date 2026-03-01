@@ -1081,4 +1081,92 @@
     toolsAddedTrendChart.render();
   }
 
+  // Handle Chart Maximize
+  const chartModalEl = document.getElementById('chartModal');
+  if (chartModalEl) {
+    const chartModal = new bootstrap.Modal(chartModalEl);
+    const modalContainer = document.querySelector('#modalChartContainer');
+    const modalTitle = document.querySelector('#chartModalTitle');
+    let modalChart = null;
+
+    // Mapping chart IDs to their respective configurations
+    // We recreate them here to avoid scope issues or use existing ones if accessible
+    const getChartConfig = (chartId) => {
+      switch (chartId) {
+        case 'toolsByCategoryChart':
+          return {
+            chart: { height: 500, type: 'donut' },
+            labels: dashboardData.categoryNames,
+            series: dashboardData.categoryCounts,
+            colors: [config.colors.primary, successColor, infoColor, warningColor, dangerColor, secondaryColor],
+            stroke: { width: 5, colors: [cardColor] },
+            dataLabels: { enabled: true, formatter: (val) => parseInt(val) + "%" },
+            legend: { show: true, position: 'bottom', fontFamily: fontFamily, labels: { colors: legendColor } },
+            plotOptions: { pie: { donut: { size: '65%', labels: { show: true, name: { fontSize: '1rem', fontFamily: fontFamily }, value: { fontSize: '1.5rem', fontFamily: fontFamily, color: headingColor, formatter: (val) => parseInt(val) }, total: { show: true, fontSize: '1rem', color: labelColor, label: 'Total Tools', formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0) } } } } }
+          };
+        case 'toolsStatusChart':
+          return {
+            chart: { height: 500, type: 'bar', toolbar: { show: true } },
+            series: [{ name: 'Tools', data: dashboardData.statusCounts }],
+            xaxis: { categories: dashboardData.statuses.map(s => s.charAt(0).toUpperCase() + s.slice(1)), labels: { style: { colors: labelColor, fontFamily: fontFamily } } },
+            yaxis: { labels: { style: { colors: labelColor, fontFamily: fontFamily } } },
+            plotOptions: { bar: { borderRadius: 4, columnWidth: '40%', distributed: true } },
+            colors: [successColor, warningColor, dangerColor, infoColor],
+            dataLabels: { enabled: false }
+          };
+        case 'toolsClaimedChart':
+          return {
+            chart: { height: 500, type: 'pie' },
+            labels: ['Claimed', 'Unclaimed'],
+            series: [dashboardData.claimedToolsCount, dashboardData.unclaimedToolsCount],
+            colors: [successColor, warningColor],
+            stroke: { width: 5, colors: [cardColor] },
+            dataLabels: { enabled: true },
+            legend: { show: true, position: 'bottom', fontFamily: fontFamily, labels: { colors: legendColor } }
+          };
+        case 'toolsAddedTrendChart':
+          return {
+            chart: { height: 500, type: 'area', toolbar: { show: true } },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            series: [{ name: 'Tools Added', data: dashboardData.toolsAddedCounts }],
+            xaxis: { categories: dashboardData.months, labels: { style: { colors: labelColor, fontFamily: fontFamily } } },
+            yaxis: { labels: { style: { colors: labelColor, fontFamily: fontFamily } }, min: 0 },
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, gradientToColors: [config.colors.cardColor], opacityTo: 0.4, stops: [0, 100] } },
+            colors: [successColor]
+          };
+        default: return null;
+      }
+    };
+
+    document.querySelectorAll('.chart-maximize').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const chartId = this.getAttribute('data-chart');
+        const title = this.closest('.card-header').querySelector('h5').textContent;
+        const config = getChartConfig(chartId);
+
+        if (config) {
+          modalTitle.textContent = title;
+          modalContainer.innerHTML = '';
+          chartModal.show();
+
+          setTimeout(() => {
+            if (modalChart) modalChart.destroy();
+            modalChart = new ApexCharts(modalContainer, config);
+            modalChart.render();
+          }, 300);
+        }
+      });
+    });
+
+    // Cleanup when modal is closed
+    chartModalEl.addEventListener('hidden.bs.modal', function () {
+      if (modalChart) {
+        modalChart.destroy();
+        modalChart = null;
+      }
+      modalContainer.innerHTML = '';
+    });
+  }
+
 })();

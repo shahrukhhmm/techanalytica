@@ -99,6 +99,10 @@
                     <div class="card-title mb-0">
                         <h5 class="m-0 me-2">Tools by Category</h5>
                     </div>
+                    <button type="button" class="btn btn-sm btn-icon btn-outline-primary chart-maximize"
+                        data-chart="toolsByCategoryChart" title="Full Screen">
+                        <i class="bx bx-fullscreen"></i>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div id="toolsByCategoryChart"></div>
@@ -113,6 +117,10 @@
                     <div class="card-title mb-0">
                         <h5 class="m-0 me-2">Tools Status Overview</h5>
                     </div>
+                    <button type="button" class="btn btn-sm btn-icon btn-outline-primary chart-maximize"
+                        data-chart="toolsStatusChart" title="Full Screen">
+                        <i class="bx bx-fullscreen"></i>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div id="toolsStatusChart"></div>
@@ -127,6 +135,10 @@
                     <div class="card-title mb-0">
                         <h5 class="m-0 me-2">Tool Claim Status</h5>
                     </div>
+                    <button type="button" class="btn btn-sm btn-icon btn-outline-primary chart-maximize"
+                        data-chart="toolsClaimedChart" title="Full Screen">
+                        <i class="bx bx-fullscreen"></i>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div id="toolsClaimedChart"></div>
@@ -141,6 +153,10 @@
             <div class="card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title m-0 me-2">Tools Added Trend (Last 6 Months)</h5>
+                    <button type="button" class="btn btn-sm btn-icon btn-outline-primary chart-maximize"
+                        data-chart="toolsAddedTrendChart" title="Full Screen">
+                        <i class="bx bx-fullscreen"></i>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div id="toolsAddedTrendChart"></div>
@@ -149,72 +165,43 @@
         </div>
     </div>
 
-    <div class="row">
-        {{-- <!-- Sales Trend -->
-    <div class="col-lg-6 col-12 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5>Sales Trend (Last 12 Months)</h5>
+    <!-- Chart Modal -->
+    <div class="modal fade" id="chartModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chartModalTitle">Chart View</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalChartContainer" style="min-height: 500px;"></div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-          <div id="salesChart" style="height: 340px;"></div>
-        </div>
-      </div>
     </div>
-
-    <!-- Expenses Trend -->
-    <div class="col-lg-6 col-12 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5>Expenses Trend (Last 12 Months)</h5>
-        </div>
-        <div class="card-body">
-          <div id="expensesChart" style="height: 340px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Comparison Bar -->
-    <div class="col-12 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5>Sales vs Expenses Comparison</h5>
-        </div>
-        <div class="card-body">
-          <div id="comparisonChart" style="height: 380px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Donut -->
-    <div class="col-lg-6 col-12 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5>Financial Overview</h5>
-        </div>
-        <div class="card-body">
-          <div id="donutChart" style="height: 340px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Department Pie - only when all departments selected -->
-    @if (!$selectedDepartment && isset($departmentSalesData) && $departmentSalesData->isNotEmpty())
-      <div class="col-lg-6 col-12 mb-4">
-        <div class="card">
-          <div class="card-header">
-            <h5>Sales Distribution by Department</h5>
-          </div>
-          <div class="card-body">
-            <div id="deptPieChart" style="height: 340px;"></div>
-          </div>
-        </div>
-      </div>
-    @endif --}}
-    </div>
-
 @endsection
 @section('page-script')
+    <style>
+        #chartModal .btn-close {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            opacity: 1;
+            padding: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        #chartModal .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ebedef;
+            background-color: #f8f9fa;
+            padding: 1rem 1.5rem;
+        }
+    </style>
     <script>
         // Pass PHP variables to JavaScript
         const dashboardData = {

@@ -13,12 +13,23 @@ class CategoryController extends Controller
     {
         $query = Category::with('parent')->withCount('children');
 
+        $currentParent = null;
         // Handle filtering by parent category name if provided in query string
         if ($request->has('category')) {
             $parentName = $request->category;
-            $query->whereHas('parent', function ($q) use ($parentName) {
-                $q->where('name', $parentName);
-            });
+            $currentParent = Category::where('name', $parentName)->first();
+            
+            if ($currentParent) {
+                $query->where('parent_id', $currentParent->id);
+            } else {
+                // Fallback to name match if exact parent not found (legacy logic)
+                $query->whereHas('parent', function ($q) use ($parentName) {
+                    $q->where('name', $parentName);
+                });
+            }
+        } else {
+            // By default, show only top-level categories
+            $query->whereNull('parent_id');
         }
 
         // Load categories with parent and children count
@@ -36,7 +47,7 @@ class CategoryController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('backend.admin.content.categories.index', compact('categories', 'rootCategories'));
+        return view('backend.admin.content.categories.index', compact('categories', 'rootCategories', 'currentParent'));
     }
 
     public function create(Request $request)

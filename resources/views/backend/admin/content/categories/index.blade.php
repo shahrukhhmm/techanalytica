@@ -45,10 +45,24 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold">Categories</h4>
-            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus"></i> Add Category
-            </a>
+            <h4 class="fw-bold">
+                @if (request('category'))
+                    <span class="text-muted fw-light">Categories /</span> {{ request('category') }} Subcategories
+                @else
+                    Categories
+                @endif
+            </h4>
+            <div class="d-flex gap-2">
+                @if (request('category'))
+                    <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">
+                        <i class="bx bx-arrow-back me-1"></i> Back to Root
+                    </a>
+                @endif
+                <a href="{{ route('admin.categories.create', $currentParent ? ['parent_id' => $currentParent->id] : []) }}"
+                    class="btn btn-primary">
+                    <i class="bx bx-plus"></i> Add {{ $currentParent ? 'Subcategory' : 'Category' }}
+                </a>
+            </div>
         </div>
 
         @if (session('success'))
@@ -58,19 +72,7 @@
             </div>
         @endif
 
-        @if (request('category'))
-            <div class="alert alert-info d-flex justify-content-between align-items-center mb-4" role="alert">
-                <span>
-                    <i class="bx bx-filter-alt me-2"></i>
-                    Showing subcategories for: <strong>{{ request('category') }}</strong>
-                </span>
-                <a href="{{ route('admin.categories.index') }}" class="btn btn-sm btn-outline-info">
-                    <i class="bx bx-x me-1"></i> Clear Filter
-                </a>
-            </div>
-        @endif
-
-        <div class="card">
+        <div class="card shadow-sm">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover" id="table">
@@ -78,7 +80,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Slug</th>
-                                <th>Parent</th>
+                                <th>Items</th>
                                 <th>Weight</th>
                                 <th>Actions</th>
                             </tr>
@@ -86,18 +88,31 @@
                         <tbody>
                             @foreach ($categories as $category)
                                 <tr>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->slug }}</td>
-                                    <td>{{ $category->parent->name ?? '-' }}</td>
+                                    <td>
+                                        <div class="fw-bold">{{ $category->name }}</div>
+                                        @if (!$category->parent_id && $category->children_count > 0)
+                                            <small class="text-info">{{ $category->children_count }} subcategories</small>
+                                        @endif
+                                    </td>
+                                    <td><code>{{ $category->slug }}</code></td>
+                                    <td>
+                                        <span class="badge bg-label-secondary">
+                                            {{ $category->children_count }} Sub
+                                        </span>
+                                    </td>
                                     <td>{{ $category->weight }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('admin.categories.index', ['category' => $category->name]) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info" title="View Subcategories">
-                                                <i class="bx bx-list-ul"></i>
-                                            </a>
+                                            @if ($category->children_count > 0 || !$category->parent_id)
+                                                <a href="{{ route('admin.categories.index', ['category' => $category->name]) }}"
+                                                    class="btn btn-sm btn-icon btn-outline-info" title="View Subcategories">
+                                                    <i class="bx bx-list-ul"></i>
+                                                </a>
+                                            @endif
                                             <a href="{{ route('admin.categories.edit', $category) }}"
-                                                class="btn btn-sm btn-outline-primary"><i class="bx bx-edit"></i></a>
+                                                class="btn btn-sm btn-icon btn-outline-primary" title="Edit">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
                                             <form action="{{ route('admin.categories.destroy', $category) }}"
                                                 method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                                 @csrf

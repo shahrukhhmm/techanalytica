@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Claim extends Model
+class Review extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'tool_id',
-        'vendor_id',
+        'user_id',
+        'user_name',
+        'user_email',
+        'rating',
+        'comment',
         'status',
-        'reason',
     ];
 
     public function tool()
@@ -21,8 +24,8 @@ class Claim extends Model
         return $this->belongsTo(Tool::class);
     }
 
-    public function vendor()
+    public function user()
     {
-        return $this->belongsTo(Vendor::class);
+        return $this->belongsTo(User::class);
     }
 }

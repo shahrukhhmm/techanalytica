@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
+use App\Models\Blog;
+use App\Models\Category;
+use App\Models\PricingTier;
+use App\Models\Tool;
 use App\Models\User;
 use App\Models\Vendor;
-use App\Models\Tool;
-use App\Models\PricingTier;
-use App\Models\Category;
-use App\Models\Blog;
 use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-  /**
-   * Seed the application's database.
-   */
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
         // Seed static data
@@ -25,19 +25,22 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create Admin User
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make(12345678),
-            'role' => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make(12345678),
+                'role' => 'admin',
+                'email_verified' => true,
+            ]
+        );
 
         // Create Users with Vendors and Tools
         User::factory(10)->create()->each(function ($user) {
             // 50% chance to be a vendor
             if (rand(0, 1)) {
                 $vendor = Vendor::factory()->create(['user_id' => $user->id]);
-                
+
                 // Create tools for vendor
                 Tool::factory(rand(1, 3))->create([
                     'vendor_id' => $vendor->id,
@@ -52,5 +55,22 @@ class DatabaseSeeder extends Seeder
 
         // Create Blogs
         Blog::factory(20)->create();
+
+        // Create Subscribers
+        \App\Models\Subscriber::factory(50)->create();
+
+        // Create Newsletters
+        \App\Models\Newsletter::factory(10)->create();
+
+        // Scatter Reviews across Tools
+        Tool::all()->each(function ($tool) {
+            \App\Models\Review::factory(rand(2, 5))->create([
+                'tool_id' => $tool->id,
+                'user_id' => User::inRandomOrder()->first()->id,
+            ]);
+        });
+
+        // Create Claims
+        \App\Models\Claim::factory(10)->create();
     }
 }

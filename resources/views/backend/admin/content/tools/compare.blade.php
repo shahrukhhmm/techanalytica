@@ -7,7 +7,7 @@
 @endsection
 
 @section('page-script')
-    @vite('resources/assets/js/tools-compare.js')
+    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/js/tools-compare.js'])
 @endsection
 
 @section('content')

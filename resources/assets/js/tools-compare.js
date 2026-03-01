@@ -20,13 +20,26 @@
             }
             fontFamily = config.fontFamily;
         } else {
-            console.warn("isDarkStyle or config not defined");
+            console.warn("isDarkStyle or config not defined, using defaults");
             cardColor = '#fff';
             headingColor = '#566a7f';
             legendColor = '#566a7f';
             labelColor = '#a1acb8';
             borderColor = '#d9dee3';
             fontFamily = 'Public Sans';
+        }
+
+        // Ensure global config colors are present for ApexCharts if missing
+        if (typeof config === 'undefined') {
+            window.config = {
+                colors: {
+                    primary: '#696cff',
+                    warning: '#ffab00',
+                    danger: '#ff3e1d',
+                    success: '#71dd37',
+                    info: '#03c3ec'
+                }
+            };
         }
     }
 
@@ -119,48 +132,105 @@
                 comparisonChartInstance.destroy();
             }
 
-            const categories = ['Categories', 'Industries', 'Media Files'];
+            const categories = ['Categories', 'Industries', 'Media Files', 'Monthly Pricing'];
 
+            // Original values for tooltips
+            const t1Original = {
+                categories: tool1.categories_count || 0,
+                industries: tool1.industries_count || 0,
+                media: tool1.media_count || 0,
+                price: tool1.tier ? parseFloat(tool1.tier.monthly_price) || 0 : 0
+            };
+
+            const t2Original = {
+                categories: tool2.categories_count || 0,
+                industries: tool2.industries_count || 0,
+                media: tool2.media_count || 0,
+                price: tool2.tier ? parseFloat(tool2.tier.monthly_price) || 0 : 0
+            };
+
+            // Calculate max values for each axis to normalize
+            const maxValues = {
+                categories: Math.max(t1Original.categories, t2Original.categories, 1),
+                industries: Math.max(t1Original.industries, t2Original.industries, 1),
+                media: Math.max(t1Original.media, t2Original.media, 1),
+                price: Math.max(t1Original.price, t2Original.price, 1)
+            };
+
+            // Normalized data (0-100 scale)
             const t1Data = [
-                tool1.categories_count || 0,
-                tool1.industries_count || 0,
-                tool1.media_count || 0,
+                (t1Original.categories / maxValues.categories) * 100,
+                (t1Original.industries / maxValues.industries) * 100,
+                (t1Original.media / maxValues.media) * 100,
+                (t1Original.price / maxValues.price) * 100
             ];
 
             const t2Data = [
-                tool2.categories_count || 0,
-                tool2.industries_count || 0,
-                tool2.media_count || 0,
+                (t2Original.categories / maxValues.categories) * 100,
+                (t2Original.industries / maxValues.industries) * 100,
+                (t2Original.media / maxValues.media) * 100,
+                (t2Original.price / maxValues.price) * 100
             ];
 
             const chartConfig = {
                 chart: {
                     height: 400,
-                    type: 'radar',
-                    toolbar: { show: false },
-                    dropShadow: {
-                        enabled: true,
-                        blur: 1,
-                        left: 1,
-                        top: 1
+                    type: 'bar',
+                    toolbar: { show: false }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        dataLabels: { position: 'top' },
+                        barHeight: '70%',
+                        borderRadius: 4
                     }
                 },
                 series: [
                     { name: tool1.name, data: t1Data },
                     { name: tool2.name, data: t2Data }
                 ],
-                labels: categories,
-                stroke: { width: 2 },
-                fill: { opacity: 0.2 },
-                markers: { size: 5, hover: { size: 10 } },
-                colors: [config.colors.primary, config.colors.warning],
-                yaxis: { show: false },
                 xaxis: {
+                    categories: categories,
+                    labels: {
+                        show: false // Hide since it's normalized 0-100
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
                     labels: {
                         style: {
-                            colors: [labelColor, labelColor, labelColor],
+                            colors: labelColor,
                             fontSize: '14px',
                             fontFamily: fontFamily
+                        }
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                colors: [
+                    (typeof config !== 'undefined' && config.colors) ? config.colors.primary : '#696cff',
+                    (typeof config !== 'undefined' && config.colors) ? config.colors.warning : '#ffab00'
+                ],
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    y: {
+                        formatter: function (val, { seriesIndex, dataPointIndex }) {
+                            const originalData = seriesIndex === 0 ? t1Original : t2Original;
+                            const keys = ['categories', 'industries', 'media', 'price'];
+                            const key = keys[dataPointIndex];
+                            const rawValue = originalData[key];
+
+                            if (key === 'price') return `$${rawValue}`;
+                            return rawValue;
                         }
                     }
                 },

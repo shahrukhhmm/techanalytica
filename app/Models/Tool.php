@@ -78,4 +78,9 @@ class Tool extends Model
     {
         return $this->hasMany(Claim::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

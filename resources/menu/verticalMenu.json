@@ -29,6 +29,11 @@
           "slug": "admin.tools.index"
         },
         {
+          "url": "/admin/tools-claims",
+          "name": "Claims",
+          "slug": "admin.tools.claims.index"
+        },
+        {
           "url": "/admin/tools/compare",
           "name": "Compare Tools",
           "slug": "admin.tools.compare"
@@ -36,19 +41,45 @@
       ]
     },
     {
+      "url": "/admin/vendors",
+      "name": "Vendors",
+      "icon": "menu-icon icon-base bx bx-user-pin",
+      "slug": "admin.vendors"
+    },
+    {
+      "url": "/admin/pricing-tiers",
+      "name": "Pricing Tiers",
+      "icon": "menu-icon icon-base bx bx-dollar-circle",
+      "slug": "admin.pricing_tiers"
+    },
+    {
+      "url": "/admin/blogs",
       "name": "Blogs",
       "icon": "menu-icon icon-base bx bx-news",
-      "slug": "admin.blogs",
-      "url": "/admin/blogs"
+      "slug": "admin.blogs"
     },
     {
-      "menuHeader": "System Management"
+      "url": "/admin/reviews",
+      "name": "Reviews",
+      "icon": "menu-icon icon-base bx bx-comment-detail",
+      "slug": "admin.reviews"
     },
     {
-      "name": "Departements",
-      "icon": "menu-icon icon-base bx bx-collection",
-      "slug": "departments",
-      "url": "departments"
+      "name": "Newsletters",
+      "icon": "menu-icon icon-base bx bx-envelope",
+      "slug": "admin.newsletters",
+      "submenu": [
+        {
+          "url": "/admin/newsletters",
+          "name": "List",
+          "slug": "admin.newsletters.index"
+        },
+        {
+          "url": "/admin/subscribers",
+          "name": "Subscribers",
+          "slug": "admin.subscribers.index"
+        }
+      ]
     }
   ]
 }

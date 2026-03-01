@@ -23,7 +23,10 @@ class ToolController extends Controller
 
     public function show(Tool $tool)
     {
-        $tool->load(['vendor', 'tier', 'categories', 'industries']);
+        $tool->load(['vendor', 'tier', 'categories', 'industries', 'reviews' => function($query) {
+            $query->latest()->take(5);
+        }]);
+        $tool->loadCount('reviews');
 
         return view('backend.admin.content.tools.show', compact('tool'));
     }
