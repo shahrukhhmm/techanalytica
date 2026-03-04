@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
 
         Route::get('tools/compare', [\App\Http\Controllers\backend\admin\ToolController::class, 'compare'])->name('tools.compare');
+        Route::post('tools/{tool}/approve-update', [\App\Http\Controllers\backend\admin\ToolController::class, 'approveUpdate'])->name('tools.approve-update');
         Route::resource('tools', \App\Http\Controllers\backend\admin\ToolController::class);
         Route::resource('blogs', \App\Http\Controllers\backend\admin\BlogController::class);
 
@@ -58,9 +59,23 @@ Route::middleware('auth')->group(function () {
         Route::delete('tools-claims/{claim}', [\App\Http\Controllers\backend\admin\ClaimController::class, 'destroy'])->name('tools.claims.destroy');
 
         Route::resource('vendors', \App\Http\Controllers\backend\admin\VendorController::class);
-
-        // API route for tool comparison
-        Route::get('/api/compare-tools', [Analytics::class, 'compareTools'])->name('api.compare-tools');
     });
 
+    // Shared API routes
+    Route::get('/api/compare-tools', [\App\Http\Controllers\backend\admin\dashboard\Analytics::class, 'compareTools'])->name('api.compare-tools');
+
+    // Vendor Routes
+    Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
+        Route::get('/switch-tool/{id}', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'switchTool'])->name('switch-tool');
+        Route::post('/tools/{tool}/submit', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'submitForReview'])->name('tools.submit');
+        Route::post('/tools/{tool}/unpublish', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'unpublish'])->name('tools.unpublish');
+        Route::get('/tools/compare', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'compare'])->name('tools.compare');
+        Route::resource('tools', \App\Http\Controllers\backend\vendor\VendorToolController::class);
+        Route::get('/analytics', [\App\Http\Controllers\backend\vendor\VendorAnalyticsController::class, 'index'])->name('analytics');
+        
+        // Sections
+        Route::resource('blogs', \App\Http\Controllers\backend\vendor\VendorBlogController::class);
+        Route::get('/reviews', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/billing', function () { return "Billing & Plan Page Placeholder"; })->name('billing');
+    });
 });

@@ -107,6 +107,10 @@
                                                 'Verified Badge',
                                                 'Newsletter Mention',
                                                 'Priority Support',
+                                                'view-analytics',
+                                                'manage-custom-features',
+                                                'upload-videos',
+                                                'multiple-ctas',
                                             ];
 
                                             if (empty($permissions) && !isset($pricing_tier)) {

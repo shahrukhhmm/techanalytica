@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PricingTierSeeder::class,
             CategorySeeder::class,
+            VendorDashboardSeeder::class,
         ]);
 
         // Create Admin User

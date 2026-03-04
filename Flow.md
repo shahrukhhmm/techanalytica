@@ -2,7 +2,7 @@
 
 Admin
 
-Vender
+vendor
 
 visitor
 

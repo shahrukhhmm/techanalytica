@@ -22,6 +22,8 @@ class Tool extends Model
         'cta_type',
         'cta_url',
         'status',
+        'pending_data',
+        'has_pending_update',
         'is_claimed',
         'published_at',
         'last_edited_at',
@@ -29,6 +31,8 @@ class Tool extends Model
 
     protected $casts = [
         'pricing_structured' => 'array',
+        'pending_data' => 'array',
+        'has_pending_update' => 'boolean',
         'is_claimed' => 'boolean',
         'published_at' => 'datetime',
         'last_edited_at' => 'datetime',

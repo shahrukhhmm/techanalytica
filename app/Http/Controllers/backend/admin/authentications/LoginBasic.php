@@ -11,6 +11,9 @@ class LoginBasic extends Controller
   public function index()
   {
     if (Auth::check()) {
+      if (Auth::user()->role === 'vendor') {
+        return redirect()->route('vendor.tools.index');
+      }
       return redirect()->route('dashboard.analytics');
     }
 
@@ -30,8 +33,10 @@ class LoginBasic extends Controller
 
     if (Auth::attempt([$field => $credentials['email-username'], 'password' => $credentials['password']], $remember)) {
       $request->session()->regenerate();
+      
+      $redirectRoute = Auth::user()->role === 'vendor' ? route('vendor.tools.index') : route('dashboard.analytics');
 
-      return redirect()->intended(route('dashboard.analytics'))
+      return redirect()->intended($redirectRoute)
         ->with('success', 'Welcome back!');
     }
 

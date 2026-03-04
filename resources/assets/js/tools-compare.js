@@ -84,7 +84,7 @@
             if (detailsEl) detailsEl.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="min-height: 200px;"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
             try {
-                const response = await fetch(`/admin/api/compare-tools?${isTool1 ? 't1' : 't2'}=${toolId}`);
+                const response = await fetch(`/api/compare-tools?${isTool1 ? 't1' : 't2'}=${toolId}`);
                 const data = await response.json();
 
                 if (data.status === 'success') {

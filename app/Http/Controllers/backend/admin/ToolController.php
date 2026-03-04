@@ -129,7 +129,46 @@ class ToolController extends Controller
         $tool->categories()->sync($request->input('categories', []));
         $tool->industries()->sync($request->input('industries', []));
 
+        // If admin manually updates, clear pending flags to avoid confusion
+        if ($tool->has_pending_update) {
+            $tool->update([
+                'pending_data' => null,
+                'has_pending_update' => false
+            ]);
+        }
+
         return redirect()->route('admin.tools.index')->with('success', 'Tool updated successfully.');
+    }
+
+    public function approveUpdate(Tool $tool)
+    {
+        if (!$tool->has_pending_update || !$tool->pending_data) {
+            return back()->with('error', 'No pending update found for this tool.');
+        }
+
+        $data = $tool->pending_data;
+        
+        // Extract relations
+        $categories = $data['categories'] ?? [];
+        $industries = $data['industries'] ?? [];
+        
+        // Remove relations from data to update columns
+        unset($data['categories'], $data['industries']);
+
+        // Update tool columns
+        $tool->update($data);
+        
+        // Sync relations
+        $tool->categories()->sync($categories);
+        $tool->industries()->sync($industries);
+
+        // Clear pending flags
+        $tool->update([
+            'pending_data' => null,
+            'has_pending_update' => false
+        ]);
+
+        return redirect()->route('admin.tools.index')->with('success', 'Tool update approved and applied.');
     }
 
     public function destroy(Tool $tool)

@@ -13,6 +13,7 @@ class Blog extends Model
         'slug',
         'body',
         'author_id',
+        'vendor_id',
         'status',
         'published_at',
         'meta_title',
@@ -27,5 +28,10 @@ class Blog extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }

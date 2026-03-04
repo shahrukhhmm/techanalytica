@@ -1,0 +1,52 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboards",
+      "icon": "menu-icon icon-base bx bx-home-smile",
+      "slug": "vendor.dashboard"
+    },
+    {
+      "name": "Tools",
+      "icon": "menu-icon icon-base bx bx-wrench",
+      "slug": "vendor.tools",
+      "submenu": [
+        {
+          "url": "/vendor/tools",
+          "name": "List",
+          "slug": "vendor.tools.index"
+        },
+        {
+          "url": "/vendor/tools/compare",
+          "name": "Compare Tools",
+          "slug": "vendor.tools.compare"
+        }
+      ]
+    },
+    {
+      "url": "/vendor/analytics",
+      "name": "Analytics",
+      "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
+      "slug": "vendor.analytics",
+      "permission": "view-analytics"
+    },
+    {
+      "url": "/vendor/blogs",
+      "name": "Blogs",
+      "icon": "menu-icon icon-base bx bx-news",
+      "slug": "vendor.blogs"
+    },
+    {
+      "url": "/vendor/reviews",
+      "name": "Reviews",
+      "icon": "menu-icon icon-base bx bx-comment-detail",
+      "slug": "vendor.reviews.index"
+    },
+    {
+      "url": "/vendor/billing",
+      "name": "Billing & Plan",
+      "icon": "menu-icon icon-base bx bx-credit-card",
+      "slug": "vendor.billing"
+    }
+  ]
+}
