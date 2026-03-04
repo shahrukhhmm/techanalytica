@@ -7,6 +7,24 @@ use Illuminate\Http\Request;
 
 class VendorDashboardController extends Controller
 {
+    public function index()
+    {
+        $vendor = auth()->user()->vendor;
+        if (!$vendor) {
+            abort(403);
+        }
+
+        $tools = $vendor->tools;
+        $activeToolId = session('active_tool_id');
+        $activeTool = $activeToolId ? $vendor->tools()->find($activeToolId) : $tools->first();
+
+        if ($activeTool && !$activeToolId) {
+            session(['active_tool_id' => $activeTool->id]);
+        }
+
+        return view('backend.vendor.content.dashboard', compact('vendor', 'tools', 'activeTool'));
+    }
+
     public function switchTool($id)
     {
         $vendor = auth()->user()->vendor;

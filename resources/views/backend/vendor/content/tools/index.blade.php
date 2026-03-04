@@ -6,9 +6,6 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold"><span class="text-muted fw-light">Products /</span> List</h4>
-            <a href="{{ route('vendor.tools.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-1"></i> Add New Product
-            </a>
         </div>
 
         @if (session('success'))
@@ -24,7 +21,7 @@
                     <table class="table table-hover" id="tools-table">
                         <thead>
                             <tr>
-                                <th>Product Name</th>
+                                <th>Name</th>
                                 <th>Pricing Tier</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -74,32 +71,7 @@
                                                     title="Edit Details">
                                                     <i class="bx bx-edit"></i>
                                                 </a>
-                                                <a href="{{ route('vendor.switch-tool', $tool->id) }}"
-                                                    class="btn btn-sm btn-icon btn-outline-info ms-1"
-                                                    data-bs-toggle="tooltip" title="Switch Context">
-                                                    <i class="bx bx-log-in-circle"></i>
-                                                </a>
                                             </div>
-                                            @if ($tool->status === 'draft')
-                                                <form action="{{ route('vendor.tools.submit', $tool->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-label-warning"
-                                                        data-bs-toggle="tooltip" title="Submit for Review">
-                                                        <i class="bx bx-send me-1"></i> Submit
-                                                    </button>
-                                                </form>
-                                            @elseif($tool->status === 'published')
-                                                <form action="{{ route('vendor.tools.unpublish', $tool->id) }}"
-                                                    method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to unpublish this product? It will be moved to drafts.');">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-label-danger"
-                                                        data-bs-toggle="tooltip" title="Unpublish Product">
-                                                        <i class="bx bx-cloud-download me-1"></i> Unpublish
-                                                    </button>
-                                                </form>
-                                            @endif
                                         </div>
                                     </td>
                                 </tr>

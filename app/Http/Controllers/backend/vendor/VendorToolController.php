@@ -183,13 +183,6 @@ class VendorToolController extends Controller
         return back()->with('error', 'Only published tools can be unpublished.');
     }
 
-    public function compare()
-    {
-        $allTools = Tool::select('id', 'name')->orderBy('name')->get();
-
-        return view('backend.vendor.content.tools.compare', compact('allTools'));
-    }
-
     public function destroy(Tool $tool)
     {
         if ($tool->vendor_id !== auth()->user()->vendor->id) {

@@ -19,6 +19,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('backend.vendor.*', function ($view) {
+            $permissions = [];
+            if (auth()->check() && auth()->user()->vendor) {
+                $activeToolId = session('active_tool_id');
+                $tool = auth()->user()->vendor->tools()->find($activeToolId) 
+                        ?? auth()->user()->vendor->tools()->first();
+                
+                if ($tool && $tool->tier) {
+                    $permissions = $tool->tier->permissions ?? [];
+                }
+            }
+            $view->with('current_vendor_permissions', $permissions);
+        });
     }
 }

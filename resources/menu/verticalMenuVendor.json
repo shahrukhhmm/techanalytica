@@ -13,13 +13,18 @@
       "submenu": [
         {
           "url": "/vendor/tools",
-          "name": "List",
+          "name": "My Tools",
           "slug": "vendor.tools.index"
         },
         {
-          "url": "/vendor/tools/compare",
-          "name": "Compare Tools",
-          "slug": "vendor.tools.compare"
+          "url": "/vendor/claim-product",
+          "name": "Claim your Product",
+          "slug": "vendor.claim"
+        },
+        {
+          "url": "/vendor/submit-product",
+          "name": "Submit a Product",
+          "slug": "vendor.submit"
         }
       ]
     },
@@ -28,19 +33,52 @@
       "name": "Analytics",
       "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
       "slug": "vendor.analytics",
-      "permission": "view-analytics"
+      "permission": "view_analytics"
     },
     {
       "url": "/vendor/blogs",
       "name": "Blogs",
       "icon": "menu-icon icon-base bx bx-news",
-      "slug": "vendor.blogs"
+      "slug": "vendor.blogs",
+      "permission": "manage_blogs"
     },
     {
       "url": "/vendor/reviews",
       "name": "Reviews",
       "icon": "menu-icon icon-base bx bx-comment-detail",
-      "slug": "vendor.reviews.index"
+      "slug": "vendor.reviews.index",
+      "permission": "manage_reviews"
+    },
+    {
+      "name": "Premium Features",
+      "icon": "menu-icon icon-base bx bx-star",
+      "slug": "vendor.premium",
+      "submenu": [
+        {
+          "url": "#",
+          "name": "Integrations",
+          "slug": "vendor.integrations",
+          "permission": "manage_integrations"
+        },
+        {
+          "url": "#",
+          "name": "Pricing Details",
+          "slug": "vendor.pricing_update",
+          "permission": "manage_pricing"
+        },
+        {
+          "url": "#",
+          "name": "Book a Demo",
+          "slug": "vendor.demo_link",
+          "permission": "manage_demo"
+        },
+        {
+          "url": "#",
+          "name": "Video Uploads",
+          "slug": "vendor.videos",
+          "permission": "upload_videos"
+        }
+      ]
     },
     {
       "url": "/vendor/billing",

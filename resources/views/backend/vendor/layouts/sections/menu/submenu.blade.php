@@ -29,15 +29,25 @@
                     }
                 }
             @endphp
+            @php
+                $isLocked =
+                    isset($submenu->permission) && !in_array($submenu->permission, $current_vendor_permissions ?? []);
+            @endphp
 
-            <li class="menu-item {{ $activeClass }}">
-                <a href="{{ isset($submenu->url) ? url($submenu->url) : 'javascript:void(0)' }}"
+            <li class="menu-item {{ $activeClass }} {{ $isLocked ? 'menu-locked' : '' }}">
+                <a href="{{ $isLocked ? route('vendor.billing') : (isset($submenu->url) ? url($submenu->url) : 'javascript:void(0)') }}"
                     class="{{ isset($submenu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}"
-                    @if (isset($submenu->target) and !empty($submenu->target)) target="_blank" @endif>
+                    @if (isset($submenu->target) and !empty($submenu->target)) target="_blank" @endif
+                    @if ($isLocked) data-bs-toggle="tooltip" data-bs-placement="right" title="Upgrade to Unlock" @endif>
                     @if (isset($submenu->icon))
                         <i class="{{ $submenu->icon }}"></i>
                     @endif
-                    <div>{{ isset($submenu->name) ? __($submenu->name) : '' }}</div>
+                    <div class="d-flex align-items-center">
+                        {{ isset($submenu->name) ? __($submenu->name) : '' }}
+                        @if ($isLocked)
+                            <i class="bx bx-lock-alt ms-2 small text-muted"></i>
+                        @endif
+                    </div>
                     @isset($submenu->badge)
                         <div class="badge rounded-pill bg-{{ $submenu->badge[0] }} text-uppercase ms-auto">
                             {{ $submenu->badge[1] }}</div>

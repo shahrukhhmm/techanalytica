@@ -22,6 +22,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/auth/login-basic', [LoginBasic::class, 'login'])->name('login');
 
     Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
+    Route::get('/auth/register-vendor', [\App\Http\Controllers\Auth\VendorRegistrationController::class, 'index'])->name('register-vendor');
+    Route::post('/auth/register-vendor', [\App\Http\Controllers\Auth\VendorRegistrationController::class, 'store'])->name('register-vendor.store');
     Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
 });
 
@@ -66,16 +68,26 @@ Route::middleware('auth')->group(function () {
 
     // Vendor Routes
     Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
+        Route::get('/', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index'])->name('dashboard');
         Route::get('/switch-tool/{id}', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'switchTool'])->name('switch-tool');
         Route::post('/tools/{tool}/submit', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'submitForReview'])->name('tools.submit');
         Route::post('/tools/{tool}/unpublish', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'unpublish'])->name('tools.unpublish');
-        Route::get('/tools/compare', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'compare'])->name('tools.compare');
+        Route::get('/claim-product', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'index'])->name('claim');
+        Route::get('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'create'])->name('claim.create');
+        Route::post('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'store'])->name('claim.store');
+        
+        Route::get('/submit-product', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'index'])->name('submit');
+        Route::get('/submit-product/create', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'create'])->name('submit.create');
+        Route::post('/submit-product/store', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'store'])->name('submit.store');
+        Route::get('/submit-product/review', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'review'])->name('submit.review');
+        Route::post('/submit-product/confirm', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'confirm'])->name('submit.confirm');
+        
         Route::resource('tools', \App\Http\Controllers\backend\vendor\VendorToolController::class);
         Route::get('/analytics', [\App\Http\Controllers\backend\vendor\VendorAnalyticsController::class, 'index'])->name('analytics');
         
         // Sections
         Route::resource('blogs', \App\Http\Controllers\backend\vendor\VendorBlogController::class);
         Route::get('/reviews', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'index'])->name('reviews.index');
-        Route::get('/billing', function () { return "Billing & Plan Page Placeholder"; })->name('billing');
+        Route::get('/billing', [\App\Http\Controllers\backend\vendor\BillingController::class, 'index'])->name('billing');
     });
 });

@@ -1,5 +1,22 @@
 // This file is used for writing your custom styles
 
-// .card {
-//    background-color: #fd0000;
-//  }
+.menu-locked {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+
+    .menu-link {
+        color: #a1acb8 !important;
+        background-color: transparent !important;
+        pointer-events: auto !important;
+        /* Allow tooltip to show */
+
+        div,
+        i {
+            filter: blur(0.5px);
+        }
+    }
+
+    &:hover>.menu-link {
+        background-color: rgba(67, 89, 113, 0.04) !important;
+    }
+}
