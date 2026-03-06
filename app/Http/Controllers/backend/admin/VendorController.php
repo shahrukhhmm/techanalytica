@@ -42,7 +42,7 @@ class VendorController extends Controller
 
     public function show(Vendor $vendor)
     {
-        $vendor->load(['user', 'tools', 'claims']);
+        $vendor->load(['user', 'tools', 'claims', 'sponsorships', 'billingTransactions']);
         return view('backend.admin.content.vendors.show', compact('vendor'));
     }
 

@@ -16,6 +16,17 @@ class SubmissionController extends Controller
 
     public function create()
     {
+        $vendor = auth()->user()->vendor->load('tier', 'tools');
+        $permissions = $vendor->tier->permissions ?? [];
+        
+        $maxProducts = 1;
+        if (in_array('manage_unlimited_products', $permissions)) $maxProducts = 1000;
+        elseif (in_array('manage_3_products', $permissions)) $maxProducts = 3;
+        
+        if ($vendor->tools->count() >= $maxProducts) {
+             return redirect()->route('vendor.tools.index')->with('error', 'Your current plan limit is ' . $maxProducts . ' product(s). Please upgrade to add more.');
+        }
+
         $categories = Category::all();
         return view('backend.vendor.content.submission.create', compact('categories'));
     }

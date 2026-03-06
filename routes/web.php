@@ -28,7 +28,8 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout route
-Route::get('/logout', [LoginBasic::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/logout', [LoginBasic::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/logout', [LoginBasic::class, 'logout'])->middleware('auth'); // fallback for GET links
 
 Route::middleware('auth')->group(function () {
     // Main Page Route
@@ -39,9 +40,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', \App\Http\Controllers\backend\admin\CategoryController::class);
         Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
+        Route::patch('industries/{industry}/toggle-approval', [\App\Http\Controllers\backend\admin\IndustryController::class, 'toggleApproval'])->name('industries.toggle-approval');
 
         Route::get('tools/compare', [\App\Http\Controllers\backend\admin\ToolController::class, 'compare'])->name('tools.compare');
+        Route::get('tools/pending-updates', [\App\Http\Controllers\backend\admin\ToolController::class, 'pendingUpdates'])->name('tools.pending-updates');
         Route::post('tools/{tool}/approve-update', [\App\Http\Controllers\backend\admin\ToolController::class, 'approveUpdate'])->name('tools.approve-update');
+        Route::post('tools/{tool}/reject-update', [\App\Http\Controllers\backend\admin\ToolController::class, 'rejectUpdate'])->name('tools.reject-update');
         Route::resource('tools', \App\Http\Controllers\backend\admin\ToolController::class);
         Route::resource('blogs', \App\Http\Controllers\backend\admin\BlogController::class);
 
@@ -60,7 +64,29 @@ Route::middleware('auth')->group(function () {
         Route::patch('tools-claims/{claim}', [\App\Http\Controllers\backend\admin\ClaimController::class, 'updateStatus'])->name('tools.claims.update-status');
         Route::delete('tools-claims/{claim}', [\App\Http\Controllers\backend\admin\ClaimController::class, 'destroy'])->name('tools.claims.destroy');
 
+        // Submissions
+        Route::get('submissions', [\App\Http\Controllers\backend\admin\SubmissionController::class, 'index'])->name('submissions.index');
+        Route::get('submissions/{submission}', [\App\Http\Controllers\backend\admin\SubmissionController::class, 'show'])->name('submissions.show');
+        Route::patch('submissions/{submission}', [\App\Http\Controllers\backend\admin\SubmissionController::class, 'updateStatus'])->name('submissions.update-status');
+        Route::delete('submissions/{submission}', [\App\Http\Controllers\backend\admin\SubmissionController::class, 'destroy'])->name('submissions.destroy');
+
+        // Monetization
+        Route::get('sponsorships', [\App\Http\Controllers\backend\admin\SponsorshipController::class, 'index'])->name('sponsorships.index');
+        Route::get('sponsorships/{sponsorship}', [\App\Http\Controllers\backend\admin\SponsorshipController::class, 'show'])->name('sponsorships.show');
+        Route::patch('sponsorships/{sponsorship}', [\App\Http\Controllers\backend\admin\SponsorshipController::class, 'updateStatus'])->name('sponsorships.update-status');
+        Route::delete('sponsorships/{sponsorship}', [\App\Http\Controllers\backend\admin\SponsorshipController::class, 'destroy'])->name('sponsorships.destroy');
+
+        Route::get('billing', [\App\Http\Controllers\backend\admin\BillingTransactionController::class, 'index'])->name('billing.index');
+        Route::get('billing/{transaction}', [\App\Http\Controllers\backend\admin\BillingTransactionController::class, 'show'])->name('billing.show');
+        Route::patch('billing/{transaction}', [\App\Http\Controllers\backend\admin\BillingTransactionController::class, 'updateStatus'])->name('billing.update-status');
+
         Route::resource('vendors', \App\Http\Controllers\backend\admin\VendorController::class);
+
+        // User Management
+        Route::post('users/{user}/toggle-suspension', [\App\Http\Controllers\backend\admin\UserController::class, 'toggleSuspension'])->name('users.toggle-suspension');
+        Route::post('users/{user}/force-password-reset', [\App\Http\Controllers\backend\admin\UserController::class, 'forcePasswordReset'])->name('users.force-password-reset');
+        Route::post('users/{user}/verify-email', [\App\Http\Controllers\backend\admin\UserController::class, 'verifyEmail'])->name('users.verify-email');
+        Route::resource('users', \App\Http\Controllers\backend\admin\UserController::class);
     });
 
     // Shared API routes
@@ -68,6 +94,7 @@ Route::middleware('auth')->group(function () {
 
     // Vendor Routes
     Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index']);
         Route::get('/', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index'])->name('dashboard');
         Route::get('/switch-tool/{id}', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'switchTool'])->name('switch-tool');
         Route::post('/tools/{tool}/submit', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'submitForReview'])->name('tools.submit');
@@ -75,19 +102,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/claim-product', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'index'])->name('claim');
         Route::get('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'create'])->name('claim.create');
         Route::post('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'store'])->name('claim.store');
-        
+
         Route::get('/submit-product', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'index'])->name('submit');
         Route::get('/submit-product/create', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'create'])->name('submit.create');
         Route::post('/submit-product/store', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'store'])->name('submit.store');
         Route::get('/submit-product/review', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'review'])->name('submit.review');
         Route::post('/submit-product/confirm', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'confirm'])->name('submit.confirm');
-        
+
         Route::resource('tools', \App\Http\Controllers\backend\vendor\VendorToolController::class);
         Route::get('/analytics', [\App\Http\Controllers\backend\vendor\VendorAnalyticsController::class, 'index'])->name('analytics');
-        
+
         // Sections
         Route::resource('blogs', \App\Http\Controllers\backend\vendor\VendorBlogController::class);
         Route::get('/reviews', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'index'])->name('reviews.index');
         Route::get('/billing', [\App\Http\Controllers\backend\vendor\BillingController::class, 'index'])->name('billing');
+        Route::get('/profile', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'profile'])->name('profile');
     });
 });

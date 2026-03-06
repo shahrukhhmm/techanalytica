@@ -22,6 +22,10 @@ class Tool extends Model
         'cta_type',
         'cta_url',
         'status',
+        'is_featured',
+        'rank',
+        'is_verified',
+        'is_locked',
         'pending_data',
         'has_pending_update',
         'is_claimed',
@@ -34,8 +38,12 @@ class Tool extends Model
         'pending_data' => 'array',
         'has_pending_update' => 'boolean',
         'is_claimed' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_verified' => 'boolean',
+        'is_locked' => 'boolean',
         'published_at' => 'datetime',
         'last_edited_at' => 'datetime',
+        'rank' => 'integer',
     ];
 
     public function vendor()

@@ -8,7 +8,7 @@
         <a href="{{ url('/') }}" class="app-brand-link">
             {{-- <span class="app-brand-logo demo">@include('_partials.macros')</span> --}}
             {{-- <span class="app-brand-text demo menu-text fw-bold ms-2">Golden Peak Trading</span> --}}
-            <img class="app-brand-logo demo" src="{{ asset('assets/img/gplogo.png') }}" alt="" width="100%">
+            <img class="app-brand-logo demo" src="{{ asset('assets/img/gplogo.png') }}" alt="" width="50%">
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">

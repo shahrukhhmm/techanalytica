@@ -21,7 +21,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover" id="table">
+                    <table class="table table-hover" id="tools-table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -62,9 +62,43 @@
             </div>
         </div>
     </div>
+    <style>
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            margin: 1rem 1.5rem;
+        }
+
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            margin: 1rem 1.5rem;
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#table');
+            if (document.getElementById('tools-table')) {
+                new DataTable('#tools-table', {
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    language: {
+                        search: "",
+                        searchPlaceholder: "Search Tools...",
+                        lengthMenu: "_MENU_"
+                    },
+                    pageLength: 10,
+                    responsive: true
+                });
+
+                document.querySelectorAll('.dataTables_filter input').forEach(el => el.classList.add(
+                    'form-control'));
+                document.querySelectorAll('.dataTables_length select').forEach(el => el.classList.add(
+                    'form-select'));
+            }
         });
     </script>
 @endsection

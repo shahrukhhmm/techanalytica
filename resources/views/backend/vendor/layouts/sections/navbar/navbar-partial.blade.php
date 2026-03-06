@@ -34,9 +34,6 @@
     </div>
     <!-- /Search -->
     <ul class="navbar-nav flex-row align-items-center ms-auto">
-        <!-- Tool Selector -->
-        @include('backend.vendor.layouts.sections.navbar.tool-selector')
-
         <!-- User -->
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">

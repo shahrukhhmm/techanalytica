@@ -37,25 +37,25 @@ class VendorDashboardSeeder extends Seeder
         ]);
 
         // 3. Ensure we have basic pricing tiers with distinct permissions to test the menu switching
-        // Basic Tier (No Analytics)
-        $freeTier = PricingTier::firstOrCreate(
+        // Free Tier
+        $freeTier = PricingTier::updateOrCreate(
             ['name' => 'Free Vendor Tier'],
             [
                 'monthly_price' => 0,
                 'annual_price' => 0,
                 'features' => ['Basic Listing'],
-                'permissions' => ['Basic Listing'] // intentionally omitting 'view-analytics'
+                'permissions' => [] 
             ]
         );
 
-        // Pro Tier (Has Analytics)
-        $proTier = PricingTier::firstOrCreate(
+        // Pro/Growth Tier
+        $proTier = PricingTier::updateOrCreate(
             ['name' => 'Pro Vendor Tier'],
             [
                 'monthly_price' => 99,
                 'annual_price' => 990,
                 'features' => ['Basic Listing', 'Analytics'],
-                'permissions' => ['Basic Listing', 'view-analytics', 'upload-videos', 'multiple-ctas']
+                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_reviews', 'manage_long_description', 'manage_multiple_industries', 'manage_premium_cta']
             ]
         );
 

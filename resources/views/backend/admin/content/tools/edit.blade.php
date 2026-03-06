@@ -139,6 +139,38 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="rank" class="form-label">Rank</label>
+                            <input type="number" class="form-control @error('rank') is-invalid @enderror" id="rank"
+                                name="rank" value="{{ old('rank', $tool->rank) }}">
+                            @error('rank')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-3 mb-3 d-flex align-items-center mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
+                                    value="1" {{ old('is_featured', $tool->is_featured) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_featured">Featured</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3 d-flex align-items-center mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_verified" name="is_verified"
+                                    value="1" {{ old('is_verified', $tool->is_verified) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_verified">Verified</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3 d-flex align-items-center mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_locked" name="is_locked"
+                                    value="1" {{ old('is_locked', $tool->is_locked) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_locked">Lock Editing</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="short_description" class="form-label">Short Description</label>
                         <textarea class="form-control @error('short_description') is-invalid @enderror" id="short_description"

@@ -23,7 +23,7 @@ class ToolController extends Controller
 
     public function show(Tool $tool)
     {
-        $tool->load(['vendor', 'tier', 'categories', 'industries', 'reviews' => function($query) {
+        $tool->load(['vendor', 'tier', 'categories', 'industries', 'reviews' => function ($query) {
             $query->latest()->take(5);
         }]);
         $tool->loadCount('reviews');
@@ -57,6 +57,10 @@ class ToolController extends Controller
             'cta_type' => 'nullable|in:website,signup,demo,free_trial,contact_sales',
             'cta_url' => 'nullable|url',
             'status' => 'required|in:draft,pending,published,archived',
+            'is_featured' => 'boolean',
+            'rank' => 'integer',
+            'is_verified' => 'boolean',
+            'is_locked' => 'boolean',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'industries' => 'array',
@@ -110,6 +114,10 @@ class ToolController extends Controller
             'cta_type' => 'nullable|in:website,signup,demo,free_trial,contact_sales',
             'cta_url' => 'nullable|url',
             'status' => 'required|in:draft,pending,published,archived',
+            'is_featured' => 'boolean',
+            'rank' => 'integer',
+            'is_verified' => 'boolean',
+            'is_locked' => 'boolean',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'industries' => 'array',
@@ -133,31 +141,46 @@ class ToolController extends Controller
         if ($tool->has_pending_update) {
             $tool->update([
                 'pending_data' => null,
-                'has_pending_update' => false
+                'has_pending_update' => false,
             ]);
         }
 
         return redirect()->route('admin.tools.index')->with('success', 'Tool updated successfully.');
     }
 
+    public function pendingUpdates()
+    {
+        $tools = Tool::with(['vendor', 'categories', 'industries'])
+            ->where('has_pending_update', true)
+            ->whereNotNull('pending_data')
+            ->latest('updated_at')
+            ->get();
+
+        // Pre-load all categories and industries for name resolution in view
+        $allCategories = \App\Models\Category::pluck('name', 'id');
+        $allIndustries = \App\Models\Industry::pluck('name', 'id');
+
+        return view('backend.admin.content.tools.pending-updates', compact('tools', 'allCategories', 'allIndustries'));
+    }
+
     public function approveUpdate(Tool $tool)
     {
-        if (!$tool->has_pending_update || !$tool->pending_data) {
+        if (! $tool->has_pending_update || ! $tool->pending_data) {
             return back()->with('error', 'No pending update found for this tool.');
         }
 
         $data = $tool->pending_data;
-        
+
         // Extract relations
         $categories = $data['categories'] ?? [];
         $industries = $data['industries'] ?? [];
-        
+
         // Remove relations from data to update columns
         unset($data['categories'], $data['industries']);
 
         // Update tool columns
         $tool->update($data);
-        
+
         // Sync relations
         $tool->categories()->sync($categories);
         $tool->industries()->sync($industries);
@@ -165,10 +188,24 @@ class ToolController extends Controller
         // Clear pending flags
         $tool->update([
             'pending_data' => null,
-            'has_pending_update' => false
+            'has_pending_update' => false,
         ]);
 
         return redirect()->route('admin.tools.index')->with('success', 'Tool update approved and applied.');
+    }
+
+    public function rejectUpdate(Tool $tool)
+    {
+        if (! $tool->has_pending_update) {
+            return back()->with('error', 'No pending update found for this tool.');
+        }
+
+        $tool->update([
+            'pending_data' => null,
+            'has_pending_update' => false,
+        ]);
+
+        return redirect()->route('admin.tools.pending-updates')->with('success', 'Pending update rejected and discarded.');
     }
 
     public function destroy(Tool $tool)

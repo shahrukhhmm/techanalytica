@@ -19,6 +19,13 @@
                     @csrf
                     @method('PUT')
 
+                    @php
+                        $permissions = auth()->user()->vendor->tier->permissions ?? [];
+                        $hasLongDescription = in_array('manage_long_description', $permissions);
+                        $hasMultipleIndustries = in_array('manage_multiple_industries', $permissions);
+                        $hasPremiumCTA = in_array('manage_premium_cta', $permissions);
+                    @endphp
+
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label for="name" class="form-label fw-bold">Product Name <span
@@ -61,10 +68,23 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
-                        <label for="long_description" class="form-label fw-bold">Product Overview</label>
+                    <div class="mb-4 position-relative">
+                        <label for="long_description" class="form-label fw-bold">
+                            Product Overview
+                            @if (!$hasLongDescription)
+                                <span class="badge bg-label-warning ms-1"><i class="bx bx-lock-alt me-1"></i>Starter+</span>
+                            @endif
+                        </label>
                         <textarea class="form-control @error('long_description') is-invalid @enderror" id="long_description"
-                            name="long_description" rows="5" placeholder="Detailed description of your product features and benefits">{{ old('long_description', $tool->long_description) }}</textarea>
+                            name="long_description" rows="5" placeholder="Detailed description of your product features and benefits"
+                            {{ !$hasLongDescription ? 'readonly disabled' : '' }}>{{ old('long_description', $tool->long_description) }}</textarea>
+                        @if (!$hasLongDescription)
+                            <div class="mt-2">
+                                <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
+                                        class="bx bx-up-arrow-alt me-1"></i>Upgrade to Starter to unlock long
+                                    description</a>
+                            </div>
+                        @endif
                         @error('long_description')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -89,38 +109,55 @@
                                     </div>
                                 @endforeach
                             </div>
-                            @error('categories')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold mb-2">Targeted Industries</label>
-                            <p class="text-muted small mb-2">Which industries does your product cater to?</p>
+                            <label class="form-label fw-bold mb-2">
+                                Targeted Industries
+                                @if (!$hasMultipleIndustries)
+                                    <span class="badge bg-label-warning ms-1"><i
+                                            class="bx bx-lock-alt me-1"></i>Growth+</span>
+                                @endif
+                            </label>
+                            <p class="text-muted small mb-2">Which industries does your product cater to? @if (!$hasMultipleIndustries)
+                                    <span class="text-warning fw-bold">(Limited to 1)</span>
+                                @endif
+                            </p>
                             <div class="border rounded p-3"
                                 style="max-height: 250px; overflow-y: auto; background-color: #f8f9fa;">
                                 @php $selectedIndustries = $tool->industries->pluck('id')->toArray(); @endphp
                                 @foreach ($industries as $industry)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" name="industries[]"
+                                        <input class="form-check-input industry-check" type="checkbox" name="industries[]"
                                             value="{{ $industry->id }}" id="ind-{{ $industry->id }}"
-                                            {{ is_array(old('industries', $selectedIndustries)) && in_array($industry->id, old('industries', $selectedIndustries)) ? 'checked' : '' }}>
+                                            {{ is_array(old('industries', $selectedIndustries)) && in_array($industry->id, old('industries', $selectedIndustries)) ? 'checked' : '' }}
+                                            {{ !$hasMultipleIndustries && count($selectedIndustries) >= 1 && !in_array($industry->id, $selectedIndustries) ? 'disabled' : '' }}>
                                         <label class="form-check-label" for="ind-{{ $industry->id }}">
                                             {{ $industry->name }}
                                         </label>
                                     </div>
                                 @endforeach
                             </div>
-                            @error('industries')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                            @if (!$hasMultipleIndustries)
+                                <div class="mt-2">
+                                    <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
+                                            class="bx bx-up-arrow-alt me-1"></i>Upgrade to Growth to unlock up to 5
+                                        industries</a>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
                     <h5 class="mt-4 mb-3 fw-bold border-bottom pb-2">Call to Action & Status</h5>
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label for="cta_type" class="form-label fw-bold">Call-to-Action Type</label>
+                            <label for="cta_type" class="form-label fw-bold">
+                                Call-to-Action Type
+                                @if (!$hasPremiumCTA)
+                                    <span class="badge bg-label-warning ms-1"><i
+                                            class="bx bx-lock-alt me-1"></i>Starter+</span>
+                                @endif
+                            </label>
                             <select class="form-select @error('cta_type') is-invalid @enderror" id="cta_type"
                                 name="cta_type">
                                 <option value="">Select Primary CTA</option>
@@ -128,19 +165,35 @@
                                     {{ old('cta_type', $tool->cta_type) == 'website' ? 'selected' : '' }}>Visit Website
                                 </option>
                                 <option value="signup"
-                                    {{ old('cta_type', $tool->cta_type) == 'signup' ? 'selected' : '' }}>Sign Up</option>
-                                <option value="demo" {{ old('cta_type', $tool->cta_type) == 'demo' ? 'selected' : '' }}>
-                                    Book a Demo</option>
+                                    {{ old('cta_type', $tool->cta_type) == 'signup' ? 'selected' : '' }}
+                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Sign Up @if (!$hasPremiumCTA)
+                                        (Starter+)
+                                    @endif
+                                </option>
+                                <option value="demo" {{ old('cta_type', $tool->cta_type) == 'demo' ? 'selected' : '' }}
+                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Book a Demo @if (!$hasPremiumCTA)
+                                        (Starter+)
+                                    @endif
+                                </option>
                                 <option value="free_trial"
-                                    {{ old('cta_type', $tool->cta_type) == 'free_trial' ? 'selected' : '' }}>Start Free
-                                    Trial</option>
+                                    {{ old('cta_type', $tool->cta_type) == 'free_trial' ? 'selected' : '' }}
+                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Start Free Trial @if (!$hasPremiumCTA)
+                                        (Starter+)
+                                    @endif
+                                </option>
                                 <option value="contact_sales"
-                                    {{ old('cta_type', $tool->cta_type) == 'contact_sales' ? 'selected' : '' }}>Contact
-                                    Sales</option>
+                                    {{ old('cta_type', $tool->cta_type) == 'contact_sales' ? 'selected' : '' }}
+                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Contact Sales @if (!$hasPremiumCTA)
+                                        (Starter+)
+                                    @endif
+                                </option>
                             </select>
-                            @error('cta_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @if (!$hasPremiumCTA)
+                                <div class="mt-2">
+                                    <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
+                                            class="bx bx-up-arrow-alt me-1"></i>Upgrade to Starter for custom CTAs</a>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col-md-6 mb-4">
@@ -148,13 +201,10 @@
                             <input type="url" class="form-control @error('cta_url') is-invalid @enderror"
                                 id="cta_url" name="cta_url" value="{{ old('cta_url', $tool->cta_url) }}"
                                 placeholder="https://">
-                            @error('cta_url')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-12 mb-4">
                             @if ($tool->status === 'published')
                                 <div class="alert alert-warning border-0 shadow-none mb-0">
@@ -162,18 +212,10 @@
                                     changes you save here will be submitted as a <strong>Pending Update</strong> and won't
                                     affect the live product until an admin approves them.
                                 </div>
-                                @if ($tool->has_pending_update)
-                                    <div class="alert alert-info border-0 shadow-none mt-3 mb-0">
-                                        <i class="bx bx-time-five me-1"></i> This product already has a <strong>Pending
-                                            Update</strong> undergoing review. Saving again will overwrite the existing
-                                        request.
-                                    </div>
-                                @endif
                             @else
                                 <div class="alert alert-info border-0 shadow-none mb-0">
                                     <i class="bx bx-info-circle me-1"></i> This product is currently in
-                                    <strong>{{ ucfirst($tool->status) }}</strong> state. You can update it and then submit
-                                    for review from the product list.
+                                    <strong>{{ ucfirst($tool->status) }}</strong> state.
                                 </div>
                             @endif
                         </div>

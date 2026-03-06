@@ -57,6 +57,7 @@ class IndustryController extends Controller
             'slug' => 'nullable|string|max:255|unique:industries,slug,'.$industry->id,
             'description' => 'nullable|string',
             'suggested_by_vendor_id' => 'nullable|exists:vendors,id',
+            'is_approved' => 'boolean',
         ]);
 
         if (empty($validated['slug'])) {
@@ -67,6 +68,12 @@ class IndustryController extends Controller
 
         return redirect()->route('admin.industries.index')
             ->with('success', 'Industry updated successfully.');
+    }
+
+    public function toggleApproval(Industry $industry)
+    {
+        $industry->update(['is_approved' => !$industry->is_approved]);
+        return back()->with('success', 'Industry approval status updated.');
     }
 
     public function destroy(Industry $industry)

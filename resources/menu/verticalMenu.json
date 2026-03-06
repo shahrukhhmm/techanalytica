@@ -37,6 +37,16 @@
           "url": "/admin/tools/compare",
           "name": "Compare Tools",
           "slug": "admin.tools.compare"
+        },
+        {
+          "url": "/admin/submissions",
+          "name": "Submissions",
+          "slug": "submissions.index"
+        },
+        {
+          "url": "/admin/tools/pending-updates",
+          "name": "Pending Updates",
+          "slug": "admin.tools.pending-updates"
         }
       ]
     },
@@ -45,6 +55,12 @@
       "name": "Vendors",
       "icon": "menu-icon icon-base bx bx-user-pin",
       "slug": "admin.vendors"
+    },
+    {
+      "url": "/admin/users",
+      "name": "Users",
+      "icon": "menu-icon icon-base bx bx-user",
+      "slug": "admin.users"
     },
     {
       "url": "/admin/pricing-tiers",
@@ -78,6 +94,23 @@
           "url": "/admin/subscribers",
           "name": "Subscribers",
           "slug": "admin.subscribers.index"
+        }
+      ]
+    },
+    {
+      "name": "Monetization",
+      "icon": "menu-icon icon-base bx bx-dollar",
+      "slug": "admin.monetization",
+      "submenu": [
+        {
+          "url": "/admin/sponsorships",
+          "name": "Sponsorships",
+          "slug": "admin.sponsorships.index"
+        },
+        {
+          "url": "/admin/billing",
+          "name": "Billing Logs",
+          "slug": "admin.billing.index"
         }
       ]
     }

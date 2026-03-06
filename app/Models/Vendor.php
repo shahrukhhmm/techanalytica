@@ -18,11 +18,17 @@ class Vendor extends Model
         'phone',
         'billing_email',
         'billing_address',
+        'pricing_tier_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tier()
+    {
+        return $this->belongsTo(PricingTier::class, 'pricing_tier_id');
     }
 
     public function tools()

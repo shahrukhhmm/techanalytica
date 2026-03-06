@@ -1,30 +1,32 @@
 {
   "menu": [
     {
-      "url": "/",
-      "name": "Dashboards",
+      "url": "/vendor/dashboard",
+      "name": "Dashboard",
       "icon": "menu-icon icon-base bx bx-home-smile",
       "slug": "vendor.dashboard"
     },
     {
-      "name": "Tools",
+      "name": "Products",
       "icon": "menu-icon icon-base bx bx-wrench",
-      "slug": "vendor.tools",
+      "slug": "vendor.products",
       "submenu": [
         {
           "url": "/vendor/tools",
-          "name": "My Tools",
+          "name": "Product Information",
           "slug": "vendor.tools.index"
         },
         {
-          "url": "/vendor/claim-product",
-          "name": "Claim your Product",
-          "slug": "vendor.claim"
+          "url": "/vendor/pricing",
+          "name": "Pricing",
+          "slug": "vendor.pricing",
+          "permission": "manage_pricing"
         },
         {
-          "url": "/vendor/submit-product",
-          "name": "Submit a Product",
-          "slug": "vendor.submit"
+          "url": "/vendor/features",
+          "name": "Features",
+          "slug": "vendor.features",
+          "permission": "manage_features"
         }
       ]
     },
@@ -36,13 +38,6 @@
       "permission": "view_analytics"
     },
     {
-      "url": "/vendor/blogs",
-      "name": "Blogs",
-      "icon": "menu-icon icon-base bx bx-news",
-      "slug": "vendor.blogs",
-      "permission": "manage_blogs"
-    },
-    {
       "url": "/vendor/reviews",
       "name": "Reviews",
       "icon": "menu-icon icon-base bx bx-comment-detail",
@@ -50,41 +45,23 @@
       "permission": "manage_reviews"
     },
     {
-      "name": "Premium Features",
+      "url": "/vendor/ads-addons",
+      "name": "Ads & Add-ons",
       "icon": "menu-icon icon-base bx bx-star",
-      "slug": "vendor.premium",
-      "submenu": [
-        {
-          "url": "#",
-          "name": "Integrations",
-          "slug": "vendor.integrations",
-          "permission": "manage_integrations"
-        },
-        {
-          "url": "#",
-          "name": "Pricing Details",
-          "slug": "vendor.pricing_update",
-          "permission": "manage_pricing"
-        },
-        {
-          "url": "#",
-          "name": "Book a Demo",
-          "slug": "vendor.demo_link",
-          "permission": "manage_demo"
-        },
-        {
-          "url": "#",
-          "name": "Video Uploads",
-          "slug": "vendor.videos",
-          "permission": "upload_videos"
-        }
-      ]
+      "slug": "vendor.ads",
+      "permission": "manage_ads"
     },
     {
       "url": "/vendor/billing",
       "name": "Billing & Plan",
       "icon": "menu-icon icon-base bx bx-credit-card",
       "slug": "vendor.billing"
+    },
+    {
+      "url": "/vendor/profile",
+      "name": "Profile Settings",
+      "icon": "menu-icon icon-base bx bx-user",
+      "slug": "vendor.profile"
     }
   ]
 }
