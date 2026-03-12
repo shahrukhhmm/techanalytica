@@ -13,7 +13,7 @@
 @section('content')
     <div class="row">
         <!-- Total Statistics Cards -->
-        <div class="col-lg-6 col-md-6 col-sm-6 mb-4">
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -32,25 +32,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div class="card-info">
-                            <p class="card-text">Total Blogs</p>
-                            <div class="d-flex align-items-end mb-2">
-                                <h4 class="card-title mb-0 me-2">{{ $totalBlogs }}</h4>
-                            </div>
-                        </div>
-                        <div class="card-icon">
-                            <span class="badge bg-label-warning rounded p-2">
-                                <i class="bx bx-news bx-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <div class="row">

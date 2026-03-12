@@ -21,7 +21,6 @@ class VendorDashboardController extends Controller
 
         // 1. Total Counts
         $totalTools = \App\Models\Tool::where('vendor_id', $vendorId)->count();
-        $totalBlogs = \App\Models\Blog::where('vendor_id', $vendorId)->count();
 
         // 2. Tools by Category
         $toolsByCategory = \App\Models\Category::whereHas('tools', function ($q) use ($vendorId) {
@@ -78,7 +77,6 @@ class VendorDashboardController extends Controller
             'vendor',
             'tools',
             'totalTools',
-            'totalBlogs',
             'categoryNames',
             'categoryCounts',
             'statuses',
