@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechAnalytica - Find AI tools Worth Adopting</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a050d;
+            --bg-card: #150d1a;
+            --bg-card-hover: #1f1326;
+            --text-primary: #ffffff;
+            --text-secondary: #9a8c9e;
+            --accent-pink: #e04385;
+            --accent-gradient: linear-gradient(135deg, #e04385 0%, #a4358a 50%, #6e278d 100%);
+            --button-pink: #d83b7d;
+            --border-dark: rgba(255, 255, 255, 0.08);
+            --card-glow: rgba(224, 67, 133, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* SVG Background Grid/Dot Wave */
+        .bg-wave-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(224, 67, 133, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 100% 70%, rgba(164, 53, 138, 0.12) 0%, transparent 50%),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 100% 100%, 100% 100%, 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Bar / Navigation */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--accent-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-submit-ai {
+            background: var(--button-pink);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit-ai:hover {
+            background: #c22f6d;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 90px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .search-box-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            padding: 8px 8px 8px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .search-box-wrapper i {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 15px;
+            flex: 1;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: #6c5a72;
+        }
+
+        .btn-search {
+            background: var(--button-pink);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-search:hover {
+            opacity: 0.9;
+        }
+
+        /* Sponsor Badges Bar */
+        .sponsors-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 36px;
+            padding: 40px 0 80px;
+            opacity: 0.75;
+            flex-wrap: wrap;
+        }
+
+        .sponsor-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #d1c4d6;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* AI Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(224, 67, 133, 0.4);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+        }
+
+        .tool-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(224, 67, 133, 0.15);
+            color: var(--accent-pink);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #25162b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--accent-pink);
+            flex-shrink: 0;
+        }
+
+        .tool-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tool-category {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .tool-desc {
+            font-size: 13px;
+            color: #b5a4bb;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .tool-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            font-size: 13px;
+        }
+
+        .pricing-tag {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .btn-visit {
+            color: var(--accent-pink);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .load-more-container {
+            text-align: center;
+            margin: 40px 0 100px;
+        }
+
+        .btn-view-all {
+            background: rgba(224, 67, 133, 0.12);
+            color: var(--accent-pink);
+            border: 1px solid rgba(224, 67, 133, 0.3);
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-all:hover {
+            background: var(--button-pink);
+            color: #fff;
+        }
+
+        /* New AI Tool Releases Showcase Section */
+        .showcase-section {
+            padding: 60px 0 100px;
+            background: radial-gradient(circle at 30% 50%, rgba(224, 67, 133, 0.08) 0%, transparent 70%);
+        }
+
+        .showcase-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--accent-pink);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .showcase-card-left {
+            background: linear-gradient(145deg, #180922, #0d0413);
+            border: 1px solid rgba(224, 67, 133, 0.3);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(224, 67, 133, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-dial {
+            width: 180px;
+            height: 180px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, #2a1138 0%, #15061c 100%);
+            border: 2px solid var(--accent-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(224, 67, 133, 0.4);
+            position: relative;
+        }
+
+        .visual-dial i {
+            font-size: 64px;
+            color: var(--accent-pink);
+        }
+
+        .showcase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .showcase-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .showcase-item-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(224, 67, 133, 0.15);
+            color: var(--accent-pink);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Light Section: Why TechAnalytica? */
+        .why-section {
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 90px 0;
+            text-align: center;
+        }
+
+        .why-section .section-title {
+            color: #111;
+        }
+
+        .why-section .section-desc {
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .why-card {
+            padding: 20px;
+        }
+
+        .why-icon {
+            width: 60px;
+            height: 60px;
+            background: #fdebf2;
+            color: var(--accent-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+        }
+
+        .why-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .why-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Browse Categories Section */
+        .categories-section {
+            padding: 100px 0;
+            background: var(--bg-dark);
+        }
+
+        .category-pills {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pill.active, .pill:hover {
+            background: var(--button-pink);
+            color: #fff;
+            border-color: var(--button-pink);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .cat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 24px;
+            transition: 0.2s;
+        }
+
+        .cat-card:hover {
+            border-color: var(--accent-pink);
+            transform: translateY(-3px);
+        }
+
+        .cat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .cat-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cat-card p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Dual CTA Banners Section */
+        .cta-section {
+            padding: 60px 0 100px;
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+            color: #2c0e21;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .cta-card p {
+            font-size: 14px;
+            color: #5c2045;
+            margin-bottom: 24px;
+            max-width: 80%;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-cta-pink {
+            background: var(--button-pink);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn-cta-outline {
+            background: transparent;
+            border: 1px solid #5c2045;
+            color: #5c2045;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Community Testimonial Cards Section */
+        .testimonial-section {
+            padding: 80px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .testimonial-text {
+            max-width: 450px;
+        }
+
+        .testimonial-text h2 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 460px;
+        }
+
+        .t-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .t-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #3d2348;
+            object-fit: cover;
+        }
+
+        .t-info h5 {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .t-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .t-stars {
+            margin-left: auto;
+            color: #ffb400;
+            font-size: 12px;
+        }
+
+        /* Light Insights Section */
+        .insights-section {
+            background: #ffffff;
+            color: #111;
+            padding: 90px 0;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .featured-insight {
+            background: #0d0413;
+            color: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 380px;
+            position: relative;
+            background-image: radial-gradient(circle at 80% 20%, rgba(224, 67, 133, 0.4) 0%, transparent 60%);
+        }
+
+        .featured-insight h3 {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .insight-item {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .insight-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: #eee;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .insight-content h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #111;
+        }
+
+        .insight-content p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 100px 0;
+            background: var(--bg-dark);
+        }
+
+        .faq-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+        }
+
+        .faq-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .faq-item h5 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .faq-item i {
+            color: var(--accent-pink);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 80px 0 40px;
+            background: #070309;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h5 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .footer-col ul a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 30px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 992px) {
+            .tools-grid, .why-grid, .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .showcase-grid, .cta-grid, .insights-grid, .faq-wrapper, .testimonial-section {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-wave-pattern"></div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+                <span>TechAnalytica</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">AI Tools</a></li>
+                <li><a href="#">Newsletters</a></li>
+                <li><a href="#">Blogs</a></li>
+                <li><a href="#">Community</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-submit-ai">Submit AI Tool</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Find AI tools Worth Adopting</h1>
+            <p class="hero-subtitle">Discover real products, real reviews, & honest AI insights.</p>
+
+            <div class="search-box-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" placeholder="Search for AI tools, categories or features...">
+                <button class="btn-search">Search</button>
+            </div>
+
+            <!-- Sponsor Logos -->
+            <div class="sponsors-bar">
+                <div class="sponsor-item"><i class="fa-brands fa-figma"></i> Figma</div>
+                <div class="sponsor-item"><i class="fa-brands fa-slack"></i> Slack</div>
+                <div class="sponsor-item"><i class="fa-brands fa-github"></i> GitHub</div>
+                <div class="sponsor-item"><i class="fa-brands fa-intercom"></i> Intercom</div>
+                <div class="sponsor-item"><i class="fa-brands fa-stripe"></i> Stripe</div>
+                <div class="sponsor-item"><i class="fa-brands fa-spotify"></i> Spotify</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Making Real Noise Section -->
+    <section class="container" style="padding-bottom: 60px;">
+        <div class="section-header">
+            <h2 class="section-title">The AI Tools Making Real Noise</h2>
+            <p class="section-desc">Hand-curated software tools that generate proven ROI for teams worldwide.</p>
+        </div>
+
+        <div class="tools-grid">
+            <!-- Tool 1 -->
+            <div class="tool-card">
+                <span class="tool-badge">Featured</span>
+                <div class="tool-header">
+                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="tool-title">AI Tool Hub</h3>
+                        <p class="tool-category">Productivity & Automation</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Automate your complex daily workflows with intelligent deep-learning agents.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Freemium</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 2 -->
+            <div class="tool-card">
+                <span class="tool-badge">Popular</span>
+                <div class="tool-header">
+                    <div class="tool-icon" style="background: rgba(164,53,138,0.15);"><i class="fa-solid fa-code"></i></div>
+                    <div>
+                        <h3 class="tool-title">CodePulse AI</h3>
+                        <p class="tool-category">Developer Tools</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Write cleaner code faster with real-time context-aware code generation.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Free Trial</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 3 -->
+            <div class="tool-card">
+                <span class="tool-badge">Trending</span>
+                <div class="tool-header">
+                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="tool-title">Synthetix Art</h3>
+                        <p class="tool-category">Design & Media</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Generate production-ready vector graphics and designs from prompts.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Paid</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 4 -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <h3 class="tool-title">MetricMind</h3>
+                        <p class="tool-category">Data & Analytics</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Transform raw tabular data into intuitive executive dashboards instantly.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Freemium</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 5 -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                    <div>
+                        <h3 class="tool-title">ChatFlow Pro</h3>
+                        <p class="tool-category">Customer Support</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Deploy custom trained AI support bots directly into your existing CRM platform.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Free</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 6 -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon"><i class="fa-solid fa-pen-nib"></i></div>
+                    <div>
+                        <h3 class="tool-title">WriterGenie</h3>
+                        <p class="tool-category">Copywriting</p>
+                    </div>
+                </div>
+                <p class="tool-desc">Generate SEO-optimized articles, social copy, and newsletters seamlessly.</p>
+                <div class="tool-footer">
+                    <span class="pricing-tag">Freemium</span>
+                    <a href="#" class="btn-visit">Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="load-more-container">
+            <button class="btn-view-all">View All Tools</button>
+        </div>
+    </section>
+
+    <!-- New AI Tool Releases Showcase Section -->
+    <section class="showcase-section">
+        <div class="container">
+            <div class="showcase-banner">
+                <i class="fa-solid fa-fire"></i> New AI Tool Releases
+            </div>
+            <div class="section-header">
+                <h2 class="section-title">Fresh releases, updated features, and cutting-edge products</h2>
+            </div>
+
+            <div class="showcase-grid">
+                <div class="showcase-card-left">
+                    <div class="visual-dial">
+                        <i class="fa-solid fa-compact-disc"></i>
+                    </div>
+                    <h3>Voice Engine Pro 2.0</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">Ultra-realistic real-time voice synthesis and conversion for creators.</p>
+                </div>
+
+                <div class="showcase-list">
+                    <div class="showcase-item">
+                        <div class="showcase-item-icon"><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <h4>VideoGen Studio</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Generative video engine with full scene consistency control.</p>
+                        </div>
+                    </div>
+                    <div class="showcase-item">
+                        <div class="showcase-item-icon"><i class="fa-solid fa-layer-group"></i></div>
+                        <div>
+                            <h4>PromptForge 3D</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Text-to-3D mesh model generator for game developers.</p>
+                        </div>
+                    </div>
+                    <div class="showcase-item">
+                        <div class="showcase-item-icon"><i class="fa-solid fa-robot"></i></div>
+                        <div>
+                            <h4>AutoAgent CLI</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Autonomous agent framework for terminal command execution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Light Section: Why TechAnalytica? -->
+    <section class="why-section">
+        <div class="container">
+            <h2 class="section-title">Why TechAnalytica?</h2>
+            <p class="section-desc">We simplify the noise so you can adopt software with confidence.</p>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-check-double"></i></div>
+                    <h4>Verified Reviews</h4>
+                    <p>Every review is authenticated through genuine user feedback and usage logs.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4>Unbiased Data</h4>
+                    <p>Our ranking algorithms are strictly metric-based without paid rank inflation.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h4>Fast Discovery</h4>
+                    <p>Filter by industry, pricing, rating, or precise feature requirements.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-users"></i></div>
+                    <h4>Active Community</h4>
+                    <p>Connect with software vendors and power users sharing best practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Browse Categories -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Browse Our AI Categories</h2>
+                <p class="section-desc">Explore tools organized by specialized enterprise use cases.</p>
+            </div>
+
+            <div class="category-pills">
+                <div class="pill active">All Categories</div>
+                <div class="pill">Code & Tech</div>
+                <div class="pill">Marketing</div>
+                <div class="pill">Design & Art</div>
+                <div class="pill">Writing</div>
+                <div class="pill">Video</div>
+                <div class="pill">Audio</div>
+                <div class="pill">Productivity</div>
+            </div>
+
+            <div class="category-grid">
+                <div class="cat-card">
+                    <div class="cat-icon" style="background: #10b981;"><i class="fa-solid fa-code"></i></div>
+                    <h4>Development</h4>
+                    <p>140+ AI tools available</p>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon" style="background: #8b5cf6;"><i class="fa-solid fa-palette"></i></div>
+                    <h4>Design & Graphics</h4>
+                    <p>95+ AI tools available</p>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon" style="background: #f59e0b;"><i class="fa-solid fa-bullhorn"></i></div>
+                    <h4>Marketing</h4>
+                    <p>210+ AI tools available</p>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon" style="background: #3b82f6;"><i class="fa-solid fa-file-pen"></i></div>
+                    <h4>Copywriting</h4>
+                    <p>115+ AI tools available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dual CTA Banners Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-grid">
+                <div class="cta-card">
+                    <h3>Are you an AI Software Vendor?</h3>
+                    <p>Get featured in front of thousands of tech decision-makers looking for AI tools.</p>
+                    <div class="cta-buttons">
+                        <button class="btn-cta-pink">Submit Your Tool</button>
+                        <button class="btn-cta-outline">Claim Vendor Profile</button>
+                    </div>
+                </div>
+
+                <div class="cta-card" style="background: linear-gradient(135deg, #fce4ec 0%, #f48fb1 100%);">
+                    <h3>Used an AI Tool? Share Your Experience</h3>
+                    <p>Help millions of professionals make informed decisions by writing honest reviews.</p>
+                    <div class="cta-buttons">
+                        <button class="btn-cta-pink">Write a Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Testimonials -->
+    <section class="container testimonial-section">
+        <div class="testimonial-text">
+            <h2>What The Community Says</h2>
+            <p style="color: var(--text-secondary); margin-top: 12px;">Read real testimonials from developers, designers, and tech leaders who rely on TechAnalytica.</p>
+            <button class="btn-submit-ai" style="margin-top: 24px;">Join Community</button>
+        </div>
+
+        <div class="testimonial-cards">
+            <div class="t-card">
+                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-info">
+                    <h5>Sarah Jenkins</h5>
+                    <p>Lead Developer @ TechCorp</p>
+                </div>
+                <div class="t-stars">★★★★★</div>
+            </div>
+            <div class="t-card">
+                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-info">
+                    <h5>Michael Chang</h5>
+                    <p>Product Designer @ DesignLab</p>
+                </div>
+                <div class="t-stars">★★★★★</div>
+            </div>
+            <div class="t-card">
+                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-info">
+                    <h5>Elena Rostova</h5>
+                    <p>Head of Marketing @ GrowthX</p>
+                </div>
+                <div class="t-stars">★★★★★</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Light Insights Section -->
+    <section class="insights-section">
+        <div class="container">
+            <div class="section-header" style="text-align: left;">
+                <h2 class="section-title">AI Insights Worth Reading</h2>
+                <p class="section-desc">Stay updated with breaking AI trends, research, and analysis.</p>
+            </div>
+
+            <div class="insights-grid">
+                <div class="featured-insight">
+                    <h3>Unlock the Power of "And" with the Hybrid CDP</h3>
+                    <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">How modern data platforms are combining warehouse power with instant operational workflows.</p>
+                </div>
+
+                <div class="insight-list">
+                    <div class="insight-item">
+                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-content">
+                            <h4>Top 10 Generative AI Tools for Coding in 2026</h4>
+                            <p>5 min read • Industry Trends</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-item">
+                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-content">
+                            <h4>The Ethics of Voice Cloning in Commercial Media</h4>
+                            <p>8 min read • Deep Analysis</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-item">
+                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-content">
+                            <h4>How AI LLMs are Changing Search Engine Optimization</h4>
+                            <p>4 min read • SEO Guide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container faq-wrapper">
+            <div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-desc" style="margin-top: 12px;">Everything you need to know about listing, discovering, and evaluating AI tools on TechAnalytica.</p>
+            </div>
+
+            <div class="faq-accordion">
+                <div class="faq-item">
+                    ##### What is TechAnalytica?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-item">
+                    <h5>How do you rate and rank AI tools?</h5>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-item">
+                    <h5>Can I list my own AI software?</h5>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-item">
+                    <h5>Are the reviews verified?</h5>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="logo" style="margin-bottom: 16px;">
+                        <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <span>TechAnalytica</span>
+                    </a>
+                    <p style="font-size: 13px; color: var(--text-secondary); max-width: 300px;">
+                        The premier platform for discovering, evaluating, and adopting software tools for modern teams.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Product</h5>
+                    <ul>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">Trending Tools</a></li>
+                        <li><a href="#">New Releases</a></li>
+                        <li><a href="#">Submit Tool</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 TechAnalytica. All rights reserved.</p>
+                <div style="display: flex; gap: 16px;">
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

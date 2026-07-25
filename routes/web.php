@@ -1,11 +1,23 @@
 <?php
 
+use App\Http\Controllers\frontend\PageController;
 use App\Http\Controllers\backend\admin\authentications\ForgotPasswordBasic;
 use App\Http\Controllers\backend\admin\authentications\LoginBasic;
 use App\Http\Controllers\backend\admin\authentications\RegisterBasic;
 use App\Http\Controllers\backend\admin\dashboard\Analytics;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
+// Frontend Routes
+Route::get('/', [PageController::class, 'index'])->name('frontend.home');
+Route::get('/blogs', [PageController::class, 'blogs'])->name('frontend.blogs');
+Route::get('/blogs/detail', [PageController::class, 'blogDetail'])->name('frontend.blogs.show');
+Route::get('/vendors/crm', [PageController::class, 'crmVendor'])->name('frontend.vendors.crm');
+Route::get('/vendors/salesforce', [PageController::class, 'vendorDetail'])->name('frontend.vendors.show');
+
+
+
+
 
 Route::get('/optimize', function () {
     Artisan::call('optimize');
@@ -33,8 +45,9 @@ Route::get('/logout', [LoginBasic::class, 'logout'])->middleware('auth'); // fal
 
 Route::middleware('auth')->group(function () {
     // Main Page Route
-    Route::get('/', [Analytics::class, 'index'])->name('dashboard.analytics');
+    Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard.analytics');
     Route::get('/dashboard/analytics/pdf', [Analytics::class, 'pdf'])->name('dashboard.analytics.pdf');
+
 
     // Category CRUD Routes
     Route::prefix('admin')->name('admin.')->group(function () {
