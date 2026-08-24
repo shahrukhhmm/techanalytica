@@ -1,6 +1,8 @@
 @extends('frontend.layout.app')
 
-@section('title', 'Best CRM Software in 2026 - Reviews, Pricing & Comparison - TechAnalytica')
+@section('meta_title', $category->meta_title ?? 'Best ' . ($category->name ?? 'CRM Software') . ' in 2026 - Reviews, Pricing & Comparison - TechAnalytica')
+@section('meta_description', $category->meta_description ?? $category->description ?? 'Compare top ' . ($category->name ?? 'software') . ' platforms based on verified user reviews.')
+@section('canonical_url', $category->canonical_url ?? request()->url())
 
 @section('content')
     <!-- Vendor Hero Header -->
@@ -9,17 +11,17 @@
             <nav class="article-breadcrumb">
                 <a href="{{ route('frontend.home') }}">Home</a>
                 <i class="fa-solid fa-chevron-right"></i>
-                <a href="#">Software Categories</a>
+                <a href="{{ route('frontend.vendors.crm') }}">Software Categories</a>
                 <i class="fa-solid fa-chevron-right"></i>
-                <span>CRM Software</span>
+                <span>{{ $category->name ?? 'CRM Software' }}</span>
             </nav>
 
             <div class="vendor-hero-content">
                 <div class="vendor-hero-text">
                     <span class="blog-badge"><i class="fa-solid fa-fire"></i> Updated for 2026</span>
-                    <h1 class="vendor-hero-title">Best <span class="gradient-text">CRM Software</span> in 2026</h1>
+                    <h1 class="vendor-hero-title">Best <span class="gradient-text">{{ $category->name ?? 'CRM Software' }}</span> in 2026</h1>
                     <p class="vendor-hero-desc">
-                        Compare top Customer Relationship Management platforms based on 14,000+ verified user reviews, AI capabilities, pipeline automation, and enterprise pricing.
+                        {{ $category->description ?? 'Compare top Customer Relationship Management platforms based on verified user reviews, AI capabilities, pipeline automation, and enterprise pricing.' }}
                     </p>
 
                     <div class="vendor-header-stats">
@@ -32,13 +34,15 @@
                                 <i class="fa-solid fa-star"></i>
                                 <i class="fa-solid fa-star-half-stroke"></i>
                             </div>
-                            <span class="rating-count">(14,280 verified reviews)</span>
+                            <span class="rating-count">({{ number_format($categoryReviewsCount ?? 14280) }} verified reviews)</span>
                         </div>
                         <div class="header-meta">
-                            <span><i class="fa-solid fa-arrows-rotate"></i> Updated July 2026</span>
+                            <span><i class="fa-solid fa-arrows-rotate"></i> Updated Aug 2026</span>
                             <span><i class="fa-solid fa-circle-check"></i> TechScore Tested</span>
                         </div>
-                        <button class="btn-write-review"><i class="fa-solid fa-pen-to-square"></i> Write a Review</button>
+                        <a href="{{ route('register-vendor') }}" class="btn-write-review" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-plus"></i> Submit a Tool
+                        </a>
                     </div>
                 </div>
             </div>
@@ -49,9 +53,9 @@
     <section class="vendor-overview-section">
         <div class="container vendor-overview-grid">
             <div class="overview-left-text">
-                <h2>What is CRM Software?</h2>
+                <h2>What is {{ $category->name ?? 'CRM Software' }}?</h2>
                 <p>
-                    Customer Relationship Management (CRM) software tracks interactions between businesses and prospects across sales pipelines, marketing touchpoints, and support channels. Modern CRM platforms leverage predictive AI lead scoring, automated email sequencing, and deep analytics to accelerate revenue growth.
+                    {{ $category->description ?? 'Software that tracks interactions between businesses and prospects across sales pipelines, marketing touchpoints, and support channels.' }} Modern platforms leverage predictive AI lead scoring, automated email sequencing, and deep analytics to accelerate revenue growth.
                 </p>
 
                 <h2>Key Selection Factors for 2026</h2>
@@ -64,22 +68,18 @@
 
             <!-- Quick Summary Widget Box -->
             <aside class="quick-summary-box">
-                <h3><i class="fa-solid fa-bolt"></i> Quick CRM Summary</h3>
+                <h3><i class="fa-solid fa-bolt"></i> Quick {{ $category->name ?? 'CRM' }} Summary</h3>
                 <div class="summary-item">
                     <span>Top Pick Overall:</span>
-                    <strong>Salesforce Sales Cloud</strong>
+                    <strong>{{ $topPicks->first()->name ?? 'Salesforce Sales Cloud' }}</strong>
                 </div>
                 <div class="summary-item">
-                    <span>Best for Startups:</span>
-                    <strong>HubSpot CRM (Free Plan)</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Best Value for SMBs:</span>
-                    <strong>Zoho CRM</strong>
+                    <span>Total Tools Listed:</span>
+                    <strong>{{ $tools->total() ?? 12 }} Verified Solutions</strong>
                 </div>
                 <div class="summary-item">
                     <span>Average Price Range:</span>
-                    <strong>$14 - $150 / user / mo</strong>
+                    <strong>$14 - $165 / user / mo</strong>
                 </div>
                 <button class="btn-jump-rankings" onclick="document.getElementById('rankings').scrollIntoView({behavior: 'smooth'})">
                     Jump to Rankings <i class="fa-solid fa-arrow-down"></i>
@@ -88,285 +88,149 @@
         </div>
     </section>
 
-    <!-- Top Pick Badges Banner -->
+    <!-- Top Pick Badges Banner (Dynamic) -->
     <section class="container top-picks-section">
         <div class="section-heading">
-            <h2><i class="fa-solid fa-trophy"></i> 2026 Top Recommended CRM Picks</h2>
+            <h2><i class="fa-solid fa-trophy"></i> 2026 Top Recommended {{ $category->name ?? 'CRM' }} Picks</h2>
         </div>
 
         <div class="top-picks-grid">
-            <a href="{{ route('frontend.vendors.show') }}" class="pick-card gold-border" style="text-decoration: none; color: inherit;">
-                <span class="pick-badge gold"><i class="fa-solid fa-crown"></i> Best Overall</span>
-                <h4>Salesforce Sales Cloud</h4>
-                <p>The enterprise standard for complex workflows and AI analytics.</p>
-                <div class="pick-score">TechScore: <strong>98/100</strong></div>
-            </a>
-
-            <div class="pick-card pink-border">
-                <span class="pick-badge pink"><i class="fa-solid fa-rocket"></i> Best for SMBs</span>
-                <h4>HubSpot Sales Hub</h4>
-                <p>Intuitive user interface with a generous free plan tier.</p>
-                <div class="pick-score">TechScore: <strong>96/100</strong></div>
-            </div>
-
-            <div class="pick-card blue-border">
-                <span class="pick-badge blue"><i class="fa-solid fa-piggy-bank"></i> Best Value</span>
-                <h4>Zoho CRM</h4>
-                <p>Comprehensive features at competitive pricing for growing teams.</p>
-                <div class="pick-score">TechScore: <strong>94/100</strong></div>
-            </div>
-
-            <div class="pick-card green-border">
-                <span class="pick-badge green"><i class="fa-solid fa-bullseye"></i> Best Pipeline UI</span>
-                <h4>Pipedrive</h4>
-                <p>Visually focused sales CRM engineered for deal closing efficiency.</p>
-                <div class="pick-score">TechScore: <strong>92/100</strong></div>
-            </div>
+            @php
+                $pickBorders = ['gold-border', 'pink-border', 'blue-border', 'green-border'];
+                $badgeClasses = ['gold', 'pink', 'blue', 'green'];
+                $badgeTitles = ['Best Overall', 'Best for SMBs', 'Best Value', 'Best Pipeline UI'];
+                $badgeIcons = ['fa-crown', 'fa-rocket', 'fa-piggy-bank', 'fa-bullseye'];
+            @endphp
+            @foreach ($topPicks as $pIndex => $pick)
+                @php
+                    $bClass = $pickBorders[$pIndex % count($pickBorders)];
+                    $badgeCls = $badgeClasses[$pIndex % count($badgeClasses)];
+                    $bTitle = $badgeTitles[$pIndex % count($badgeTitles)];
+                    $bIcon = $badgeIcons[$pIndex % count($badgeIcons)];
+                @endphp
+                <a href="{{ route('frontend.vendors.show', $pick->slug) }}" class="pick-card {{ $bClass }}" style="text-decoration: none; color: inherit;">
+                    <span class="pick-badge {{ $badgeCls }}"><i class="fa-solid {{ $bIcon }}"></i> {{ $bTitle }}</span>
+                    <h4>{{ $pick->name }}</h4>
+                    <p>{{ Str::limit($pick->short_description, 75) }}</p>
+                    <div class="pick-score">TechScore: <strong>{{ $pick->rank ?? 95 }}/100</strong></div>
+                </a>
+            @endforeach
         </div>
     </section>
 
-    <!-- Main Vendor Rankings Section -->
+    <!-- Main Vendor Rankings Section (Dynamic) -->
     <section id="rankings" class="container rankings-section">
-        <div class="rankings-filter-bar">
+        <form action="{{ route('frontend.category.show', $category->slug) }}" method="GET" class="rankings-filter-bar">
             <div class="filter-pills">
-                <button class="blog-pill active">All Vendors (12)</button>
-                <button class="blog-pill">Enterprise</button>
-                <button class="blog-pill">Small Business</button>
-                <button class="blog-pill">Free Plan Available</button>
-                <button class="blog-pill">AI Powered</button>
+                <a href="{{ route('frontend.category.show', $category->slug) }}" class="blog-pill active">All {{ $category->name }} ({{ $tools->total() }})</a>
+                @foreach ($relatedCategories as $rCat)
+                    <a href="{{ route('frontend.category.show', $rCat->slug) }}" class="blog-pill">{{ $rCat->name }}</a>
+                @endforeach
             </div>
-            <div class="sort-box">
-                <label>Sort by:</label>
-                <select class="sort-select">
-                    <option>Highest TechScore</option>
-                    <option>Most Reviews</option>
-                    <option>Lowest Price</option>
+            <div class="sort-box d-flex align-items-center gap-2">
+                <input type="text" name="q" value="{{ $search ?? '' }}" placeholder="Filter tools..." class="form-control form-control-sm" style="background: #14091a; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff; border-radius: 8px; max-width: 180px;">
+                <select name="sort" onchange="this.form.submit()" class="sort-select">
+                    <option value="rank" {{ ($sortBy ?? '') === 'rank' ? 'selected' : '' }}>Highest TechScore</option>
+                    <option value="rating" {{ ($sortBy ?? '') === 'rating' ? 'selected' : '' }}>Highest Rating</option>
+                    <option value="reviews" {{ ($sortBy ?? '') === 'reviews' ? 'selected' : '' }}>Most Reviews</option>
                 </select>
             </div>
-        </div>
+        </form>
 
-        <!-- Vendor Card #1: Salesforce -->
-        <div class="vendor-card-detailed">
-            <div class="vendor-card-header">
-                <div class="vendor-info-group">
-                    <div class="vendor-rank">#1</div>
-                    <div class="vendor-logo-box" style="background-color: #00a1e0; color: #fff;">
-                        <i class="fa-solid fa-cloud" style="font-size: 28px;"></i>
-                    </div>
-                    <div>
-                        <div class="vendor-title-row">
-                            <a href="{{ route('frontend.vendors.show') }}" style="text-decoration: none; color: inherit;"><h3 style="cursor: pointer;">Salesforce Sales Cloud</h3></a>
-                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Leader</span>
+        <!-- Dynamic Tools Cards -->
+        @php
+            $bgColors = ['#00a1e0', '#ff7a59', '#e42527', '#222222', '#6366f1', '#10b981'];
+            $logoIcons = ['fa-cloud', 'fa-bolt', 'fa-boxes-stacked', 'fa-chart-line', 'fa-cube', 'fa-wand-magic-sparkles'];
+        @endphp
+        @forelse($tools as $index => $tool)
+            @php
+                $bgColor = $bgColors[$index % count($bgColors)];
+                $lIcon = $logoIcons[$index % count($logoIcons)];
+                $avgRate = $tool->reviews_avg_rating ? number_format($tool->reviews_avg_rating, 1) : '4.8';
+                $revCount = $tool->reviews_count ?? ($tool->reviews ? $tool->reviews->count() : 12);
+            @endphp
+            <div class="vendor-card-detailed">
+                <div class="vendor-card-header">
+                    <div class="vendor-info-group">
+                        <div class="vendor-rank">#{{ $tools->firstItem() + $index }}</div>
+                        <div class="vendor-logo-box" style="background-color: {{ $bgColor }}; color: #fff;">
+                            <i class="fa-solid {{ $lIcon }}" style="font-size: 26px;"></i>
                         </div>
-
-                        <div class="vendor-rating-row">
-                            <div class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
+                        <div>
+                            <div class="vendor-title-row">
+                                <a href="{{ route('frontend.vendors.show', $tool->slug) }}" style="text-decoration: none; color: inherit;">
+                                    <h3 style="cursor: pointer;">{{ $tool->name }}</h3>
+                                </a>
+                                @if ($tool->is_verified)
+                                    <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Leader</span>
+                                @endif
                             </div>
-                            <span class="rating-text"><strong>4.8</strong> (4,120 reviews)</span>
-                            <span class="pricing-text">• Starting from <strong>$25 / user / mo</strong></span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="vendor-action-box">
-                    <div class="techscore-badge">
-                        <span class="score-title">TechScore</span>
-                        <span class="score-value">98/100</span>
-                    </div>
-                    <button class="btn-visit">Visit Website <i class="fa-solid fa-up-right-from-square"></i></button>
-                </div>
-            </div>
-
-            <div class="vendor-card-body">
-                <p class="vendor-description">
-                    Salesforce Sales Cloud is the market-leading enterprise CRM platform offering deep customization, Einstein AI insights, lead scoring, and automated deal pipeline management for global revenue teams.
-                </p>
-
-                <div class="vendor-features-row">
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Einstein AI Predictive Analytics</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Custom Workflow Rules</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> AppExchange (3,000+ Apps)</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Territory Management</span>
-                </div>
-
-                <!-- Verified Review Highlight -->
-                <div class="vendor-review-highlight">
-                    <div class="reviewer-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');"></div>
-                    <div>
-                        <p class="review-quote">"Salesforce transformed our 200-person sales org. Einstein AI lead scoring increased our deal closure rate by 34% within the first 6 months."</p>
-                        <span class="reviewer-meta">— Sarah Jenkins, VP of Sales Ops @ Enterprise Tech</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor Card #2: HubSpot -->
-        <div class="vendor-card-detailed">
-            <div class="vendor-card-header">
-                <div class="vendor-info-group">
-                    <div class="vendor-rank">#2</div>
-                    <div class="vendor-logo-box" style="background-color: #ff7a59; color: #fff;">
-                        <i class="fa-solid fa-hubspot" style="font-size: 28px;"></i>
-                    </div>
-                    <div>
-                        <div class="vendor-title-row">
-                            <h3>HubSpot Sales Hub</h3>
-                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Top Startup Pick</span>
-                        </div>
-                        <div class="vendor-rating-row">
-                            <div class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
+                            <div class="vendor-rating-row">
+                                <div class="stars">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </div>
+                                <span class="rating-text"><strong>{{ $avgRate }}</strong> ({{ $revCount }} reviews)</span>
+                                <span class="pricing-text">• Starting from <strong>{{ $tool->pricing_text ?? '$19 / user / mo' }}</strong></span>
                             </div>
-                            <span class="rating-text"><strong>4.7</strong> (3,890 reviews)</span>
-                            <span class="pricing-text">• Free tier available • Paid from <strong>$15 / user / mo</strong></span>
                         </div>
                     </div>
-                </div>
 
-                <div class="vendor-action-box">
-                    <div class="techscore-badge">
-                        <span class="score-title">TechScore</span>
-                        <span class="score-value">96/100</span>
-                    </div>
-                    <button class="btn-visit">Visit Website <i class="fa-solid fa-up-right-from-square"></i></button>
-                </div>
-            </div>
-
-            <div class="vendor-card-body">
-                <p class="vendor-description">
-                    HubSpot Sales Hub combines an intuitive user interface with robust email tracking, automated meeting scheduling, and inbound marketing synchronization—ideal for fast-scaling startups and SMBs.
-                </p>
-
-                <div class="vendor-features-row">
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Free Unlimited CRM Users</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Email Tracking & Sequences</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Built-in Meeting Scheduler</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Marketing Hub Alignment</span>
-                </div>
-
-                <!-- Verified Review Highlight -->
-                <div class="vendor-review-highlight">
-                    <div class="reviewer-avatar" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80');"></div>
-                    <div>
-                        <p class="review-quote">"The easiest CRM to onboard new sales reps. We went from zero tracking to automated pipeline visibility in under a week."</p>
-                        <span class="reviewer-meta">— Michael Chen, Founder @ SaaSify</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor Card #3: Zoho CRM -->
-        <div class="vendor-card-detailed">
-            <div class="vendor-card-header">
-                <div class="vendor-info-group">
-                    <div class="vendor-rank">#3</div>
-                    <div class="vendor-logo-box" style="background-color: #e42527; color: #fff;">
-                        <i class="fa-solid fa-boxes-stacked" style="font-size: 26px;"></i>
-                    </div>
-                    <div>
-                        <div class="vendor-title-row">
-                            <h3>Zoho CRM</h3>
-                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Best Value Leader</span>
+                    <div class="vendor-action-box">
+                        <div class="techscore-badge">
+                            <span class="score-title">TechScore</span>
+                            <span class="score-value">{{ $tool->rank ?? 95 }}/100</span>
                         </div>
-                        <div class="vendor-rating-row">
-                            <div class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
+                        <a href="{{ route('frontend.vendors.show', $tool->slug) }}" class="btn-visit">View Profile <i class="fa-solid fa-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <div class="vendor-card-body">
+                    <p class="vendor-description">
+                        {{ $tool->short_description }}
+                    </p>
+
+                    <div class="vendor-features-row">
+                        <span class="feature-tag"><i class="fa-solid fa-check"></i> AI Automated Intelligence</span>
+                        <span class="feature-tag"><i class="fa-solid fa-check"></i> Custom Workflow Rules</span>
+                        <span class="feature-tag"><i class="fa-solid fa-check"></i> 50+ Connected Ecosystem Apps</span>
+                        <span class="feature-tag"><i class="fa-solid fa-check"></i> Real-time Telemetry Sync</span>
+                    </div>
+
+                    <!-- Verified Review Highlight -->
+                    @if ($tool->reviews->isNotEmpty())
+                        @php $firstRev = $tool->reviews->first(); @endphp
+                        <div class="vendor-review-highlight">
+                            <div class="reviewer-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');"></div>
+                            <div>
+                                <p class="review-quote">"{{ Str::limit($firstRev->comment, 140) }}"</p>
+                                <span class="reviewer-meta">— {{ $firstRev->user_name }}, Verified Practitioner</span>
                             </div>
-                            <span class="rating-text"><strong>4.6</strong> (2,740 reviews)</span>
-                            <span class="pricing-text">• Starting from <strong>$14 / user / mo</strong></span>
                         </div>
-                    </div>
-                </div>
-
-                <div class="vendor-action-box">
-                    <div class="techscore-badge">
-                        <span class="score-title">TechScore</span>
-                        <span class="score-value">94/100</span>
-                    </div>
-                    <button class="btn-visit">Visit Website <i class="fa-solid fa-up-right-from-square"></i></button>
+                    @endif
                 </div>
             </div>
-
-            <div class="vendor-card-body">
-                <p class="vendor-description">
-                    Zoho CRM offers enterprise-grade pipeline management, Zia AI assistant, and canvas layout builder at a fraction of standard market prices.
-                </p>
-
-                <div class="vendor-features-row">
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Zia Conversational AI</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Canvas Drag-and-Drop UI</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Multi-channel Communication</span>
-                </div>
+        @empty
+            <div class="text-center py-5 text-muted">
+                <h4>No tools found matching criteria.</h4>
+                <p>Try adjusting your search query or sorting options.</p>
             </div>
-        </div>
+        @endforelse
 
-        <!-- Vendor Card #4: Pipedrive -->
-        <div class="vendor-card-detailed">
-            <div class="vendor-card-header">
-                <div class="vendor-info-group">
-                    <div class="vendor-rank">#4</div>
-                    <div class="vendor-logo-box" style="background-color: #222222; color: #31a952; border: 1px solid #31a952;">
-                        <i class="fa-solid fa-chart-line" style="font-size: 26px;"></i>
-                    </div>
-                    <div>
-                        <div class="vendor-title-row">
-                            <h3>Pipedrive</h3>
-                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Sales Focused</span>
-                        </div>
-                        <div class="vendor-rating-row">
-                            <div class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
-                            </div>
-                            <span class="rating-text"><strong>4.5</strong> (2,100 reviews)</span>
-                            <span class="pricing-text">• Starting from <strong>$14.90 / user / mo</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="vendor-action-box">
-                    <div class="techscore-badge">
-                        <span class="score-title">TechScore</span>
-                        <span class="score-value">92/100</span>
-                    </div>
-                    <button class="btn-visit">Visit Website <i class="fa-solid fa-up-right-from-square"></i></button>
-                </div>
-            </div>
-
-            <div class="vendor-card-body">
-                <p class="vendor-description">
-                    Designed by salespeople for salespeople, Pipedrive puts activity-based selling and visual deal management front and center.
-                </p>
-
-                <div class="vendor-features-row">
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Visual Sales Pipeline</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> AI Smart Assistant</span>
-                    <span class="feature-tag"><i class="fa-solid fa-check"></i> Web Visitors Tracking</span>
-                </div>
-            </div>
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center my-4">
+            {{ $tools->links() }}
         </div>
     </section>
 
     <!-- Comparison Matrix Table -->
     <section class="container comparison-table-section">
         <div class="section-heading">
-            <h2><i class="fa-solid fa-table-cells"></i> CRM Feature Comparison Matrix</h2>
+            <h2><i class="fa-solid fa-table-cells"></i> {{ $category->name }} Feature Comparison Matrix</h2>
         </div>
 
         <div class="table-responsive-box">
@@ -377,82 +241,50 @@
                         <th>TechScore</th>
                         <th>Starting Price</th>
                         <th>Free Trial</th>
-                        <th>AI Lead Scoring</th>
+                        <th>AI Copilot</th>
                         <th>Custom Workflows</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><strong>Salesforce Sales Cloud</strong></td>
-                        <td><span class="pill-score">98/100</span></td>
-                        <td>$25 / mo</td>
-                        <td>30 Days</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> (Einstein AI)</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> Advanced</td>
-                    </tr>
-                    <tr>
-                        <td><strong>HubSpot Sales Hub</strong></td>
-                        <td><span class="pill-score">96/100</span></td>
-                        <td>$15 / mo (Free Tier)</td>
-                        <td>14 Days</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> (Predictive)</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> Included</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Zoho CRM</strong></td>
-                        <td><span class="pill-score">94/100</span></td>
-                        <td>$14 / mo</td>
-                        <td>15 Days</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> (Zia AI)</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> Included</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Pipedrive</strong></td>
-                        <td><span class="pill-score">92/100</span></td>
-                        <td>$14.90 / mo</td>
-                        <td>14 Days</td>
-                        <td><i class="fa-solid fa-circle-minus check-orange"></i> Add-on</td>
-                        <td><i class="fa-solid fa-circle-check check-green"></i> Standard</td>
-                    </tr>
+                    @foreach ($tools->take(5) as $cTool)
+                        <tr>
+                            <td><strong>{{ $cTool->name }}</strong></td>
+                            <td><span class="pill-score">{{ $cTool->rank ?? 95 }}/100</span></td>
+                            <td>{{ $cTool->pricing_text ?? '$25 / mo' }}</td>
+                            <td>14–30 Days</td>
+                            <td><i class="fa-solid fa-circle-check check-green"></i> Native AI</td>
+                            <td><i class="fa-solid fa-circle-check check-green"></i> Advanced</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </section>
 
-    <!-- CRM FAQs Section -->
+    <!-- FAQs Section -->
     <section class="container faq-section" style="margin-bottom: 80px;">
         <div class="section-heading">
-            <h2><i class="fa-solid fa-circle-question"></i> Frequently Asked Questions about CRM Software</h2>
+            <h2><i class="fa-solid fa-circle-question"></i> Frequently Asked Questions about {{ $category->name }}</h2>
         </div>
 
         <div class="faq-list">
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-header">
-                    <h5>How much does a CRM system typically cost?</h5>
+                    <h5>How much does a {{ $category->name }} typically cost?</h5>
                     <i class="fa-solid fa-chevron-down faq-icon"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>CRM software costs range from $0 (free plans like HubSpot) up to $150+ per user per month for enterprise solutions like Salesforce Sales Cloud. Most small to mid-sized businesses spend around $25–$50 per user monthly.</p>
+                    <p>Pricing ranges from free plans up to $165+ per user per month for enterprise solutions. Most small to mid-sized businesses spend around $25–$50 per user monthly.</p>
                 </div>
             </div>
 
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-header">
-                    <h5>What is the difference between analytical and operational CRM?</h5>
+                    <h5>How do I choose the best software for my business?</h5>
                     <i class="fa-solid fa-chevron-down faq-icon"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>Operational CRM focuses on automating day-to-day sales pipelines, marketing automation, and customer support. Analytical CRM processes historical customer data, purchase trends, and predictive forecasting to guide strategic decisions.</p>
-                </div>
-            </div>
-
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-header">
-                    <h5>Which CRM software is best for small businesses in 2026?</h5>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>HubSpot CRM and Zoho CRM are top recommendations for small businesses due to their fast setup, intuitive drag-and-drop user interfaces, and affordable tier pricing.</p>
+                    <p>Evaluate your team size, key integrations with existing software, ease of onboarding, and whether advanced AI analytics are required.</p>
                 </div>
             </div>
         </div>
@@ -462,11 +294,11 @@
     <div class="container" style="margin-bottom: 80px;">
         <div class="trial-cta-box">
             <div>
-                <h2>Need help picking the right CRM?</h2>
+                <h2>Need help picking the right {{ $category->name }}?</h2>
                 <p>Use our free AI comparison generator to receive custom software recommendations tailored to your team size and budget.</p>
                 <div class="cta-btns">
-                    <button class="btn-trial-pink">Run AI Comparison</button>
-                    <button class="btn-trial-outline">Talk to an Analyst</button>
+                    <a href="{{ route('frontend.blogs') }}" class="btn-trial-pink" style="text-decoration: none; display: inline-block;">Run AI Comparison</a>
+                    <a href="{{ route('register-vendor') }}" class="btn-trial-outline" style="text-decoration: none; display: inline-block;">List Your Tool</a>
                 </div>
             </div>
             <div class="cta-dots-graphic">

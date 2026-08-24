@@ -32,10 +32,20 @@ const CoreScssFiles = GetFilesArray('resources/assets/vendor/scss/**/!(_)*.scss'
 
 // Processing Fonts Scss & JS Files
 const FontsScssFiles = GetFilesArray('resources/assets/vendor/fonts/!(_)*.scss');
-const FontsJsFiles = GetFilesArray('resources/assets/vendor/fonts/**/!(_)*.js');
+const FontsJsFiles = GetFilesArray('resources/assets/vendor/fonts/**/!(_)*.js').filter(
+  file => !file.endsWith('iconify.js')
+);
 const FontsCssFiles = GetFilesArray('resources/assets/vendor/fonts/**/!(_)*.css');
 
+
 export default defineConfig({
+  server: {
+    host: '127.0.0.1',
+    port: 5000,
+    hmr: {
+      host: '127.0.0.1'
+    }
+  },
   plugins: [
     laravel({
       input: [
@@ -71,3 +81,4 @@ export default defineConfig({
     }
   }
 });
+

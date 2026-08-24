@@ -141,7 +141,7 @@
 
             <div class="nav-actions">
                 <button class="btn-calc">
-                    Comparisons Calculator <i class="fa-solid fa-arrow-right"></i>
+                    ROI Calculator <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
                 <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle Menu">

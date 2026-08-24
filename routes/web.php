@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Route;
 // Frontend Routes
 Route::get('/', [PageController::class, 'index'])->name('frontend.home');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('frontend.blogs');
-Route::get('/blogs/detail', [PageController::class, 'blogDetail'])->name('frontend.blogs.show');
+Route::get('/blogs/{slug?}', [PageController::class, 'blogDetail'])->name('frontend.blogs.show');
 Route::get('/vendors/crm', [PageController::class, 'crmVendor'])->name('frontend.vendors.crm');
-Route::get('/vendors/salesforce', [PageController::class, 'vendorDetail'])->name('frontend.vendors.show');
+Route::get('/category/{slug}', [PageController::class, 'crmVendor'])->name('frontend.category.show');
+Route::get('/vendors/{slug?}', [PageController::class, 'vendorDetail'])->name('frontend.vendors.show');
+Route::get('/tools/{slug?}', [PageController::class, 'vendorDetail'])->name('frontend.tools.show');
+
+// Actions
+Route::post('/tools/{id}/reviews', [PageController::class, 'submitReview'])->name('frontend.reviews.store');
+Route::post('/newsletter/subscribe', [PageController::class, 'subscribeNewsletter'])->name('frontend.newsletter.subscribe');
 
 
 
