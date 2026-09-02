@@ -73,5 +73,8 @@ class DatabaseSeeder extends Seeder
 
         // Create Claims
         \App\Models\Claim::factory(10)->create();
+
+        // Seed Billing Transactions for vendors
+        $this->call(BillingTransactionSeeder::class);
     }
 }

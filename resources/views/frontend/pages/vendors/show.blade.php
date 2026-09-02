@@ -1,571 +1,589 @@
 @extends('frontend.layout.app')
 
-@section('meta_title', $tool->meta_title ?? ($tool->name ?? 'Software Tool') . ' Review 2026 - Pricing, Features & Ratings - TechAnalytica')
-@section('meta_description', $tool->meta_description ?? $tool->short_description ?? 'Discover and review the best AI tools and software on TechAnalytica.')
-@section('canonical_url', $tool->canonical_url ?? request()->url())
+@section('title', $tool->name . ' - Reviews, Pricing & AI Specifications | TechAnalytica')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('frontend/css/vendor-details.css') }}">
+@endpush
 
 @section('content')
-    @if (session('success'))
-        <div class="container mt-4">
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #a7f3d0; border-radius: 12px;">
-                <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+
+{{-- ========== HERO SECTION ========== --}}
+<section class="vendor-hero">
+    <div class="container hero-container">
+
+        {{-- Left: Logo + Meta --}}
+        <div class="vendor-header-left">
+            <div class="vendor-logo-box">
+                @if ($tool->logo_url)
+                    <img src="{{ asset($tool->logo_url) }}" alt="{{ $tool->name }} Logo">
+                @else
+                    <i class="fa-solid fa-brain" style="font-size: 36px; color: #e04385;"></i>
+                @endif
             </div>
-        </div>
-    @endif
 
-    <!-- 1. Vendor Detail Hero Header -->
-    <section class="vendor-detail-hero">
-        <div class="mesh-wave-hero"></div>
-        <div class="container">
-            <nav class="article-breadcrumb">
-                <a href="{{ route('frontend.home') }}">Home</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <a href="{{ route('frontend.vendors.crm') }}">Software Directory</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <span>{{ $tool->name }}</span>
-            </nav>
-
-            <div class="vendor-detail-header-grid">
-                <div class="vendor-brand-info">
-                    <div class="vendor-logo-lg" style="background-color: #00a1e0; color: #fff;">
-                        <i class="fa-solid fa-cloud"></i>
-                    </div>
-                    <div>
-                        <div class="vendor-title-row">
-                            <h1 class="vendor-name">{{ $tool->name }}</h1>
-                            @if ($tool->is_verified)
-                                <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Leader</span>
-                            @endif
-                        </div>
-                        <p class="vendor-tagline">{{ $tool->short_description }}</p>
-
-                        <div class="vendor-detail-meta">
-                            <div class="rating-box">
-                                <span class="score-num">{{ $avgRating }}</span>
-                                <div class="stars">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star-half-stroke"></i>
-                                </div>
-                                <span class="review-count">({{ $totalReviews }} verified reviews)</span>
-                            </div>
-                            <span class="meta-divider">•</span>
-                            <span class="meta-item"><i class="fa-solid fa-building"></i> {{ $tool->vendor->company_name ?? 'Verified Vendor' }}</span>
-                            <span class="meta-divider">•</span>
-                            <span class="meta-item"><i class="fa-solid fa-shield-halved"></i> SOC2 Type II Certified</span>
-                        </div>
-
-                        <div class="vendor-hero-pill-badges">
-                            <span class="v-pill">Enterprise Leader</span>
-                            <span class="v-pill">AI Automated</span>
-                            <span class="v-pill">Cloud SaaS</span>
-                            <span class="v-pill">Multi-Currency</span>
-                        </div>
-                    </div>
+            <div class="vendor-meta">
+                <div class="title-row">
+                    <h1>{{ $tool->name }}</h1>
+                    @if ($tool->is_verified || $tool->is_claimed)
+                        <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);color:#10b981;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid rgba(16,185,129,0.3);">
+                            <i class="fa-solid fa-circle-check"></i> Verified Leader
+                        </span>
+                    @endif
                 </div>
 
-                <div class="vendor-hero-actions">
-                    <div class="techscore-card">
-                        <span class="ts-label">TechScore</span>
-                        <span class="ts-val">{{ $tool->rank ?? 98 }}<small>/100</small></span>
+                <p class="tagline">{{ $tool->short_description }}</p>
+
+                @php
+                    $approvedReviews = $tool->reviews->where('status', 'approved');
+                    $avgRating = $approvedReviews->avg('rating') ?: 0;
+                @endphp
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <strong>{{ $avgRating > 0 ? number_format($avgRating, 1) : 'New' }}</strong>
+                        </span>
+                        <span class="stat-label">({{ $approvedReviews->count() }} Reviews)</span>
                     </div>
-                    <a href="{{ $tool->website_url ?? '#' }}" target="_blank" class="btn-visit-lg" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        Visit Website <i class="fa-solid fa-up-right-from-square"></i>
-                    </a>
-                    <div class="sub-actions">
-                        <button class="btn-sub-action" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="fa-solid fa-pen-to-square"></i> Write Review</button>
-                        <a href="{{ route('register-vendor') }}" class="btn-sub-action" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-bookmark"></i> Claim Tool</a>
+                    <div class="divider"></div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-microchip" style="color:#e04385;font-size:13px;"></i>
+                        <strong style="color:#fff;">{{ $tool->ai_type ?? 'AI Tool' }}</strong>
                     </div>
+                    <div class="divider"></div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-trophy" style="color:#ffc107;font-size:12px;"></i>
+                        <span class="stat-label">TechScore:</span>
+                        <strong style="color:#e04385;font-size:15px;">{{ $tool->score }}<span style="color:#9a8c9e;font-size:11px;font-weight:500;">/100</span></strong>
+                    </div>
+                    @if($tool->categories->count())
+                    <div class="divider"></div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-tag" style="color:#9a8c9e;font-size:12px;"></i>
+                        <span class="stat-label">{{ $tool->categories->first()->name }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 2. Sticky Navigation Tabs -->
-    <div class="vendor-tabs-bar">
-        <div class="container tabs-inner">
-            <a href="#overview" class="tab-link active">Overview</a>
-            <a href="#calculator" class="tab-link">ROI Calculator</a>
-            <a href="#features" class="tab-link">Features</a>
-            <a href="#integrations" class="tab-link">Integrations</a>
-            <a href="#proscons" class="tab-link">Pros & Cons</a>
-            <a href="#benchmarks" class="tab-link">Benchmarks</a>
-            <a href="#pricing" class="tab-link">Pricing</a>
-            <a href="#reviews" class="tab-link">Reviews ({{ $totalReviews }})</a>
-            <a href="#alternatives" class="tab-link">Alternatives</a>
-            <a href="#faqs" class="tab-link">FAQs</a>
+        {{-- Right: CTA Actions --}}
+        <div class="vendor-header-actions">
+            <button onclick="openLeadModal('demo')" class="btn-trial-pink">
+                <i class="fa-solid fa-paper-plane"></i> Request Demo / Quote
+            </button>
+            <a href="{{ route('frontend.compare', ['tool1' => $tool->slug]) }}" class="btn-trial-outline">
+                <i class="fa-solid fa-code-compare"></i> Compare This Tool
+            </a>
+            @if ($tool->website_url)
+                <a href="{{ $tool->website_url }}" target="_blank" rel="noopener noreferrer" class="btn-trial-outline" style="font-size:13px;padding:10px 20px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit Official Site
+                </a>
+            @endif
+            @if (!$tool->is_claimed)
+                <div class="claim-prompt">
+                    <i class="fa-regular fa-building"></i>
+                    <span>Are you an employee?</span>
+                    <a href="javascript:void(0)" onclick="openClaimModal({{ $tool->id }}, '{{ addslashes($tool->name) }}')">Claim this Product</a>
+                </div>
+            @endif
+        </div>
+
+    </div>
+</section>
+
+{{-- ========== SESSION ALERTS ========== --}}
+@if(session('success'))
+    <div class="container" style="padding-top:24px;">
+        <div class="alert-success-custom">
+            <i class="fa-solid fa-circle-check" style="font-size:18px;"></i>
+            {{ session('success') }}
         </div>
     </div>
+@endif
+@if(session('error'))
+    <div class="container" style="padding-top:24px;">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:16px 20px;border-radius:14px;font-size:14px;font-weight:600;">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:18px;"></i> {{ session('error') }}
+        </div>
+    </div>
+@endif
 
-    <!-- 3. Main Vendor Body Grid -->
-    <section class="container vendor-detail-main">
-        <div class="vendor-content-grid">
-            <!-- Left Main Content Column -->
-            <div class="vendor-left-body">
-                <!-- Scores Summary Grid -->
+{{-- ========== STICKY TABS ========== --}}
+<div class="vendor-tabs-wrapper">
+    <div class="container tabs-container">
+        <ul class="nav-tabs-list">
+            <li class="active"><a href="#overview"><i class="fa-solid fa-circle-info"></i> Overview</a></li>
+            <li><a href="#proscons"><i class="fa-solid fa-scale-balanced"></i> Pros & Cons</a></li>
+            <li><a href="#reviews"><i class="fa-solid fa-star"></i> Reviews ({{ $approvedReviews->count() }})</a></li>
+            <li><a href="#alternatives"><i class="fa-solid fa-code-compare"></i> Competitors</a></li>
+        </ul>
+    </div>
+</div>
+
+{{-- ========== MAIN BODY ========== --}}
+<section class="vendor-main-body">
+    <div class="container layout-grid">
+
+        {{-- ===== LEFT COLUMN ===== --}}
+        <div class="content-left">
+
+            {{-- Overview Card --}}
+            <div id="overview" class="detail-card">
+                <h3><i class="fa-solid fa-circle-info" style="color:#e04385;font-size:16px;"></i> Product Overview & Capabilities</h3>
+                <p class="body-p">{{ $tool->long_description ?: $tool->short_description }}</p>
+
+                <div class="feature-highlights-grid">
+                    <div class="f-item">
+                        <div class="f-item-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h5>Enterprise Compliance</h5>
+                            <p>SOC2, GDPR, and enterprise access hierarchies ready.</p>
+                        </div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-item-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <div>
+                            <h5>Automated Pipelines</h5>
+                            <p>Native webhooks, REST API endpoints, and low latency compute.</p>
+                        </div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-item-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div>
+                            <h5>Real-Time Telemetry</h5>
+                            <p>Algorithmic tracking, automated analytics, and usage insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Screenshots --}}
+            @if($tool->media && $tool->media->count() > 0)
                 <div class="detail-card">
-                    <h3><i class="fa-solid fa-chart-pie"></i> Performance & Satisfaction Scores</h3>
-                    <div class="scores-grid">
-                        <div class="score-card-mini">
-                            <div class="score-ring ring-98">98%</div>
-                            <strong>Feature Depth</strong>
-                            <span>Enterprise capability</span>
-                        </div>
-                        <div class="score-card-mini">
-                            <div class="score-ring ring-86">86%</div>
-                            <strong>Ease of Use</strong>
-                            <span>Admin & User UI</span>
-                        </div>
-                        <div class="score-card-mini">
-                            <div class="score-ring ring-96">96%</div>
-                            <strong>AI Copilot</strong>
-                            <span>Model accuracy</span>
-                        </div>
-                        <div class="score-card-mini">
-                            <div class="score-ring ring-88">88%</div>
-                            <strong>Value for Money</strong>
-                            <span>ROI vs licensing fee</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Executive Overview & Technical Architecture -->
-                <div id="overview" class="detail-card">
-                    <h3>Overview & Technical Architecture</h3>
-                    <p class="body-p">
-                        {{ $tool->long_description ?? $tool->short_description }}
-                    </p>
-                </div>
-
-                <!-- Interactive ROI Calculator Widget -->
-                <div id="calculator" class="detail-card roi-calculator-card">
-                    <div class="roi-header">
-                        <div>
-                            <h3><i class="fa-solid fa-calculator gradient-text"></i> Interactive ROI & Value Calculator</h3>
-                            <p class="body-p">Estimate annual team savings and productivity gains from adopting {{ $tool->name }}.</p>
-                        </div>
-                        <span class="roi-badge">Interactive Tool</span>
-                    </div>
-
-                    <div class="roi-widget-grid">
-                        <div class="roi-inputs">
-                            <div class="roi-slider-group">
-                                <label>Team Size: <strong id="repCount">25 users</strong></label>
-                                <input type="range" min="5" max="250" value="25" class="roi-slider" id="repSlider" oninput="document.getElementById('repCount').innerText = this.value + ' users'; updateROI();">
-                            </div>
-
-                            <div class="roi-slider-group">
-                                <label>Average Deal / Contract Size ($): <strong id="dealSize">$15,000</strong></label>
-                                <input type="range" min="1000" max="100000" step="1000" value="15000" class="roi-slider" id="dealSlider" oninput="document.getElementById('dealSize').innerText = '$' + Number(this.value).toLocaleString(); updateROI();">
-                            </div>
-
-                            <div class="roi-slider-group">
-                                <label>Hours Saved per User / Week: <strong id="hoursSaved">6 hours</strong></label>
-                                <input type="range" min="1" max="20" value="6" class="roi-slider" id="hourSlider" oninput="document.getElementById('hoursSaved').innerText = this.value + ' hours'; updateROI();">
-                            </div>
-                        </div>
-
-                        <div class="roi-outputs">
-                            <div class="roi-output-box">
-                                <span>Estimated Annual Value Generated</span>
-                                <h2 id="annualRoi" class="gradient-text">$187,500</h2>
-                            </div>
-                            <div class="roi-sub-stats">
-                                <div>
-                                    <strong id="repEfficiency">+15%</strong>
-                                    <span>Team Velocity</span>
-                                </div>
-                                <div>
-                                    <strong id="paybackTime">2.4 mos</strong>
-                                    <span>Payback Period</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Matrix & Capabilities Breakdown -->
-                <div id="features" class="detail-card">
-                    <h3>Core Capabilities & Feature Checklist</h3>
-                    <div class="capabilities-grid">
-                        <div class="capability-item">
-                            <div class="cap-icon"><i class="fa-solid fa-chart-line"></i></div>
-                            <div>
-                                <h4>Pipeline & Task Management</h4>
-                                <p>Automated stage progression rules, Kanban boards, and multi-currency pipelines.</p>
-                            </div>
-                        </div>
-                        <div class="capability-item">
-                            <div class="cap-icon"><i class="fa-solid fa-robot"></i></div>
-                            <div>
-                                <h4>AI Intelligence & Copilot</h4>
-                                <p>Generative text drafting, automated predictive summarization, and deal risk scoring.</p>
-                            </div>
-                        </div>
-                        <div class="capability-item">
-                            <div class="cap-icon"><i class="fa-solid fa-network-wired"></i></div>
-                            <div>
-                                <h4>Visual Workflow Automation</h4>
-                                <p>No-code visual automation pipelines for conditional routing and approval flows.</p>
-                            </div>
-                        </div>
-                        <div class="capability-item">
-                            <div class="cap-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                            <div>
-                                <h4>Enterprise Security & Governance</h4>
-                                <p>Role-based access control (RBAC), field-level encryption, SOC2 Type II compliance.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Key Integrations Ecosystem Grid -->
-                <div id="integrations" class="detail-card">
-                    <h3>Enterprise Integration Ecosystem</h3>
-                    <p class="body-p">{{ $tool->name }} connects natively with popular cloud productivity platforms.</p>
-
-                    <div class="integrations-grid-full">
-                        <div class="int-box"><i class="fa-brands fa-slack" style="color: #e01e5a;"></i><span>Slack</span></div>
-                        <div class="int-box"><i class="fa-brands fa-google" style="color: #4285f4;"></i><span>Google Workspace</span></div>
-                        <div class="int-box"><i class="fa-brands fa-microsoft" style="color: #00a4ef;"></i><span>Microsoft 365</span></div>
-                        <div class="int-box"><i class="fa-solid fa-bolt" style="color: #ff4a00;"></i><span>Zapier</span></div>
-                        <div class="int-box"><i class="fa-brands fa-stripe" style="color: #635bff;"></i><span>Stripe</span></div>
-                        <div class="int-box"><i class="fa-solid fa-snowflake" style="color: #29b5e8;"></i><span>Snowflake</span></div>
-                        <div class="int-box"><i class="fa-brands fa-jira" style="color: #0052cc;"></i><span>Jira</span></div>
-                        <div class="int-box"><i class="fa-brands fa-aws" style="color: #ff9900;"></i><span>AWS</span></div>
-                        <div class="int-box"><i class="fa-brands fa-hubspot" style="color: #ff7a59;"></i><span>HubSpot</span></div>
-                        <div class="int-box"><i class="fa-solid fa-chart-pie" style="color: #e97627;"></i><span>Tableau</span></div>
-                        <div class="int-box"><i class="fa-solid fa-file-signature" style="color: #ff0000;"></i><span>DocuSign</span></div>
-                        <div class="int-box"><i class="fa-solid fa-video" style="color: #2d8cff;"></i><span>Zoom</span></div>
-                    </div>
-                </div>
-
-                <!-- Pros & Cons Section -->
-                <div id="proscons" class="detail-card">
-                    <h3>Pros & Cons Breakdown</h3>
-                    <div class="pros-cons-grid">
-                        <div class="pros-column">
-                            <h4><i class="fa-solid fa-thumbs-up check-green"></i> Key Advantages</h4>
-                            <ul class="pc-list">
-                                <li><i class="fa-solid fa-check check-green"></i> Unrivaled customization via Custom Objects and Flow Builder.</li>
-                                <li><i class="fa-solid fa-check check-green"></i> Native AI predictive lead and opportunity scoring.</li>
-                                <li><i class="fa-solid fa-check check-green"></i> Extensive marketplace with hundreds of third-party integrations.</li>
-                                <li><i class="fa-solid fa-check check-green"></i> Enterprise-grade security, role hierarchies, and audit logs.</li>
-                            </ul>
-                        </div>
-
-                        <div class="cons-column">
-                            <h4><i class="fa-solid fa-thumbs-down check-orange"></i> Potential Drawbacks</h4>
-                            <ul class="pc-list">
-                                <li><i class="fa-solid fa-xmark check-orange"></i> Learning curve for non-technical team members during initial setup.</li>
-                                <li><i class="fa-solid fa-xmark check-orange"></i> Advanced tiers require higher annual licensing investments.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance & Latency Benchmarks -->
-                <div id="benchmarks" class="detail-card">
-                    <h3>Technical Performance Benchmarks</h3>
-                    <div class="benchmarks-grid">
-                        <div class="benchmark-item">
-                            <span class="bm-label">API Response Latency (p95)</span>
-                            <div class="bm-bar-wrap">
-                                <div class="bm-bar" style="width: 88%;"></div>
-                            </div>
-                            <span class="bm-val">142ms <small>(Industry avg: 220ms)</small></span>
-                        </div>
-                        <div class="benchmark-item">
-                            <span class="bm-label">Platform Uptime SLA</span>
-                            <div class="bm-bar-wrap">
-                                <div class="bm-bar bar-green" style="width: 99.9%;"></div>
-                            </div>
-                            <span class="bm-val">99.99% <small>Guaranteed</small></span>
-                        </div>
-                        <div class="benchmark-item">
-                            <span class="bm-label">Realtime Webhook Delivery</span>
-                            <div class="bm-bar-wrap">
-                                <div class="bm-bar bar-purple" style="width: 95%;"></div>
-                            </div>
-                            <span class="bm-val">99.4% <small>Within 500ms</small></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pricing Plans Section (Dynamic from structured pricing) -->
-                <div id="pricing" class="detail-card">
-                    <h3>Pricing & Subscription Tiers</h3>
-                    <p class="body-p">{{ $tool->name }} pricing starts from {{ $tool->pricing_text ?? '$25 / user / mo' }}.</p>
-
-                    <div class="pricing-cards-grid">
-                        @if (!empty($tool->pricing_structured) && is_array($tool->pricing_structured))
-                            @foreach ($tool->pricing_structured as $tierKey => $tier)
-                                <div class="p-card {{ $tierKey === 'pro' || $tierKey === 'professional' ? 'featured-p-card' : '' }}">
-                                    @if ($tierKey === 'pro' || $tierKey === 'professional')
-                                        <span class="p-badge-popular">Most Popular</span>
-                                    @endif
-                                    <span class="p-tier">{{ $tier['name'] ?? ucfirst($tierKey) }}</span>
-                                    <div class="p-price">{{ $tier['price'] ?? '$25' }} <span>/ user / mo</span></div>
-                                    <p class="p-desc">{{ $tier['desc'] ?? 'Complete features for scaling teams.' }}</p>
-                                    @if (!empty($tier['features']))
-                                        <ul class="p-features">
-                                            @foreach ($tier['features'] as $feat)
-                                                <li><i class="fa-solid fa-check"></i> {{ $feat }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="p-card">
-                                <span class="p-tier">Starter</span>
-                                <div class="p-price">$25 <span>/ user / mo</span></div>
-                                <p class="p-desc">Simplified setup for small teams.</p>
-                                <ul class="p-features">
-                                    <li><i class="fa-solid fa-check"></i> Basic Lead & Task Tracking</li>
-                                    <li><i class="fa-solid fa-check"></i> Email Integration</li>
-                                </ul>
-                            </div>
-                            <div class="p-card featured-p-card">
-                                <span class="p-badge-popular">Most Popular</span>
-                                <span class="p-tier">Professional</span>
-                                <div class="p-price">$80 <span>/ user / mo</span></div>
-                                <p class="p-desc">Complete features for growing teams.</p>
-                                <ul class="p-features">
-                                    <li><i class="fa-solid fa-check"></i> Automated Workflows</li>
-                                    <li><i class="fa-solid fa-check"></i> AI Analytics Copilot</li>
-                                </ul>
-                            </div>
-                            <div class="p-card">
-                                <span class="p-tier">Enterprise</span>
-                                <div class="p-price">$165 <span>/ user / mo</span></div>
-                                <p class="p-desc">Custom enterprise integrations.</p>
-                                <ul class="p-features">
-                                    <li><i class="fa-solid fa-check"></i> Dedicated Account Manager</li>
-                                    <li><i class="fa-solid fa-check"></i> 24/7 SLA Support</li>
-                                </ul>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Verified User Reviews (Dynamic) -->
-                <div id="reviews" class="detail-card">
-                    <div class="reviews-header-row">
-                        <div>
-                            <h3>Verified User Reviews</h3>
-                            <p class="body-p">Based on {{ $totalReviews }} authenticated practitioner reviews.</p>
-                        </div>
-                        <button class="btn-write-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                            <i class="fa-solid fa-pen-to-square"></i> Leave a Review
-                        </button>
-                    </div>
-
-                    <div class="reviews-breakdown-box">
-                        <div class="reviews-summary-score">
-                            <h1>{{ $avgRating }}</h1>
-                            <div class="stars">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
-                            </div>
-                            <span>{{ $starBreakdown[5]['percentage'] ?? 82 }}% recommend this tool</span>
-                        </div>
-
-                        <div class="rating-bars-list">
-                            @for ($s = 5; $s >= 1; $s--)
-                                <div class="rating-bar-row">
-                                    <span>{{ $s }} ★</span>
-                                    <div class="bar-track">
-                                        <div class="bar-fill" style="width: {{ $starBreakdown[$s]['percentage'] ?? 0 }}%;"></div>
-                                    </div>
-                                    <span>{{ $starBreakdown[$s]['percentage'] ?? 0 }}%</span>
-                                </div>
-                            @endfor
-                        </div>
-                    </div>
-
-                    @forelse($tool->reviews as $rev)
-                        <div class="user-review-card">
-                            <div class="review-top-meta">
-                                <div class="user-row">
-                                    <div class="user-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');"></div>
-                                    <div>
-                                        <strong>{{ $rev->user_name }}</strong>
-                                        <span>Verified Reviewer • {{ $rev->created_at ? $rev->created_at->format('M d, Y') : 'Aug 2026' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="stars review-stars">
-                                @for ($st = 0; $st < $rev->rating; $st++)
-                                    <i class="fa-solid fa-star"></i>
-                                @endfor
-                            </div>
-                            <p class="review-text">"{{ $rev->comment }}"</p>
-                        </div>
-                    @empty
-                        <div class="text-center py-4 text-muted">
-                            <p>No verified reviews written yet. Be the first to leave a review!</p>
-                        </div>
-                    @endforelse
-                </div>
-
-                <!-- Alternatives & Competitors (Dynamic) -->
-                <div id="alternatives" class="detail-card">
-                    <h3>Top {{ $tool->name }} Alternatives</h3>
-                    <div class="alt-grid">
-                        @foreach ($alternatives as $alt)
-                            <div class="alt-card">
-                                <div class="alt-header">
-                                    <div class="alt-logo" style="background: #ff7a59; color: #fff;"><i class="fa-solid fa-bolt"></i></div>
-                                    <div>
-                                        <h4>{{ $alt->name }}</h4>
-                                        <span class="alt-score">TechScore: {{ $alt->rank ?? 95 }}/100</span>
-                                    </div>
-                                </div>
-                                <p>{{ Str::limit($alt->short_description, 90) }}</p>
-                                <a href="{{ route('frontend.vendors.show', $alt->slug) }}" class="btn-alt-compare">Compare vs {{ $tool->name }} <i class="fa-solid fa-arrow-right"></i></a>
+                    <h3><i class="fa-solid fa-images" style="color:#e04385;font-size:16px;"></i> Interface & Product Screenshots</h3>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:4px;">
+                        @foreach($tool->media as $mediaItem)
+                            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
+                                <img src="{{ $mediaItem->url }}" alt="{{ $tool->name }} Screenshot" style="width:100%;height:190px;object-fit:cover;display:block;">
                             </div>
                         @endforeach
                     </div>
                 </div>
+            @endif
 
-                <!-- Tool FAQs Accordion -->
-                <div id="faqs" class="detail-card">
-                    <h3>Frequently Asked Questions</h3>
-                    <div class="faq-accordion">
-                        <div class="faq-item active" onclick="this.classList.toggle('active')">
-                            <div class="faq-header">
-                                <h5>What makes {{ $tool->name }} different from competitors?</h5>
-                                <i class="fa-solid fa-chevron-down faq-icon"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>{{ $tool->short_description }}</p>
-                            </div>
-                        </div>
-
-                        <div class="faq-item" onclick="this.classList.toggle('active')">
-                            <div class="faq-header">
-                                <h5>Is there a free trial available for {{ $tool->name }}?</h5>
-                                <i class="fa-solid fa-chevron-down faq-icon"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>Yes, most plans offer a 14 to 30-day trial without requiring a credit card upfront.</p>
-                            </div>
-                        </div>
+            {{-- Pros & Cons --}}
+            <div id="proscons" class="detail-card">
+                <h3><i class="fa-solid fa-scale-balanced" style="color:#e04385;font-size:16px;"></i> Pros & Cons Breakdown</h3>
+                <div class="pros-cons-grid">
+                    <div class="pros-column">
+                        <h4><i class="fa-solid fa-thumbs-up check-green"></i> Key Advantages</h4>
+                        <ul class="pc-list">
+                            @if(!empty($tool->pros) && is_array($tool->pros))
+                                @foreach($tool->pros as $pro)
+                                    <li><i class="fa-solid fa-check check-green"></i> {{ $pro }}</li>
+                                @endforeach
+                            @else
+                                <li><i class="fa-solid fa-check check-green"></i> High-performance generative AI processing.</li>
+                                <li><i class="fa-solid fa-check check-green"></i> Enterprise-grade security and role hierarchies.</li>
+                                <li><i class="fa-solid fa-check check-green"></i> Intuitive UI and comprehensive developer API.</li>
+                            @endif
+                        </ul>
+                    </div>
+                    <div class="cons-column">
+                        <h4><i class="fa-solid fa-thumbs-down check-orange"></i> Potential Drawbacks</h4>
+                        <ul class="pc-list">
+                            @if(!empty($tool->cons) && is_array($tool->cons))
+                                @foreach($tool->cons as $con)
+                                    <li><i class="fa-solid fa-xmark check-orange"></i> {{ $con }}</li>
+                                @endforeach
+                            @else
+                                <li><i class="fa-solid fa-xmark check-orange"></i> Requires team onboarding for advanced features.</li>
+                                <li><i class="fa-solid fa-xmark check-orange"></i> Custom enterprise plans require direct vendor contact.</li>
+                            @endif
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Specifications Sidebar -->
-            <aside class="vendor-right-sidebar">
-                <div class="specs-box">
-                    <h4><i class="fa-solid fa-sliders"></i> Quick Specifications</h4>
-                    <div class="spec-row">
-                        <span>Tool Name:</span>
-                        <strong>{{ $tool->name }}</strong>
+            {{-- Reviews --}}
+            <div id="reviews" class="detail-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+                    <h3 style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
+                        <i class="fa-solid fa-star" style="color:#ffc107;font-size:16px;"></i>
+                        Verified User Reviews
+                        <span style="font-size:14px;color:#9a8c9e;font-weight:500;">({{ $approvedReviews->count() }})</span>
+                    </h3>
+                    <button onclick="openReviewModal()" class="btn-cta-pink">
+                        <i class="fa-solid fa-pen-to-square"></i> Write Review
+                    </button>
+                </div>
+
+                @if($approvedReviews->count() > 0)
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        @foreach($approvedReviews as $review)
+                            <div class="review-item-card">
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                                    <div style="display:flex;align-items:center;gap:12px;">
+                                        <div class="reviewer-avatar">
+                                            {{ strtoupper(substr($review->user_name ?? 'U', 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <h4 style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;">{{ $review->user_name }}</h4>
+                                            <span style="font-size:11px;color:#9a8c9e;display:flex;align-items:center;gap:5px;">
+                                                @if($review->is_verified)
+                                                    <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Verified Reviewer &bull;
+                                                @endif
+                                                {{ $review->created_at ? $review->created_at->diffForHumans() : 'Recently' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="review-stars">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="{{ $i <= $review->rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                        @endfor
+                                        <span style="color:#fff;font-weight:700;margin-left:5px;font-size:12px;">{{ $review->rating }}.0</span>
+                                    </div>
+                                </div>
+
+                                <p style="font-size:14px;color:#c4b8c9;line-height:1.7;margin:0;">"{{ $review->comment }}"</p>
+
+                                @if($review->vendor_reply)
+                                    <div style="background:rgba(224,67,133,0.06);border-left:3px solid #e04385;padding:14px 18px;border-radius:0 12px 12px 0;margin-top:14px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                            <span style="background:#e04385;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;">Official Vendor Response</span>
+                                            @if($review->vendor_replied_at)
+                                                <span style="font-size:11px;color:#9a8c9e;">{{ $review->vendor_replied_at->diffForHumans() }}</span>
+                                            @endif
+                                        </div>
+                                        <p style="font-size:13px;color:#f1e4f3;margin:0;font-style:italic;line-height:1.6;">"{{ $review->vendor_reply }}"</p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="spec-row">
-                        <span>Vendor:</span>
-                        <strong>{{ $tool->vendor->company_name ?? 'Verified Vendor' }}</strong>
+                @else
+                    <div class="empty-state">
+                        <i class="fa-regular fa-comment-dots" style="font-size:36px;color:#4a3a52;margin-bottom:14px;display:block;"></i>
+                        <p>No community reviews yet. Be the first to review {{ $tool->name }}!</p>
+                        <button onclick="openReviewModal()" class="btn-cta-pink">
+                            <i class="fa-solid fa-pen-to-square"></i> Submit First Review
+                        </button>
                     </div>
-                    <div class="spec-row">
-                        <span>Deployment:</span>
-                        <strong>Cloud SaaS, Web, API</strong>
+                @endif
+            </div>
+
+            {{-- Competitors --}}
+            @if(isset($relatedTools) && $relatedTools->count() > 0)
+                <div id="alternatives" class="detail-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:12px;">
+                        <h3 style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
+                            <i class="fa-solid fa-code-compare" style="color:#e04385;font-size:16px;"></i>
+                            Alternative & Competitor AI Tools
+                        </h3>
+                        <a href="{{ route('frontend.compare', ['tool1' => $tool->slug]) }}" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:rgba(224,67,133,0.12);color:#e04385;font-size:13px;font-weight:700;border-radius:10px;border:1px solid rgba(224,67,133,0.25);text-decoration:none;transition:all 0.2s ease;" onmouseover="this.style.background='#e04385';this.style.color='#fff';" onmouseout="this.style.background='rgba(224,67,133,0.12)';this.style.color='#e04385';">
+                            <i class="fa-solid fa-code-compare"></i> Open Full Comparison
+                        </a>
                     </div>
-                    <div class="spec-row">
-                        <span>Starting Price:</span>
-                        <strong>{{ $tool->pricing_text ?? '$25 / user / mo' }}</strong>
+                    <p style="font-size:13px;color:#9a8c9e;margin-bottom:20px;margin-top:8px;">Compare {{ $tool->name }} side-by-side against similar AI tools.</p>
+
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+                        @foreach($relatedTools as $rel)
+                            <div class="competitor-card">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                                    <div style="width:38px;height:38px;border-radius:10px;background:rgba(224,67,133,0.1);border:1px solid rgba(224,67,133,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                        @if($rel->logo_url)
+                                            <img src="{{ asset($rel->logo_url) }}" alt="{{ $rel->name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                                        @else
+                                            <i class="fa-solid fa-brain" style="color:#e04385;font-size:14px;"></i>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <h4 style="font-size:14px;color:#fff;font-weight:700;margin-bottom:2px;">{{ $rel->name }}</h4>
+                                        <span style="font-size:11px;color:#9a8c9e;">{{ $rel->ai_type ?? 'AI Tool' }}</span>
+                                    </div>
+                                </div>
+
+                                <p style="font-size:12.5px;color:#9a8c9e;margin-bottom:14px;line-height:1.5;">{{ Str::limit($rel->short_description, 75) }}</p>
+
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                                    <span style="font-size:12.5px;color:#ffc107;font-weight:700;display:flex;align-items:center;gap:4px;">
+                                        <i class="fa-solid fa-star"></i>
+                                        {{ number_format($rel->reviews->avg('rating') ?: 4.5, 1) }}
+                                    </span>
+                                    <a href="{{ route('frontend.compare', ['tool1' => $tool->slug, 'tool2' => $rel->slug]) }}" class="btn-visit">
+                                        <i class="fa-solid fa-code-compare" style="font-size:11px;"></i> Compare
+                                    </a>
+                                </div>
+
+                                {{-- View detail link --}}
+                                <a href="{{ route('frontend.tools.show', $rel->slug) }}" style="display:block;margin-top:10px;font-size:12px;color:#9a8c9e;text-align:center;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;transition:color 0.2s;" onmouseover="this.style.color='#e04385'" onmouseout="this.style.color='#9a8c9e'">
+                                    View {{ $rel->name }} details <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="spec-row">
-                        <span>Verified:</span>
-                        <strong>{{ $tool->is_verified ? 'Yes' : 'Pending' }}</strong>
+                </div>
+            @else
+                {{-- Always show the compare CTA even with no related tools --}}
+                <div id="alternatives" class="detail-card">
+                    <h3><i class="fa-solid fa-code-compare" style="color:#e04385;font-size:16px;"></i> Compare AI Tools</h3>
+                    <div class="empty-state">
+                        <i class="fa-solid fa-code-compare" style="font-size:36px;color:#4a3a52;margin-bottom:14px;display:block;"></i>
+                        <p>No similar tools found in this category yet. Use the comparison engine to benchmark {{ $tool->name }} against any other tool.</p>
+                        <a href="{{ route('frontend.compare', ['tool1' => $tool->slug]) }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(90deg,#e04385,#fa709a);color:#fff;font-weight:700;font-size:14px;border-radius:10px;text-decoration:none;box-shadow:0 4px 16px rgba(224,67,133,0.3);transition:all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fa-solid fa-code-compare"></i> Open Comparison Engine
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+        </div>{{-- /content-left --}}
+
+        {{-- ===== RIGHT SIDEBAR ===== --}}
+        <aside class="sidebar-right">
+
+            {{-- Product Intelligence Card --}}
+            <div class="sidebar-meta-card">
+                <h4><i class="fa-solid fa-chart-bar" style="color:#e04385;margin-right:8px;"></i> Product Intelligence</h4>
+                <div class="meta-list">
+                    <div class="meta-row">
+                        <span class="label">Vendor</span>
+                        <span class="val">{{ $tool->vendor->company_name ?? ($tool->name . ' Inc.') }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="label">Pricing</span>
+                        <span class="val">{{ $tool->pricing_text ?? ($tool->tier->name ?? 'Freemium') }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="label">AI Type</span>
+                        <span class="val">{{ $tool->ai_type ?? 'Generative AI' }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="label">Categories</span>
+                        <span class="val">{{ $tool->categories->pluck('name')->join(', ') ?: 'AI Tool' }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="label">Status</span>
+                        <span class="val" style="color:#10b981;display:flex;align-items:center;gap:5px;justify-content:flex-end;">
+                            <i class="fa-solid fa-circle" style="font-size:7px;"></i> Active & Listed
+                        </span>
                     </div>
                 </div>
 
-                <div class="sidebar-cta-card">
-                    <i class="fa-solid fa-wand-magic-sparkles cta-icon"></i>
-                    <h4>Need custom software recommendations?</h4>
-                    <p>Use our AI analysis engine to calculate exact team pricing and feature fit.</p>
-                    <a href="{{ route('frontend.vendors.crm') }}" class="btn-sidebar-trial" style="text-decoration: none; display: block; text-align: center;">Run Comparison AI</a>
+                {{-- TechScore Badge --}}
+                <div class="techscore-badge">
+                    <div class="techscore-number">{{ $tool->score }}</div>
+                    <div class="techscore-label">TechAnalytica Score / 100</div>
+                    <div class="techscore-bar-wrap">
+                        <div class="techscore-bar-fill" style="width:{{ $tool->score }}%;"></div>
+                    </div>
                 </div>
-            </aside>
-        </div>
-    </section>
+            </div>
 
-    <!-- Review Modal -->
-    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="background: #14091a; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff; border-radius: 16px;">
-                <div class="modal-header" style="border-bottom: 1px solid rgba(224, 67, 133, 0.2);">
-                    <h5 class="modal-title" id="reviewModalLabel">Review {{ $tool->name }}</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('frontend.reviews.store', $tool->id) }}" method="POST">
+            {{-- Share / Favorite --}}
+            <div class="sidebar-actions-row">
+                <button class="btn-action-icon" onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'))">
+                    <i class="fa-solid fa-share-nodes"></i> Share
+                </button>
+                <form action="{{ route('frontend.tools.lead', $tool->slug) }}" method="POST" style="flex:1;display:flex;">
                     @csrf
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label text-white">Your Name</label>
-                            <input type="text" name="user_name" required class="form-control" style="background: #0b0410; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff;" placeholder="e.g. Sarah Jenkins">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-white">Your Email</label>
-                            <input type="email" name="user_email" required class="form-control" style="background: #0b0410; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff;" placeholder="e.g. sarah@company.com">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-white">Rating (1 to 5 Stars)</label>
-                            <select name="rating" required class="form-select" style="background: #0b0410; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff;">
-                                <option value="5">★★★★★ (5 Stars - Excellent)</option>
-                                <option value="4">★★★★☆ (4 Stars - Very Good)</option>
-                                <option value="3">★★★☆☆ (3 Stars - Average)</option>
-                                <option value="2">★★☆☆☆ (2 Stars - Needs Improvement)</option>
-                                <option value="1">★☆☆☆☆ (1 Star - Poor)</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-white">Your Review & Experience</label>
-                            <textarea name="comment" rows="4" required class="form-control" style="background: #0b0410; border: 1px solid rgba(224, 67, 133, 0.3); color: #fff;" placeholder="How did this tool improve your workflow?"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="border-top: 1px solid rgba(224, 67, 133, 0.2);">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #e04385 0%, #a4358a 100%); border: none;">Submit Review</button>
-                    </div>
+                    <button type="button" class="btn-action-icon" style="width:100%;" onclick="openLeadModal('contact')">
+                        <i class="fa-regular fa-heart"></i> Inquire
+                    </button>
                 </form>
             </div>
-        </div>
-    </div>
 
-    <!-- 4. Trial CTA Box -->
-    <div class="container" style="margin-bottom: 80px;">
-        <div class="trial-cta-box">
+            {{-- Enterprise CTA --}}
+            <div class="sidebar-cta-card">
+                <i class="fa-solid fa-envelope-open-text cta-icon" style="color:#e04385;"></i>
+                <h4>Need Custom Enterprise Pricing?</h4>
+                <p>Connect directly with the product team for volume licensing and architectural inquiries.</p>
+                <button onclick="openLeadModal('pricing')" class="btn-sidebar-trial">
+                    Request Custom Quote
+                </button>
+            </div>
+
+        </aside>
+
+    </div>
+</section>
+
+{{-- ========== LEAD CAPTURE MODAL ========== --}}
+<div id="leadModal" class="modal-lead">
+    <div class="modal-lead-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
             <div>
-                <h2>Ready to evaluate {{ $tool->name }}?</h2>
-                <p>Start your trial or compare against similar software in its category.</p>
-                <div class="cta-btns">
-                    <a href="{{ $tool->website_url ?? '#' }}" target="_blank" class="btn-trial-pink" style="text-decoration: none; display: inline-block;">Visit Official Site</a>
-                    <a href="{{ route('frontend.vendors.crm') }}" class="btn-trial-outline" style="text-decoration: none; display: inline-block;">Compare Alternatives</a>
+                <h3 style="font-size:20px;font-weight:800;color:#fff;margin:0 0 4px;">Connect with {{ $tool->name }}</h3>
+                <p style="font-size:13px;color:#9a8c9e;margin:0;">Request a personalized demo or custom pricing proposal.</p>
+            </div>
+            <button type="button" onclick="closeLeadModal()" class="modal-close-btn">&times;</button>
+        </div>
+
+        <form action="{{ route('frontend.tools.lead', $tool->slug) }}" method="POST">
+            @csrf
+            <input type="hidden" name="intent_type" id="lead_intent_type" value="demo">
+
+            <div class="modal-field">
+                <label class="modal-label">Your Name *</label>
+                <input type="text" name="name" required class="form-control" placeholder="Jane Doe">
+            </div>
+
+            <div class="modal-field">
+                <label class="modal-label">Work Email *</label>
+                <input type="email" name="email" required class="form-control" placeholder="jane@company.com">
+            </div>
+
+            <div class="modal-row-2">
+                <div>
+                    <label class="modal-label">Company Name</label>
+                    <input type="text" name="company_name" class="form-control" placeholder="Acme Inc.">
+                </div>
+                <div>
+                    <label class="modal-label">Team Size</label>
+                    <select name="company_size" class="form-control">
+                        <option value="1-10">1–10 members</option>
+                        <option value="11-50">11–50 members</option>
+                        <option value="51-200">51–200 members</option>
+                        <option value="201-1000">201–1000 members</option>
+                        <option value="1000+">1000+ Enterprise</option>
+                    </select>
                 </div>
             </div>
-            <div class="cta-dots-graphic">
-                <div class="c-dot"></div>
-                <div class="c-dot"></div>
-                <div class="c-dot"></div>
-                <div class="c-dot"></div>
-                <div class="c-dot"></div>
+
+            <div class="modal-field">
+                <label class="modal-label">Message / Questions</label>
+                <textarea name="message" rows="3" class="form-control" placeholder="Tell the vendor team about your use case..."></textarea>
             </div>
-        </div>
+
+            <button type="submit" class="btn-trial-pink" style="width:100%;justify-content:center;">
+                <i class="fa-solid fa-paper-plane"></i> Send Request to Vendor
+            </button>
+        </form>
     </div>
+</div>
 
-    <script>
-        function updateROI() {
-            var reps = parseInt(document.getElementById('repSlider').value);
-            var deal = parseInt(document.getElementById('dealSlider').value);
-            var hours = parseInt(document.getElementById('hourSlider').value);
+{{-- ========== REVIEW SUBMISSION MODAL ========== --}}
+<div id="reviewModal" class="modal-lead">
+    <div class="modal-lead-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+                <h3 style="font-size:20px;font-weight:800;color:#fff;margin:0 0 4px;">Review {{ $tool->name }}</h3>
+                <p style="font-size:13px;color:#9a8c9e;margin:0;">Share your honest experience with the community.</p>
+            </div>
+            <button type="button" onclick="closeReviewModal()" class="modal-close-btn">&times;</button>
+        </div>
 
-            var savings = (reps * hours * 52 * 50) + (reps * (deal * 0.15));
-            document.getElementById('annualRoi').innerText = '$' + Math.round(savings).toLocaleString();
-        }
-    </script>
+        <form action="{{ route('frontend.tools.review', $tool->slug) }}" method="POST">
+            @csrf
+            <div class="modal-row-2">
+                <div>
+                    <label class="modal-label">Your Name *</label>
+                    <input type="text" name="reviewer_name" value="{{ auth()->user()->name ?? '' }}" required class="form-control" placeholder="John Doe">
+                </div>
+                <div>
+                    <label class="modal-label">Email *</label>
+                    <input type="email" name="reviewer_email" value="{{ auth()->user()->email ?? '' }}" required class="form-control" placeholder="john@example.com">
+                </div>
+            </div>
+
+            <div class="modal-field">
+                <label class="modal-label">Rating *</label>
+                <select name="rating" required class="form-control">
+                    <option value="5">★★★★★  5 — Excellent</option>
+                    <option value="4">★★★★☆  4 — Very Good</option>
+                    <option value="3">★★★☆☆  3 — Average</option>
+                    <option value="2">★★☆☆☆  2 — Needs Improvement</option>
+                    <option value="1">★☆☆☆☆  1 — Poor</option>
+                </select>
+            </div>
+
+            <div class="modal-field">
+                <label class="modal-label">Your Review *</label>
+                <textarea name="comment" rows="4" required minlength="10" class="form-control" placeholder="Describe your experience, what you loved, what could be better..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-trial-pink" style="width:100%;justify-content:center;">
+                <i class="fa-solid fa-check-circle"></i> Submit Verified Review
+            </button>
+        </form>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    /* --- Modal Controls --- */
+    function openLeadModal(intent) {
+        document.getElementById('lead_intent_type').value = intent;
+        document.getElementById('leadModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLeadModal() {
+        document.getElementById('leadModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function openReviewModal() {
+        document.getElementById('reviewModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    window.addEventListener('click', function(e) {
+        if (e.target.id === 'leadModal')   closeLeadModal();
+        if (e.target.id === 'reviewModal') closeReviewModal();
+    });
+
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { closeLeadModal(); closeReviewModal(); }
+    });
+
+    /* --- Active Tab Highlight on Scroll --- */
+    (function() {
+        const sections = ['overview','proscons','reviews','alternatives'].map(id => document.getElementById(id)).filter(Boolean);
+        const links = document.querySelectorAll('.nav-tabs-list li');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    links.forEach(li => li.classList.remove('active'));
+                    const active = document.querySelector(`.nav-tabs-list a[href="#${entry.target.id}"]`);
+                    if (active) active.parentElement.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+
+        /* Smooth scroll on tab click */
+        document.querySelectorAll('.nav-tabs-list a').forEach(a => {
+            a.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    })();
+
+    /* --- Animate TechScore bar on load --- */
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.techscore-bar-fill');
+        if (bar) {
+            const w = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => bar.style.width = w, 300);
+        }
+    });
+</script>
+@endpush

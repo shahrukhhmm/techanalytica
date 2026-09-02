@@ -37,7 +37,7 @@
                                 <td><span class="badge bg-label-info">{{ ucfirst($transaction->type) }}</span></td>
                                 <td>
                                     <span
-                                        class="badge bg-label-{{ $transaction->status == 'completed' ? 'success' : ($transaction->status == 'pending' ? 'warning' : 'danger') }}">
+                                        class="badge bg-label-{{ in_array($transaction->status, ['completed', 'paid']) ? 'success' : ($transaction->status == 'pending' ? 'warning' : 'danger') }}">
                                         {{ ucfirst($transaction->status) }}
                                     </span>
                                 </td>

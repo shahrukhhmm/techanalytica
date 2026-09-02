@@ -6,104 +6,129 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold">
-                <span class="text-muted fw-light">Products /</span> Edit {{ $tool->name }}
+                <span class="text-muted fw-light">Products /</span> Edit: {{ $tool->name }}
             </h4>
             <a href="{{ route('vendor.tools.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i> Back to List
             </a>
         </div>
 
+        @if ($tool->has_pending_update)
+            <div class="alert alert-warning mb-4 shadow-sm" role="alert">
+                <h5 class="alert-heading mb-1"><i class="bx bx-time-five me-1"></i> Changes Pending Approval</h5>
+                <p class="mb-0">You have previously submitted modifications to this product that are awaiting administrative review. Submitting new changes will update your pending request.</p>
+            </div>
+        @endif
+
         <div class="card shadow-sm border-0">
             <div class="card-body pt-4">
-                <form action="{{ route('vendor.tools.update', $tool->id) }}" method="POST">
+                <form action="{{ route('vendor.tools.update', $tool) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    @php
-                        $permissions = auth()->user()->vendor->tier->permissions ?? [];
-                        $hasLongDescription = in_array('manage_long_description', $permissions);
-                        $hasMultipleIndustries = in_array('manage_multiple_industries', $permissions);
-                        $hasPremiumCTA = in_array('manage_premium_cta', $permissions);
-                    @endphp
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="name" class="form-label fw-bold">Product Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                                name="name" value="{{ old('name', $tool->name) }}" required>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="ai_type" class="form-label fw-bold">AI Type Classification</label>
+                            <select class="form-select @error('ai_type') is-invalid @enderror" id="ai_type" name="ai_type">
+                                <option value="">Select AI Type</option>
+                                <option value="LLM & Conversational AI" {{ old('ai_type', $tool->ai_type) == 'LLM & Conversational AI' ? 'selected' : '' }}>LLM & Conversational AI</option>
+                                <option value="Computer Vision & Image" {{ old('ai_type', $tool->ai_type) == 'Computer Vision & Image' ? 'selected' : '' }}>Computer Vision & Image</option>
+                                <option value="Voice, Audio & Speech" {{ old('ai_type', $tool->ai_type) == 'Voice, Audio & Speech' ? 'selected' : '' }}>Voice, Audio & Speech</option>
+                                <option value="Code Assistant & Dev AI" {{ old('ai_type', $tool->ai_type) == 'Code Assistant & Dev AI' ? 'selected' : '' }}>Code Assistant & Dev AI</option>
+                                <option value="Video Generation & Studio" {{ old('ai_type', $tool->ai_type) == 'Video Generation & Studio' ? 'selected' : '' }}>Video Generation & Studio</option>
+                                <option value="Autonomous Agent & CLI" {{ old('ai_type', $tool->ai_type) == 'Autonomous Agent & CLI' ? 'selected' : '' }}>Autonomous Agent & CLI</option>
+                                <option value="Data Analytics & Predictive" {{ old('ai_type', $tool->ai_type) == 'Data Analytics & Predictive' ? 'selected' : '' }}>Data Analytics & Predictive</option>
+                                <option value="Workflow & Productivity" {{ old('ai_type', $tool->ai_type) == 'Workflow & Productivity' ? 'selected' : '' }}>Workflow & Productivity</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label for="name" class="form-label fw-bold">Product Name <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                                name="name" value="{{ old('name', $tool->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label for="website_url" class="form-label fw-bold">Website URL</label>
+                            <input type="url" class="form-control" id="website_url" name="website_url" value="{{ old('website_url', $tool->website_url) }}">
                         </div>
 
                         <div class="col-md-6 mb-4">
-                            <label for="website_url" class="form-label fw-bold">Website URL</label>
-                            <input type="url" class="form-control @error('website_url') is-invalid @enderror"
-                                id="website_url" name="website_url" value="{{ old('website_url', $tool->website_url) }}"
-                                placeholder="https://">
-                            @error('website_url')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-12 mb-4">
                             <label for="logo_url" class="form-label fw-bold">Product Logo URL</label>
-                            <input type="url" class="form-control @error('logo_url') is-invalid @enderror"
-                                id="logo_url" name="logo_url" value="{{ old('logo_url', $tool->logo_url) }}"
-                                placeholder="https://example.com/logo.png">
-                            <small class="text-muted">A direct URL to your product's logo</small>
-                            @error('logo_url')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <input type="url" class="form-control" id="logo_url" name="logo_url" value="{{ old('logo_url', $tool->logo_url) }}">
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label for="short_description" class="form-label fw-bold">Short Description</label>
-                        <textarea class="form-control @error('short_description') is-invalid @enderror" id="short_description"
-                            name="short_description" rows="2" placeholder="Brief hook (e.g. The modern CRM for sales teams)">{{ old('short_description', $tool->short_description) }}</textarea>
-                        @error('short_description')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <textarea class="form-control" id="short_description" name="short_description" rows="2">{{ old('short_description', $tool->short_description) }}</textarea>
                     </div>
 
-                    <div class="mb-4 position-relative">
-                        <label for="long_description" class="form-label fw-bold">
-                            Product Overview
-                            @if (!$hasLongDescription)
-                                <span class="badge bg-label-warning ms-1"><i class="bx bx-lock-alt me-1"></i>Starter+</span>
-                            @endif
-                        </label>
-                        <textarea class="form-control @error('long_description') is-invalid @enderror" id="long_description"
-                            name="long_description" rows="5" placeholder="Detailed description of your product features and benefits"
-                            {{ !$hasLongDescription ? 'readonly disabled' : '' }}>{{ old('long_description', $tool->long_description) }}</textarea>
-                        @if (!$hasLongDescription)
-                            <div class="mt-2">
-                                <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
-                                        class="bx bx-up-arrow-alt me-1"></i>Upgrade to Starter to unlock long
-                                    description</a>
+                    <div class="mb-4">
+                        <label for="long_description" class="form-label fw-bold">Long Overview & Architecture</label>
+                        <textarea class="form-control" id="long_description" name="long_description" rows="4">{{ old('long_description', $tool->long_description) }}</textarea>
+                    </div>
+
+                    <!-- Pros & Cons Grid -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-success fw-bold"><i class="bx bx-check-circle"></i> Key Advantages (Pros)</label>
+                            <div id="vendor-pros-container">
+                                @php
+                                    $prosList = old('pros', $tool->pros ?? ['High scalability and low inference latency', 'Native REST API support']);
+                                @endphp
+                                @foreach($prosList as $pro)
+                                    <input type="text" name="pros[]" class="form-control mb-2" value="{{ $pro }}" placeholder="Enter advantage">
+                                @endforeach
                             </div>
-                        @endif
-                        @error('long_description')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                            <button type="button" class="btn btn-sm btn-outline-success" onclick="addVendorPro()">+ Add Pro</button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-warning fw-bold"><i class="bx bx-x-circle"></i> Potential Drawbacks (Cons)</label>
+                            <div id="vendor-cons-container">
+                                @php
+                                    $consList = old('cons', $tool->cons ?? ['Requires fine-tuning for custom domain datasets']);
+                                @endphp
+                                @foreach($consList as $con)
+                                    <input type="text" name="cons[]" class="form-control mb-2" value="{{ $con }}" placeholder="Enter drawback">
+                                @endforeach
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-warning" onclick="addVendorCon()">+ Add Con</button>
+                        </div>
                     </div>
 
-                    <h5 class="mt-5 mb-3 fw-bold border-bottom pb-2">Classification</h5>
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold mb-2">Categories</label>
-                            <p class="text-muted small mb-2">Select the categories that best describe your software.</p>
-                            <div class="border rounded p-3"
-                                style="max-height: 250px; overflow-y: auto; background-color: #f8f9fa;">
-                                @php $selectedCategories = $tool->categories->pluck('id')->toArray(); @endphp
+                            <label for="pricing_text" class="form-label fw-bold">Pricing Label</label>
+                            <input type="text" class="form-control" id="pricing_text" name="pricing_text" value="{{ old('pricing_text', $tool->pricing_text) }}">
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="cta_type" class="form-label fw-bold">Call To Action Button</label>
+                            <select class="form-select" id="cta_type" name="cta_type">
+                                <option value="website" {{ old('cta_type', $tool->cta_type) == 'website' ? 'selected' : '' }}>Visit Website</option>
+                                <option value="signup" {{ old('cta_type', $tool->cta_type) == 'signup' ? 'selected' : '' }}>Sign Up</option>
+                                <option value="demo" {{ old('cta_type', $tool->cta_type) == 'demo' ? 'selected' : '' }}>Book Demo</option>
+                                <option value="free_trial" {{ old('cta_type', $tool->cta_type) == 'free_trial' ? 'selected' : '' }}>Start Free Trial</option>
+                                <option value="contact_sales" {{ old('cta_type', $tool->cta_type) == 'contact_sales' ? 'selected' : '' }}>Contact Sales</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold">Categories</label>
+                            <div class="border p-3 rounded" style="max-height: 180px; overflow-y: auto;">
+                                @php $selectedCats = old('categories', $tool->categories->pluck('id')->toArray()); @endphp
                                 @foreach ($categories as $category)
-                                    <div class="form-check mb-2">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="categories[]"
-                                            value="{{ $category->id }}" id="cat-{{ $category->id }}"
-                                            {{ is_array(old('categories', $selectedCategories)) && in_array($category->id, old('categories', $selectedCategories)) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="cat-{{ $category->id }}">
+                                            value="{{ $category->id }}" id="vcat-{{ $category->id }}"
+                                            {{ in_array($category->id, $selectedCats) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vcat-{{ $category->id }}">
                                             {{ $category->name }}
                                         </label>
                                     </div>
@@ -112,121 +137,53 @@
                         </div>
 
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold mb-2">
-                                Targeted Industries
-                                @if (!$hasMultipleIndustries)
-                                    <span class="badge bg-label-warning ms-1"><i
-                                            class="bx bx-lock-alt me-1"></i>Growth+</span>
-                                @endif
-                            </label>
-                            <p class="text-muted small mb-2">Which industries does your product cater to? @if (!$hasMultipleIndustries)
-                                    <span class="text-warning fw-bold">(Limited to 1)</span>
-                                @endif
-                            </p>
-                            <div class="border rounded p-3"
-                                style="max-height: 250px; overflow-y: auto; background-color: #f8f9fa;">
-                                @php $selectedIndustries = $tool->industries->pluck('id')->toArray(); @endphp
+                            <label class="form-label fw-bold">Industries</label>
+                            <div class="border p-3 rounded" style="max-height: 180px; overflow-y: auto;">
+                                @php $selectedInds = old('industries', $tool->industries->pluck('id')->toArray()); @endphp
                                 @foreach ($industries as $industry)
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input industry-check" type="checkbox" name="industries[]"
-                                            value="{{ $industry->id }}" id="ind-{{ $industry->id }}"
-                                            {{ is_array(old('industries', $selectedIndustries)) && in_array($industry->id, old('industries', $selectedIndustries)) ? 'checked' : '' }}
-                                            {{ !$hasMultipleIndustries && count($selectedIndustries) >= 1 && !in_array($industry->id, $selectedIndustries) ? 'disabled' : '' }}>
-                                        <label class="form-check-label" for="ind-{{ $industry->id }}">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="industries[]"
+                                            value="{{ $industry->id }}" id="vind-{{ $industry->id }}"
+                                            {{ in_array($industry->id, $selectedInds) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vind-{{ $industry->id }}">
                                             {{ $industry->name }}
                                         </label>
                                     </div>
                                 @endforeach
                             </div>
-                            @if (!$hasMultipleIndustries)
-                                <div class="mt-2">
-                                    <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
-                                            class="bx bx-up-arrow-alt me-1"></i>Upgrade to Growth to unlock up to 5
-                                        industries</a>
-                                </div>
-                            @endif
                         </div>
                     </div>
 
-                    <h5 class="mt-4 mb-3 fw-bold border-bottom pb-2">Call to Action & Status</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label for="cta_type" class="form-label fw-bold">
-                                Call-to-Action Type
-                                @if (!$hasPremiumCTA)
-                                    <span class="badge bg-label-warning ms-1"><i
-                                            class="bx bx-lock-alt me-1"></i>Starter+</span>
-                                @endif
-                            </label>
-                            <select class="form-select @error('cta_type') is-invalid @enderror" id="cta_type"
-                                name="cta_type">
-                                <option value="">Select Primary CTA</option>
-                                <option value="website"
-                                    {{ old('cta_type', $tool->cta_type) == 'website' ? 'selected' : '' }}>Visit Website
-                                </option>
-                                <option value="signup"
-                                    {{ old('cta_type', $tool->cta_type) == 'signup' ? 'selected' : '' }}
-                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Sign Up @if (!$hasPremiumCTA)
-                                        (Starter+)
-                                    @endif
-                                </option>
-                                <option value="demo" {{ old('cta_type', $tool->cta_type) == 'demo' ? 'selected' : '' }}
-                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Book a Demo @if (!$hasPremiumCTA)
-                                        (Starter+)
-                                    @endif
-                                </option>
-                                <option value="free_trial"
-                                    {{ old('cta_type', $tool->cta_type) == 'free_trial' ? 'selected' : '' }}
-                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Start Free Trial @if (!$hasPremiumCTA)
-                                        (Starter+)
-                                    @endif
-                                </option>
-                                <option value="contact_sales"
-                                    {{ old('cta_type', $tool->cta_type) == 'contact_sales' ? 'selected' : '' }}
-                                    {{ !$hasPremiumCTA ? 'disabled' : '' }}>Contact Sales @if (!$hasPremiumCTA)
-                                        (Starter+)
-                                    @endif
-                                </option>
-                            </select>
-                            @if (!$hasPremiumCTA)
-                                <div class="mt-2">
-                                    <a href="{{ route('vendor.billing') }}" class="small text-warning fw-bold"><i
-                                            class="bx bx-up-arrow-alt me-1"></i>Upgrade to Starter for custom CTAs</a>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <label for="cta_url" class="form-label fw-bold">CTA Destination URL</label>
-                            <input type="url" class="form-control @error('cta_url') is-invalid @enderror"
-                                id="cta_url" name="cta_url" value="{{ old('cta_url', $tool->cta_url) }}"
-                                placeholder="https://">
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-12 mb-4">
-                            @if ($tool->status === 'published')
-                                <div class="alert alert-warning border-0 shadow-none mb-0">
-                                    <i class="bx bx-info-circle me-1"></i> This product is <strong>Published</strong>. Any
-                                    changes you save here will be submitted as a <strong>Pending Update</strong> and won't
-                                    affect the live product until an admin approves them.
-                                </div>
-                            @else
-                                <div class="alert alert-info border-0 shadow-none mb-0">
-                                    <i class="bx bx-info-circle me-1"></i> This product is currently in
-                                    <strong>{{ ucfirst($tool->status) }}</strong> state.
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2 border-top pt-4 mt-2">
-                        <a href="{{ route('vendor.tools.index') }}" class="btn btn-outline-secondary px-4">Cancel</a>
-                        <button type="submit" class="btn btn-primary px-5">Save Changes</button>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ route('vendor.tools.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            {{ $tool->status === 'published' ? 'Save & Submit for Approval' : 'Update Draft' }}
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        function addVendorPro() {
+            const c = document.getElementById('vendor-pros-container');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'pros[]';
+            input.className = 'form-control mb-2';
+            input.placeholder = 'Enter advantage';
+            c.appendChild(input);
+        }
+
+        function addVendorCon() {
+            const c = document.getElementById('vendor-cons-container');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'cons[]';
+            input.className = 'form-control mb-2';
+            input.placeholder = 'Enter drawback';
+            c.appendChild(input);
+        }
+    </script>
 @endsection

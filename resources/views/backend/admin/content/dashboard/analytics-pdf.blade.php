@@ -1,123 +1,71 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="utf-8">
-  <title>Analytics Report - {{ now()->format('d/m/Y') }}</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      font-size: 11px;
-      color: #333;
-      margin: 15px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-    }
-
-    th,
-    td {
-      border: 1px solid #ddd;
-      padding: 6px 8px;
-      text-align: right;
-    }
-
-    th {
-      background: #f0f0f0;
-      text-align: center;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .summary {
-      background: #f8f9fa;
-      padding: 12px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-    }
-
-    h1,
-    h2 {
-      color: #222;
-      margin: 0 0 10px;
-    }
-
-    .highlight {
-      color: #28c76f;
-      font-weight: bold;
-    }
-
-    .negative {
-      color: #ea5455;
-    }
-  </style>
+    <meta charset="utf-8">
+    <title>TechAnalytica Platform Executive Report</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 13px; margin: 0; padding: 20px; }
+        .header { text-align: center; border-bottom: 2px solid #e04385; padding-bottom: 15px; margin-bottom: 25px; }
+        .logo { font-size: 24px; font-weight: bold; color: #e04385; }
+        .grid { width: 100%; margin-bottom: 20px; }
+        .grid td { padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; }
+        .val { font-size: 20px; font-weight: bold; color: #1e293b; }
+        .lbl { font-size: 11px; color: #64748b; text-transform: uppercase; margin-top: 4px; }
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table.data-table th, table.data-table td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+        table.data-table th { background: #f1f5f9; font-weight: bold; }
+    </style>
 </head>
-
 <body>
+    <div class="header">
+        <div class="logo">TechAnalytica</div>
+        <h2 style="margin: 5px 0 0;">Platform Executive Intelligence Report</h2>
+        <p style="color: #64748b; font-size: 12px; margin-top: 4px;">Generated on {{ date('F d, Y') }}</p>
+    </div>
 
-  <div class="header">
-    <h1>Financial Analytics Report</h1>
-    <p><strong>Period:</strong> Last 12 Months • <strong>Generated:</strong> {{ now()->format('d M Y') }}</p>
-    <p><strong>Department:</strong> {{ $departmentName }}</p>
-  </div>
-
-  <div class="summary">
-    <h2>Key Summary</h2>
-    <p><strong>Total Sales:</strong> Rs. {{ number_format($salesTotal) }}</p>
-    <p><strong>Total Expenses:</strong> Rs. {{ number_format($expensesTotal) }}</p>
-    <p><strong>Net Profit:</strong> <span class="{{ $profit >= 0 ? 'highlight' : 'negative' }}">Rs.
-        {{ number_format($profit) }}</span></p>
-    <p><strong>Average Monthly Sales:</strong> Rs. {{ number_format($averageMonthlySales) }}</p>
-    <p><strong>Average Monthly Expenses:</strong> Rs. {{ number_format($averageMonthlyExpense) }}</p>
-  </div>
-
-  <h2>Monthly Breakdown</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Sales (PKR)</th>
-        <th>Expenses (PKR)</th>
-        <th>Profit/Loss (PKR)</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($months as $index => $month)
-        <?php
-        $sales = $salesData[$index];
-        $expense = $expensesData[$index];
-        $monthlyProfit = $sales - $expense;
-        ?>
+    <table class="grid">
         <tr>
-          <td style="text-align:left">{{ $month }}</td>
-          <td>Rs. {{ number_format($sales) }}</td>
-          <td>Rs. {{ number_format($expense) }}</td>
-          <td class="{{ $monthlyProfit >= 0 ? 'highlight' : 'negative' }}">
-            Rs. {{ number_format($monthlyProfit) }}
-          </td>
+            <td>
+                <div class="val">{{ $totalTools }}</div>
+                <div class="lbl">Total AI Tools</div>
+            </td>
+            <td>
+                <div class="val">{{ $totalVendors }}</div>
+                <div class="lbl">Active Vendors</div>
+            </td>
+            <td>
+                <div class="val">{{ $totalLeads }}</div>
+                <div class="lbl">Leads Captured</div>
+            </td>
+            <td>
+                <div class="val">{{ $totalReviews }}</div>
+                <div class="lbl">Reviews Logged</div>
+            </td>
         </tr>
-      @endforeach
-    </tbody>
-  </table>
+    </table>
 
-  <h2>Highlights</h2>
-  <ul>
-    <li><strong>Best Sales Month:</strong> {{ $months[$bestMonthIndex] }} → Rs. {{ number_format($bestMonthSales) }}
-    </li>
-    <li><strong>Worst Sales Month:</strong> {{ $months[$worstMonthIndex] }} → Rs.
-      {{ number_format($worstMonthSales) }}</li>
-  </ul>
-
-  <p style="text-align:center; color:#777; margin-top:40px; font-size:9px;">
-    Generated from your system • © {{ now()->year }}
-  </p>
-
+    <h3 style="margin-top: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Top Ranked AI Products</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Classification</th>
+                <th>Status</th>
+                <th>TechScore</th>
+                <th>Reviews</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($topTools as $tool)
+                <tr>
+                    <td><strong>{{ $tool->name }}</strong></td>
+                    <td>{{ $tool->ai_type ?? 'AI Tool' }}</td>
+                    <td>{{ ucfirst($tool->status) }}</td>
+                    <td>{{ $tool->score }} / 100</td>
+                    <td>{{ $tool->reviews_count }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </body>
-
 </html>

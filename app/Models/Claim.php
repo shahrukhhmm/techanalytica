@@ -12,6 +12,11 @@ class Claim extends Model
     protected $fillable = [
         'tool_id',
         'vendor_id',
+        'full_name',
+        'work_email',
+        'company_name',
+        'company_website',
+        'verification_info',
         'status',
         'reason',
     ];

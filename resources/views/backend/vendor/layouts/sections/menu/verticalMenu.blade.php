@@ -5,13 +5,16 @@
 
     <!-- ! Hide app brand if navbar-full -->
     <div class="app-brand demo">
-        <a href="{{ url('/') }}" class="app-brand-link">
-            {{-- <span class="app-brand-logo demo">@include('_partials.macros')</span> --}}
-            {{-- <span class="app-brand-text demo menu-text fw-bold ms-2">Golden Peak Trading</span> --}}
-            <img class="app-brand-logo demo" src="{{ asset('assets/img/gplogo.png') }}" alt="" width="50%">
+        <a href="{{ url('/') }}" class="app-brand-link d-flex align-items-center gap-2 py-2 text-decoration-none">
+            <div class="logo-dots-brand">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+            <span class="app-brand-text fw-bold fs-5 text-white tracking-tight">Tech<span style="background: linear-gradient(135deg, #e04385 0%, #a4358a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Analytica</span></span>
         </a>
 
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none text-white">
             <i class="icon-base bx bx-chevron-left icon-sm d-flex align-items-center justify-content-center"></i>
         </a>
     </div>

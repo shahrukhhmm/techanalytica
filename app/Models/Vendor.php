@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Vendor extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'company_name',
@@ -54,5 +55,10 @@ class Vendor extends Model
     public function submissions()
     {
         return $this->hasMany(Submission::class);
+    }
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
     }
 }

@@ -3,45 +3,95 @@
 namespace Database\Seeders;
 
 use App\Models\PricingTier;
+use App\Models\Tool;
+use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 
 class PricingTierSeeder extends Seeder
 {
     public function run(): void
     {
+        // Define the 3 core plans: 1 Free, 1 Monthly, 1 Yearly
         $tiers = [
             [
                 'name' => 'Free',
                 'monthly_price' => 0.00,
                 'annual_price' => 0.00,
-                'features' => ['1 Tool Slot', 'Basic Analytics'],
+                'features' => [
+                    '100% Free for Public Users & Visitors',
+                    '1 Basic Tool Listing Slot',
+                    'Community Ratings & Reviews',
+                    'Public Side-by-Side Comparison',
+                    'Standard Directory Listing',
+                ],
                 'permissions' => [],
             ],
             [
-                'name' => 'Starter',
+                'name' => 'Pro Monthly',
                 'monthly_price' => 29.00,
+                'annual_price' => 348.00,
+                'features' => [
+                    '1 Tool Listing Slot (Billed Monthly)',
+                    'Full Analytics & Traffic Telemetry',
+                    'Verified Product Badge',
+                    'Long Architecture & Overview Specs',
+                    'Custom Call-To-Action (CTA)',
+                    'Direct Buyer Lead Capture',
+                ],
+                'permissions' => [
+                    'view_analytics',
+                    'manage_pricing',
+                    'manage_features',
+                    'manage_long_description',
+                    'manage_premium_cta',
+                    'lead_capture',
+                ],
+            ],
+            [
+                'name' => 'Pro Yearly',
+                'monthly_price' => 24.00,
                 'annual_price' => 290.00,
-                'features' => ['1 Tool Slot', 'Full Analytics', 'Long Description', 'Custom CTAs'],
-                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_long_description', 'manage_premium_cta'],
-            ],
-            [
-                'name' => 'Growth',
-                'monthly_price' => 79.00,
-                'annual_price' => 790.00,
-                'features' => ['3 Tool Slots', 'Full Analytics', 'All Base Features', 'Multiple Industries'],
-                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_reviews', 'manage_long_description', 'manage_premium_cta', 'manage_multiple_industries', 'manage_3_products'],
-            ],
-            [
-                'name' => 'Enterprise',
-                'monthly_price' => 199.00,
-                'annual_price' => 1990.00,
-                'features' => ['Unlimited Tools', 'Priority Support', 'Ads Management'],
-                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_reviews', 'manage_ads', 'manage_long_description', 'manage_premium_cta', 'manage_multiple_industries', 'manage_unlimited_products'],
+                'features' => [
+                    '3 Tool Listing Slots (Billed Annually — Save $58)',
+                    'Priority Directory Ranking & Featured Badge',
+                    'Full Analytics & Telemetry',
+                    'Multi-Industry Categorization',
+                    'Review Responses & Moderation',
+                    'Lead Inquiries CSV Export',
+                    'Priority 24/7 Support',
+                ],
+                'permissions' => [
+                    'view_analytics',
+                    'manage_pricing',
+                    'manage_features',
+                    'manage_long_description',
+                    'manage_premium_cta',
+                    'lead_capture',
+                    'manage_reviews',
+                    'featured_listing',
+                    'manage_multiple_industries',
+                    'manage_3_products',
+                ],
             ],
         ];
 
-        foreach ($tiers as $tier) {
-            PricingTier::updateOrCreate(['name' => $tier['name']], $tier);
+        // Ensure 3 standard tier records
+        $tierIds = [];
+        foreach ($tiers as $tierData) {
+            $tier = PricingTier::updateOrCreate(['name' => $tierData['name']], $tierData);
+            $tierIds[$tierData['name']] = $tier->id;
+        }
+
+        $freeTierId = $tierIds['Free'];
+
+        // Clean up any other obsolete/duplicate tiers (e.g. "Free Vendor Tier", "Starter", "Enterprise", etc.)
+        $validNames = array_column($tiers, 'name');
+        $obsoleteTiers = PricingTier::whereNotIn('name', $validNames)->get();
+
+        foreach ($obsoleteTiers as $obsolete) {
+            Tool::where('tier_id', $obsolete->id)->update(['tier_id' => $freeTierId]);
+            Vendor::where('pricing_tier_id', $obsolete->id)->update(['pricing_tier_id' => $freeTierId]);
+            $obsolete->delete();
         }
     }
 }

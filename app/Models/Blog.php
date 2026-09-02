@@ -8,17 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Blog extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'title',
         'slug',
         'body',
         'author_id',
         'vendor_id',
+        'category_id',
         'status',
         'published_at',
         'meta_title',
         'meta_description',
-        'canonical_url',
         'og_image',
     ];
 
@@ -34,5 +35,15 @@ class Blog extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(BlogCategory::class, 'category_id');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(BlogTag::class, 'blog_blog_tag');
     }
 }

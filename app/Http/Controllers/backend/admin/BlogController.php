@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use File;
@@ -12,18 +13,19 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::with('author')->latest()->get();
+        $blogs = Blog::with(['author', 'category'])->latest()->get();
         return view('backend.admin.content.blogs.index', compact('blogs'));
     }
 
     public function create()
     {
-        return view('backend.admin.content.blogs.create');
+        $categories = BlogCategory::orderBy('name')->get();
+        return view('backend.admin.content.blogs.create', compact('categories'));
     }
 
     public function show(Blog $blog)
     {
-        $blog->load('author');
+        $blog->load(['author', 'category', 'tags']);
         return view('backend.admin.content.blogs.show', compact('blog'));
     }
 
@@ -31,6 +33,7 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'category_id' => 'nullable|exists:blog_categories,id',
             'body' => 'required',
             'status' => 'required|in:draft,published',
             'meta_title' => 'nullable|string|max:255',
@@ -58,13 +61,15 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
-        return view('backend.admin.content.blogs.edit', compact('blog'));
+        $categories = BlogCategory::orderBy('name')->get();
+        return view('backend.admin.content.blogs.edit', compact('blog', 'categories'));
     }
 
     public function update(Request $request, Blog $blog)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'category_id' => 'nullable|exists:blog_categories,id',
             'body' => 'required',
             'status' => 'required|in:draft,published',
             'meta_title' => 'nullable|string|max:255',
@@ -75,11 +80,9 @@ class BlogController extends Controller
         $validated['slug'] = Str::slug($request->title);
 
         if ($request->hasFile('og_image')) {
-            // Delete old image
             if ($blog->og_image && File::exists(public_path($blog->og_image))) {
                 File::delete(public_path($blog->og_image));
             }
-
             $imageName = time() . '.' . $request->og_image->extension();
             $request->og_image->move(public_path('uploads/blogs'), $imageName);
             $validated['og_image'] = 'uploads/blogs/' . $imageName;

@@ -17,6 +17,15 @@ class Review extends Model
         'rating',
         'comment',
         'status',
+        'is_verified',
+        'verification_type',
+        'vendor_reply',
+        'vendor_replied_at',
+    ];
+
+    protected $casts = [
+        'is_verified' => 'boolean',
+        'vendor_replied_at' => 'datetime',
     ];
 
     public function tool()

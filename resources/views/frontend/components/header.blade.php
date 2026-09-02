@@ -14,135 +14,78 @@
             </a>
             
             <ul class="nav-links">
+                <li><a href="{{ route('frontend.tools.index') }}">AI Software</a></li>
+                <!-- Industries / Categories Dropdown -->
                 <li class="nav-dropdown">
-                    <a href="#" class="nav-dropdown-trigger">
-                        <span>AI Software</span>
-                        <i class="fa-solid fa-chevron-down nav-arrow"></i>
-                    </a>
-
-                    <!-- Hover Dropdown Menu -->
-                    <div class="dropdown-menu">
-                        <div class="dropdown-menu-inner">
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(224, 67, 133, 0.15); color: #e04385;"><i class="fa-solid fa-brain"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Generative AI Tools</div>
-                                    <div class="dropdown-desc">LLMs, text generation & neural assistants</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(164, 53, 138, 0.15); color: #a4358a;"><i class="fa-solid fa-code"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Developer & Code AI</div>
-                                    <div class="dropdown-desc">Code copilots, refactoring & automated testing</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;"><i class="fa-solid fa-palette"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Image & Design Generators</div>
-                                    <div class="dropdown-desc">Text-to-image, vector graphics & UI tools</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i class="fa-solid fa-chart-pie"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Data & Business Intelligence</div>
-                                    <div class="dropdown-desc">Predictive analytics & executive reporting</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </li>
-                <!-- Industries Dropdown -->
-                <li class="nav-dropdown">
-                    <a href="#" class="nav-dropdown-trigger">
-                        <span>Industries</span>
+                    <a href="{{ route('frontend.tools.index') }}" class="nav-dropdown-trigger">
+                        <span>{{ (isset($navIndustries) && $navIndustries->count() > 0) ? 'Industries' : 'Categories' }}</span>
                         <i class="fa-solid fa-chevron-down nav-arrow"></i>
                     </a>
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-inner">
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i class="fa-solid fa-stethoscope"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Healthcare & Biotech</div>
-                                    <div class="dropdown-desc">HIPAA compliant AI, EMR & clinical tools</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i class="fa-solid fa-building-columns"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Fintech & Banking</div>
-                                    <div class="dropdown-desc">Fraud detection, algorithmic trading & compliance</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;"><i class="fa-solid fa-cart-shopping"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">E-Commerce & Retail</div>
-                                    <div class="dropdown-desc">Personalization engines & inventory AI</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(224, 67, 133, 0.15); color: #e04385;"><i class="fa-solid fa-cloud"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Enterprise SaaS</div>
-                                    <div class="dropdown-desc">Multi-tenant CRM, ERP & billing platforms</div>
-                                </div>
-                            </a>
+                            @if(isset($navIndustries) && $navIndustries->count() > 0)
+                                @foreach($navIndustries as $ind)
+                                    <a href="{{ route('frontend.tools.index') }}" class="dropdown-item">
+                                        <div class="dropdown-icon" style="background: rgba(224, 67, 133, 0.15); color: #e04385;"><i class="fa-solid fa-layer-group"></i></div>
+                                        <div class="dropdown-info">
+                                            <div class="dropdown-title">{{ $ind->name }}</div>
+                                            <div class="dropdown-desc">{{ $ind->tools_count }} AI products</div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @elseif(isset($categories) && $categories->count() > 0)
+                                @foreach($categories->take(6) as $cat)
+                                    <a href="{{ route('frontend.tools.index', ['category_id' => $cat->id]) }}" class="dropdown-item">
+                                        <div class="dropdown-icon" style="background: rgba(224, 67, 133, 0.15); color: #e04385;"><i class="fa-solid fa-shapes"></i></div>
+                                        <div class="dropdown-info">
+                                            <div class="dropdown-title">{{ $cat->name }}</div>
+                                            <div class="dropdown-desc">{{ $cat->tools_count }} software tools</div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @else
+                                <a href="{{ route('frontend.tools.index') }}" class="dropdown-item">
+                                    <div class="dropdown-info">
+                                        <div class="dropdown-title">Explore All Software</div>
+                                    </div>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </li>
 
                 <!-- Vendors Dropdown -->
                 <li class="nav-dropdown">
-                    <a href="{{ route('frontend.vendors.crm') }}" class="nav-dropdown-trigger">
+                    <a href="{{ route('frontend.tools.index') }}" class="nav-dropdown-trigger">
                         <span>Vendors</span>
                         <i class="fa-solid fa-chevron-down nav-arrow"></i>
                     </a>
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-inner">
-                            <a href="{{ route('frontend.vendors.crm') }}" class="dropdown-item">
+                            <a href="{{ route('frontend.vendors.show', 'salesforce-sales-cloud') }}" class="dropdown-item">
                                 <div class="dropdown-icon" style="background: rgba(0, 161, 224, 0.15); color: #00a1e0;"><i class="fa-solid fa-cloud"></i></div>
                                 <div class="dropdown-info">
                                     <div class="dropdown-title">Salesforce Sales Cloud</div>
-                                    <div class="dropdown-desc">Top Enterprise CRM • TechScore 98/100</div>
+                                    <div class="dropdown-desc">Enterprise CRM • TechScore 98/100</div>
                                 </div>
                             </a>
-                            <a href="{{ route('frontend.vendors.crm') }}" class="dropdown-item">
+                            <a href="{{ route('frontend.vendors.show', 'hubspot-sales-hub') }}" class="dropdown-item">
                                 <div class="dropdown-icon" style="background: rgba(255, 122, 89, 0.15); color: #ff7a59;"><i class="fa-brands fa-hubspot"></i></div>
                                 <div class="dropdown-info">
                                     <div class="dropdown-title">HubSpot Sales Hub</div>
-                                    <div class="dropdown-desc">Best for Startups • Free tier available</div>
-                                </div>
-                            </a>
-                            <a href="{{ route('frontend.vendors.crm') }}" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(228, 37, 39, 0.15); color: #e42527;"><i class="fa-solid fa-boxes-stacked"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Zoho CRM</div>
-                                    <div class="dropdown-desc">Best Value for SMBs • Zia AI powered</div>
-                                </div>
-                            </a>
-                            <a href="{{ route('frontend.vendors.crm') }}" class="dropdown-item">
-                                <div class="dropdown-icon" style="background: rgba(49, 169, 82, 0.15); color: #31a952;"><i class="fa-solid fa-chart-line"></i></div>
-                                <div class="dropdown-info">
-                                    <div class="dropdown-title">Pipedrive</div>
-                                    <div class="dropdown-desc">Visual deal pipelines & sales analytics</div>
+                                    <div class="dropdown-desc">Best for Startups • Free Tier</div>
                                 </div>
                             </a>
                         </div>
                     </div>
                 </li>
-
                 <li><a href="{{ route('frontend.blogs') }}">Blogs</a></li>
             </ul>
 
-
-
             <div class="nav-actions">
-                <button class="btn-calc">
-                    ROI Calculator <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <a href="{{ route('frontend.compare') }}" class="btn-calc">
+                    Comparisons Calculator <i class="fa-solid fa-arrow-right"></i>
+                </a>
 
                 <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
                     <i class="fa-solid fa-bars" id="menuToggleIcon"></i>
@@ -151,3 +94,4 @@
         </div>
     </div>
 </header>
+

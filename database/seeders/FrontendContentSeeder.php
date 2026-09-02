@@ -47,13 +47,13 @@ class FrontendContentSeeder extends Seeder
             ]
         );
 
-        $proTier = PricingTier::firstOrCreate(
-            ['name' => 'Enterprise Tier'],
+        $proTier = PricingTier::where('name', 'Pro Yearly')->first() ?? PricingTier::firstOrCreate(
+            ['name' => 'Pro Yearly'],
             [
-                'monthly_price' => 165,
-                'annual_price' => 1650,
-                'features' => ['Enterprise Listing', 'Verified Badge', 'Priority TechScore', 'Advanced Analytics'],
-                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_reviews'],
+                'monthly_price' => 24.00,
+                'annual_price' => 290.00,
+                'features' => ['3 Tool Listing Slots', 'Verified Badge', 'Priority TechScore', 'Advanced Analytics'],
+                'permissions' => ['manage_pricing', 'manage_features', 'view_analytics', 'manage_reviews', 'featured_listing'],
             ]
         );
 

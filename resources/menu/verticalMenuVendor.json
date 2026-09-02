@@ -45,13 +45,6 @@
       "permission": "manage_reviews"
     },
     {
-      "url": "/vendor/ads-addons",
-      "name": "Ads & Add-ons",
-      "icon": "menu-icon icon-base bx bx-star",
-      "slug": "vendor.ads",
-      "permission": "manage_ads"
-    },
-    {
       "url": "/vendor/billing",
       "name": "Billing & Plan",
       "icon": "menu-icon icon-base bx bx-credit-card",

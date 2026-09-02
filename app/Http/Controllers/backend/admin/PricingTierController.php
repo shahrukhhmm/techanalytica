@@ -48,7 +48,7 @@ class PricingTierController extends Controller
 
     public function edit(PricingTier $pricing_tier)
     {
-        return view('backend.admin.content.pricing_tiers.edit', compact('pricing_tier'));
+        return view('backend.admin.content.pricing_tiers.create', compact('pricing_tier'));
     }
 
     public function update(Request $request, PricingTier $pricing_tier)

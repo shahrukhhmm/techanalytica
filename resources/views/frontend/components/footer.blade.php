@@ -18,12 +18,14 @@
             <div class="footer-col">
                 <h5>Product</h5>
                 <ul>
-                    <li><a href="#">Categories</a></li>
-                    <li><a href="#">Trending Tools</a></li>
-                    <li><a href="#">New Releases</a></li>
-                    <li><a href="#">Submit Tool</a></li>
+                    <li><a href="{{ route('frontend.tools.index') }}">Categories</a></li>
+                    <li><a href="{{ route('frontend.tools.index') }}">Trending Tools</a></li>
+                    <li><a href="{{ route('frontend.compare') }}">Compare Tools</a></li>
+                    <li><a href="javascript:void(0)" onclick="openModal('submitToolModal')">Submit Tool</a></li>
+                    <li><a href="javascript:void(0)" onclick="openModal('claimToolModal')">Claim AI Tool</a></li>
                 </ul>
             </div>
+
 
             <div class="footer-col">
                 <h5>Company</h5>

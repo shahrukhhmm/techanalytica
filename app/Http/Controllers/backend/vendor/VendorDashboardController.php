@@ -57,20 +57,26 @@ class VendorDashboardController extends Controller
             ->where('is_claimed', false)
             ->count();
 
-        // 5. Tools Added Trend (Last 6 Months)
+        // 5. Tools Added Trend (Last 6 Months - Single Grouped Query)
+        $startDate = \Carbon\Carbon::now()->subMonths(5)->startOfMonth();
+        $monthlyData = \App\Models\Tool::where('vendor_id', $vendorId)
+            ->where('created_at', '>=', $startDate)
+            ->select(
+                \Illuminate\Support\Facades\DB::raw("DATE_FORMAT(created_at, '%Y-%m') as ym"),
+                \Illuminate\Support\Facades\DB::raw('count(*) as total')
+            )
+            ->groupBy('ym')
+            ->pluck('total', 'ym')
+            ->toArray();
+
         $months = [];
         $toolsAddedCounts = [];
 
         for ($i = 5; $i >= 0; $i--) {
-
             $month = \Carbon\Carbon::now()->subMonths($i);
-
+            $ym = $month->format('Y-m');
             $months[] = $month->format('M Y');
-
-            $toolsAddedCounts[] = \App\Models\Tool::where('vendor_id', $vendorId)
-                ->whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->count();
+            $toolsAddedCounts[] = $monthlyData[$ym] ?? 0;
         }
 
         return view('backend.vendor.content.dashboard', compact(
@@ -93,5 +99,19 @@ class VendorDashboardController extends Controller
         $vendor = auth()->user()->vendor;
 
         return view('backend.vendor.content.profile', compact('vendor'));
+    }
+
+    public function switchTool($id)
+    {
+        $vendor = auth()->user()->vendor;
+        if ($vendor) {
+            $tool = $vendor->tools()->find($id);
+            if ($tool) {
+                session(['active_tool_id' => $tool->id]);
+                return redirect()->back()->with('success', "Switched active product to {$tool->name}.");
+            }
+        }
+
+        return redirect()->back()->with('error', 'Product not found in your inventory.');
     }
 }

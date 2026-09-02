@@ -22,8 +22,12 @@ class BillingTransactionController extends Controller
     public function updateStatus(Request $request, BillingTransaction $transaction)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,completed,failed,refunded',
+            'status' => 'required|in:pending,paid,completed,failed,refunded',
         ]);
+
+        if ($validated['status'] === 'completed') {
+            $validated['status'] = 'paid';
+        }
 
         $transaction->update($validated);
 

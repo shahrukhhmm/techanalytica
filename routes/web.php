@@ -1,61 +1,88 @@
 <?php
 
-use App\Http\Controllers\frontend\PageController;
 use App\Http\Controllers\backend\admin\authentications\ForgotPasswordBasic;
 use App\Http\Controllers\backend\admin\authentications\LoginBasic;
 use App\Http\Controllers\backend\admin\authentications\RegisterBasic;
+use App\Http\Controllers\backend\admin\BillingTransactionController;
+use App\Http\Controllers\backend\admin\BlogCategoryController;
+use App\Http\Controllers\backend\admin\BlogController;
+use App\Http\Controllers\backend\admin\CategoryController;
+use App\Http\Controllers\backend\admin\ClaimController;
 use App\Http\Controllers\backend\admin\dashboard\Analytics;
+use App\Http\Controllers\backend\admin\IndustryController;
+use App\Http\Controllers\backend\admin\NewsletterController;
+use App\Http\Controllers\backend\admin\PricingTierController;
+use App\Http\Controllers\backend\admin\ReviewController;
+use App\Http\Controllers\backend\admin\SponsorshipController;
+use App\Http\Controllers\backend\admin\SubmissionController;
+use App\Http\Controllers\backend\admin\ToolController;
+use App\Http\Controllers\backend\admin\UserController;
+use App\Http\Controllers\backend\admin\VendorController;
+use App\Http\Controllers\backend\vendor\BillingController;
+use App\Http\Controllers\backend\vendor\VendorAnalyticsController;
+use App\Http\Controllers\backend\vendor\VendorBlogController;
+use App\Http\Controllers\backend\vendor\VendorDashboardController;
+use App\Http\Controllers\backend\vendor\VendorLeadController;
+use App\Http\Controllers\backend\vendor\VendorReviewController;
+use App\Http\Controllers\backend\vendor\VendorToolController;
+use App\Http\Controllers\frontend\PageController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
-// Frontend Routes
-Route::get('/', [PageController::class, 'index'])->name('frontend.home');
-Route::get('/blogs', [PageController::class, 'blogs'])->name('frontend.blogs');
-Route::get('/blogs/{slug?}', [PageController::class, 'blogDetail'])->name('frontend.blogs.show');
-Route::get('/vendors/crm', [PageController::class, 'crmVendor'])->name('frontend.vendors.crm');
-Route::get('/category/{slug}', [PageController::class, 'crmVendor'])->name('frontend.category.show');
-Route::get('/vendors/{slug?}', [PageController::class, 'vendorDetail'])->name('frontend.vendors.show');
-Route::get('/tools/{slug?}', [PageController::class, 'vendorDetail'])->name('frontend.tools.show');
-
-// Actions
-Route::post('/tools/{id}/reviews', [PageController::class, 'submitReview'])->name('frontend.reviews.store');
-Route::post('/newsletter/subscribe', [PageController::class, 'subscribeNewsletter'])->name('frontend.newsletter.subscribe');
 
 
+// Frontend Public Routes
+Route::name('frontend.')->group(function () {
+    Route::get('/', [PageController::class, 'index'])->name('home');
+    
+    Route::get('/tools', [PageController::class, 'tools'])->name('tools.index');
+    Route::get('/tools-list', [PageController::class, 'tools'])->name('tools');
+    Route::get('/tools/{slug}', [PageController::class, 'toolDetail'])->name('tools.show');
+    Route::get('/compare', [PageController::class, 'compare'])->name('compare');
+    Route::get('/compare/export', [PageController::class, 'exportComparison'])->name('compare.export');
+    Route::get('/leaderboard', [PageController::class, 'leaderboard'])->name('leaderboard');
+    Route::post('/tools/{slug}/lead', [PageController::class, 'submitLead'])->name('tools.lead');
+    Route::post('/tools/{slug}/review', [PageController::class, 'submitReview'])->name('tools.review');
+    Route::post('/tools/claim', [PageController::class, 'submitClaim'])->name('tools.claim');
+    Route::post('/claims/submit', [PageController::class, 'submitClaim'])->name('claims.submit');
+    Route::post('/tools/submit', [PageController::class, 'submitTool'])->name('tools.submit');
+    Route::post('/api/favorites/{toolId}', [PageController::class, 'toggleFavorite'])->name('tools.favorite');
+    Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs.index');
+    Route::get('/blogs-all', [PageController::class, 'blogs'])->name('blogs');
+    Route::get('/blogs/{slug?}', [PageController::class, 'blogDetail'])->name('blogs.show');
+    Route::get('/vendors/{slug}', [PageController::class, 'vendorDetail'])->name('vendors.show');
+});
 
-
-
-Route::get('/optimize', function () {
-    Artisan::call('optimize');
-
+// Cache Clearing & Optimization Utility
+Route::get('/optimize-clear', function () {
+    Artisan::call('optimize:clear');
     return response()->json([
         'status' => 'optimized',
         'output' => Artisan::output(),
     ]);
 });
 
-// authentication login register routes
+// Guest Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
     Route::post('/auth/login-basic', [LoginBasic::class, 'login'])->name('login');
 
     Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
-    Route::get('/auth/register-vendor', [\App\Http\Controllers\Auth\VendorRegistrationController::class, 'index'])->name('register-vendor');
-    Route::post('/auth/register-vendor', [\App\Http\Controllers\Auth\VendorRegistrationController::class, 'store'])->name('register-vendor.store');
+    Route::post('/auth/register-basic', [RegisterBasic::class, 'register'])->name('register');
+
     Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
+    Route::post('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'sendResetLinkEmail'])->name('password.email');
 });
 
-// Logout route
+// Logout Route
 Route::post('/logout', [LoginBasic::class, 'logout'])->name('logout')->middleware('auth');
-Route::get('/logout', [LoginBasic::class, 'logout'])->middleware('auth'); // fallback for GET links
+Route::get('/logout', [LoginBasic::class, 'logout'])->middleware('auth');
 
-Route::middleware('auth')->group(function () {
-    // Main Page Route
+// Protected Admin Portal (Role: admin, editor)
+Route::middleware(['auth', 'role:admin,editor'])->group(function () {
     Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard.analytics');
     Route::get('/dashboard/analytics/pdf', [Analytics::class, 'pdf'])->name('dashboard.analytics.pdf');
 
-
-    // Category CRUD Routes
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', \App\Http\Controllers\backend\admin\CategoryController::class);
         Route::resource('industries', \App\Http\Controllers\backend\admin\IndustryController::class);
@@ -65,8 +92,14 @@ Route::middleware('auth')->group(function () {
         Route::get('tools/pending-updates', [\App\Http\Controllers\backend\admin\ToolController::class, 'pendingUpdates'])->name('tools.pending-updates');
         Route::post('tools/{tool}/approve-update', [\App\Http\Controllers\backend\admin\ToolController::class, 'approveUpdate'])->name('tools.approve-update');
         Route::post('tools/{tool}/reject-update', [\App\Http\Controllers\backend\admin\ToolController::class, 'rejectUpdate'])->name('tools.reject-update');
+        Route::patch('tools/{tool}/toggle-featured', [\App\Http\Controllers\backend\admin\ToolController::class, 'toggleFeatured'])->name('tools.toggle-featured');
         Route::resource('tools', \App\Http\Controllers\backend\admin\ToolController::class);
+
+        // Blogs & Taxonomies
         Route::resource('blogs', \App\Http\Controllers\backend\admin\BlogController::class);
+        Route::get('blog-categories', [\App\Http\Controllers\backend\admin\BlogCategoryController::class, 'index'])->name('blog-categories.index');
+        Route::post('blog-categories', [\App\Http\Controllers\backend\admin\BlogCategoryController::class, 'store'])->name('blog-categories.store');
+        Route::delete('blog-categories/{category}', [\App\Http\Controllers\backend\admin\BlogCategoryController::class, 'destroy'])->name('blog-categories.destroy');
 
         Route::get('reviews', [\App\Http\Controllers\backend\admin\ReviewController::class, 'index'])->name('reviews.index');
         Route::patch('reviews/{review}/status', [\App\Http\Controllers\backend\admin\ReviewController::class, 'updateStatus'])->name('reviews.update-status');
@@ -110,31 +143,44 @@ Route::middleware('auth')->group(function () {
 
     // Shared API routes
     Route::get('/api/compare-tools', [\App\Http\Controllers\backend\admin\dashboard\Analytics::class, 'compareTools'])->name('api.compare-tools');
+});
 
-    // Vendor Routes
-    Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
-        Route::get('/dashboard', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index']);
-        Route::get('/', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/switch-tool/{id}', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'switchTool'])->name('switch-tool');
-        Route::post('/tools/{tool}/submit', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'submitForReview'])->name('tools.submit');
-        Route::post('/tools/{tool}/unpublish', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'unpublish'])->name('tools.unpublish');
-        Route::get('/claim-product', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'index'])->name('claim');
-        Route::get('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'create'])->name('claim.create');
-        Route::post('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'store'])->name('claim.store');
+// Protected Vendor Portal (Role: vendor)
+Route::prefix('vendor')->name('vendor.')->middleware(['auth', 'role:vendor'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index']);
+    Route::get('/', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/switch-tool/{id}', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'switchTool'])->name('switch-tool');
+    Route::post('/tools/{tool}/submit', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'submitForReview'])->name('tools.submit');
+    Route::post('/tools/{tool}/unpublish', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'unpublish'])->name('tools.unpublish');
+    Route::get('/claim-product', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'index'])->name('claim');
+    Route::get('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'create'])->name('claim.create');
+    Route::post('/claim-product/{tool}', [\App\Http\Controllers\backend\vendor\ClaimController::class, 'store'])->name('claim.store');
 
-        Route::get('/submit-product', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'index'])->name('submit');
-        Route::get('/submit-product/create', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'create'])->name('submit.create');
-        Route::post('/submit-product/store', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'store'])->name('submit.store');
-        Route::get('/submit-product/review', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'review'])->name('submit.review');
-        Route::post('/submit-product/confirm', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'confirm'])->name('submit.confirm');
+    Route::get('/submit-product', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'index'])->name('submit');
+    Route::get('/submit-product/create', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'create'])->name('submit.create');
+    Route::post('/submit-product/store', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'store'])->name('submit.store');
+    Route::get('/submit-product/review', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'review'])->name('submit.review');
+    Route::post('/submit-product/confirm', [\App\Http\Controllers\backend\vendor\SubmissionController::class, 'confirm'])->name('submit.confirm');
 
-        Route::resource('tools', \App\Http\Controllers\backend\vendor\VendorToolController::class);
-        Route::get('/analytics', [\App\Http\Controllers\backend\vendor\VendorAnalyticsController::class, 'index'])->name('analytics');
+    Route::get('/pricing', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'pricing'])->name('pricing');
+    Route::post('/pricing', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'updatePricing'])->name('pricing.update');
 
-        // Sections
-        Route::resource('blogs', \App\Http\Controllers\backend\vendor\VendorBlogController::class);
-        Route::get('/reviews', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'index'])->name('reviews.index');
-        Route::get('/billing', [\App\Http\Controllers\backend\vendor\BillingController::class, 'index'])->name('billing');
-        Route::get('/profile', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'profile'])->name('profile');
-    });
+    Route::get('/features', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'features'])->name('features');
+    Route::post('/features', [\App\Http\Controllers\backend\vendor\VendorToolController::class, 'updateFeatures'])->name('features.update');
+
+    Route::resource('tools', \App\Http\Controllers\backend\vendor\VendorToolController::class);
+    Route::get('/analytics', [\App\Http\Controllers\backend\vendor\VendorAnalyticsController::class, 'index'])->name('analytics');
+
+    // Leads & Inquiries
+    Route::get('/leads', [\App\Http\Controllers\backend\vendor\VendorLeadController::class, 'index'])->name('leads.index');
+    Route::patch('/leads/{lead}', [\App\Http\Controllers\backend\vendor\VendorLeadController::class, 'updateStatus'])->name('leads.update-status');
+    Route::get('/leads/export', [\App\Http\Controllers\backend\vendor\VendorLeadController::class, 'export'])->name('leads.export');
+
+    // Blogs, Reviews & Billing
+    Route::resource('blogs', \App\Http\Controllers\backend\vendor\VendorBlogController::class);
+    Route::get('/reviews', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/reviews/{review}/reply', [\App\Http\Controllers\backend\vendor\VendorReviewController::class, 'reply'])->name('reviews.reply');
+    Route::get('/billing', [\App\Http\Controllers\backend\vendor\BillingController::class, 'index'])->name('billing');
+    Route::post('/billing/subscribe', [\App\Http\Controllers\backend\vendor\BillingController::class, 'subscribe'])->name('billing.subscribe');
+    Route::get('/profile', [\App\Http\Controllers\backend\vendor\VendorDashboardController::class, 'profile'])->name('profile');
 });

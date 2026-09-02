@@ -47,14 +47,10 @@
                             <div class="mb-3">
                                 <label for="status" class="form-label">Update Status</label>
                                 <select id="status" name="status" class="form-select" required>
-                                    <option value="pending" {{ $transaction->status == 'pending' ? 'selected' : '' }}>
-                                        Pending</option>
-                                    <option value="completed" {{ $transaction->status == 'completed' ? 'selected' : '' }}>
-                                        Completed</option>
-                                    <option value="failed" {{ $transaction->status == 'failed' ? 'selected' : '' }}>Failed
-                                    </option>
-                                    <option value="refunded" {{ $transaction->status == 'refunded' ? 'selected' : '' }}>
-                                        Refunded</option>
+                                    <option value="pending" {{ $transaction->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="paid" {{ in_array($transaction->status, ['paid', 'completed']) ? 'selected' : '' }}>Paid / Completed</option>
+                                    <option value="failed" {{ $transaction->status == 'failed' ? 'selected' : '' }}>Failed</option>
+                                    <option value="refunded" {{ $transaction->status == 'refunded' ? 'selected' : '' }}>Refunded</option>
                                 </select>
                             </div>
 

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Industry;
 use App\Models\PricingTier;
 use App\Models\Tool;
+use App\Models\ToolMedia;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,16 +16,15 @@ class ToolController extends Controller
 {
     public function index(Request $request)
     {
-
-        $tools = Tool::with(['vendor', 'tier'])->select('tools.*')->get();
+        $tools = Tool::with(['vendor', 'tier', 'categories'])->latest()->get();
 
         return view('backend.admin.content.tools.index', compact('tools'));
     }
 
     public function show(Tool $tool)
     {
-        $tool->load(['vendor', 'tier', 'categories', 'industries', 'reviews' => function ($query) {
-            $query->latest()->take(5);
+        $tool->load(['vendor', 'tier', 'categories', 'industries', 'media', 'reviews' => function ($query) {
+            $query->latest()->take(10);
         }]);
         $tool->loadCount('reviews');
 
@@ -48,9 +48,14 @@ class ToolController extends Controller
             'slug' => 'nullable|string|max:255|unique:tools,slug',
             'vendor_id' => 'nullable|exists:vendors,id',
             'tier_id' => 'nullable|exists:pricing_tiers,id',
+            'ai_type' => 'nullable|string|max:255',
             'logo_url' => 'nullable|url|max:2048',
             'short_description' => 'nullable|string',
             'long_description' => 'nullable|string',
+            'pros' => 'nullable|array',
+            'pros.*' => 'nullable|string',
+            'cons' => 'nullable|array',
+            'cons.*' => 'nullable|string',
             'website_url' => 'nullable|url',
             'pricing_structured' => 'nullable|array',
             'pricing_text' => 'nullable|string',
@@ -75,6 +80,13 @@ class ToolController extends Controller
             $validated['published_at'] = now();
         }
 
+        if (isset($validated['pros'])) {
+            $validated['pros'] = array_values(array_filter($validated['pros']));
+        }
+        if (isset($validated['cons'])) {
+            $validated['cons'] = array_values(array_filter($validated['cons']));
+        }
+
         $tool = Tool::create($validated);
 
         if (isset($validated['categories'])) {
@@ -83,6 +95,16 @@ class ToolController extends Controller
 
         if (isset($validated['industries'])) {
             $tool->industries()->sync($validated['industries']);
+        }
+
+        // Handle Media Screenshot URL if provided
+        if ($request->filled('media_screenshot_url')) {
+            ToolMedia::create([
+                'tool_id' => $tool->id,
+                'type' => 'screenshot',
+                'url' => $request->media_screenshot_url,
+                'sort_order' => 1,
+            ]);
         }
 
         return redirect()->route('admin.tools.index')->with('success', 'Tool created successfully.');
@@ -102,12 +124,17 @@ class ToolController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:tools,slug,'.$tool->id,
+            'slug' => 'nullable|string|max:255|unique:tools,slug,' . $tool->id,
             'vendor_id' => 'nullable|exists:vendors,id',
             'tier_id' => 'nullable|exists:pricing_tiers,id',
+            'ai_type' => 'nullable|string|max:255',
             'logo_url' => 'nullable|url|max:2048',
             'short_description' => 'nullable|string',
             'long_description' => 'nullable|string',
+            'pros' => 'nullable|array',
+            'pros.*' => 'nullable|string',
+            'cons' => 'nullable|array',
+            'cons.*' => 'nullable|string',
             'website_url' => 'nullable|url',
             'pricing_structured' => 'nullable|array',
             'pricing_text' => 'nullable|string',
@@ -128,64 +155,54 @@ class ToolController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
 
-        if ($validated['status'] === 'published' && ! $tool->published_at) {
+        if (isset($validated['pros'])) {
+            $validated['pros'] = array_values(array_filter($validated['pros']));
+        }
+        if (isset($validated['cons'])) {
+            $validated['cons'] = array_values(array_filter($validated['cons']));
+        }
+
+        if ($validated['status'] === 'published' && !$tool->published_at) {
             $validated['published_at'] = now();
         }
 
-        $tool->update($validated);
+        $data = $validated;
+        unset($data['categories'], $data['industries']);
+
+        $tool->update($data);
 
         $tool->categories()->sync($request->input('categories', []));
         $tool->industries()->sync($request->input('industries', []));
-
-        // If admin manually updates, clear pending flags to avoid confusion
-        if ($tool->has_pending_update) {
-            $tool->update([
-                'pending_data' => null,
-                'has_pending_update' => false,
-            ]);
-        }
 
         return redirect()->route('admin.tools.index')->with('success', 'Tool updated successfully.');
     }
 
     public function pendingUpdates()
     {
-        $tools = Tool::with(['vendor', 'categories', 'industries'])
-            ->where('has_pending_update', true)
-            ->whereNotNull('pending_data')
-            ->latest('updated_at')
-            ->get();
-
-        // Pre-load all categories and industries for name resolution in view
-        $allCategories = \App\Models\Category::pluck('name', 'id');
-        $allIndustries = \App\Models\Industry::pluck('name', 'id');
+        $tools = Tool::where('has_pending_update', true)->with(['vendor', 'tier', 'categories', 'industries'])->get();
+        $allCategories = Category::pluck('name', 'id')->toArray();
+        $allIndustries = Industry::pluck('name', 'id')->toArray();
 
         return view('backend.admin.content.tools.pending-updates', compact('tools', 'allCategories', 'allIndustries'));
     }
 
     public function approveUpdate(Tool $tool)
     {
-        if (! $tool->has_pending_update || ! $tool->pending_data) {
+        if (!$tool->has_pending_update || empty($tool->pending_data)) {
             return back()->with('error', 'No pending update found for this tool.');
         }
 
         $data = $tool->pending_data;
-
-        // Extract relations
         $categories = $data['categories'] ?? [];
         $industries = $data['industries'] ?? [];
 
-        // Remove relations from data to update columns
         unset($data['categories'], $data['industries']);
 
-        // Update tool columns
         $tool->update($data);
 
-        // Sync relations
         $tool->categories()->sync($categories);
         $tool->industries()->sync($industries);
 
-        // Clear pending flags
         $tool->update([
             'pending_data' => null,
             'has_pending_update' => false,
@@ -196,7 +213,7 @@ class ToolController extends Controller
 
     public function rejectUpdate(Tool $tool)
     {
-        if (! $tool->has_pending_update) {
+        if (!$tool->has_pending_update) {
             return back()->with('error', 'No pending update found for this tool.');
         }
 
@@ -220,5 +237,12 @@ class ToolController extends Controller
         $allTools = Tool::select('id', 'name')->orderBy('name')->get();
 
         return view('backend.admin.content.tools.compare', compact('allTools'));
+    }
+
+    public function toggleFeatured(Tool $tool)
+    {
+        $tool->update(['is_featured' => !$tool->is_featured]);
+        $status = $tool->is_featured ? 'marked as Featured' : 'unmarked from Featured';
+        return redirect()->back()->with('success', "Tool {$tool->name} has been {$status}.");
     }
 }
