@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,34 @@
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/favicon/favicon.svg') }}">
+    <link rel="alternate icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}">
+    <!-- FontAwesome for Modern & Brand Icons (including X / Twitter) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
         :root {
-            --bg-dark: #0a050d;
-            --bg-card: #150d1a;
-            --bg-card-hover: #1f1326;
+            --bg-dark: #0c0612;
+            --bg-card: #14091a;
+            --bg-card-hover: #1c0e25;
+            --bg-card-elevated: #190e22;
             --text-primary: #ffffff;
-            --text-secondary: #9a8c9e;
-            --accent-pink: #e04385;
-            --accent-gradient: linear-gradient(135deg, #e04385 0%, #a4358a 50%, #6e278d 100%);
-            --button-pink: #d83b7d;
-            --button-gradient: linear-gradient(90deg, #e04385 0%, #fa709a 100%);
+            --text-secondary: #9e93a6;
+            --text-muted: #706579;
+            --accent-pink: #ff3b7b;
+            --accent-coral: #ff735c;
+            --accent-peach: #ffa07a;
+            --accent-purple: #9f55ff;
+            --accent-gradient: linear-gradient(135deg, #ff3b7b 0%, #fa709a 50%, #9f55ff 100%);
+            --button-pink: #ff3b7b;
+            --button-gradient: linear-gradient(90deg, #ff3b7b 0%, #ff735c 100%);
             --border-dark: rgba(255, 255, 255, 0.08);
-            --card-glow: rgba(224, 67, 133, 0.15);
+            --border-highlight: rgba(255, 59, 123, 0.28);
+            --card-glow: rgba(255, 59, 123, 0.16);
         }
 
         * {
@@ -33,7 +45,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-primary);
             overflow-x: hidden;
@@ -64,24 +76,28 @@
             color: #ffffff !important;
         }
 
-        /* SVG Background Grid/Dot Wave */
+        /* SVG & Mesh Wave Background */
         .bg-wave-pattern {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(circle at 50% 20%, rgba(224, 67, 133, 0.18) 0%, transparent 60%),
-                radial-gradient(circle at 100% 70%, rgba(164, 53, 138, 0.12) 0%, transparent 50%),
-                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
-            background-size: 100% 100%, 100% 100%, 28px 28px;
+            background-image:
+                url('/assets/img/backgrounds/mesh-wave.png'),
+                radial-gradient(circle at 80% 12%, rgba(255, 59, 123, 0.14) 0%, transparent 55%),
+                radial-gradient(circle at 15% 55%, rgba(159, 85, 255, 0.11) 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(255, 115, 92, 0.09) 0%, transparent 45%);
+            background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+            background-position: right top, center, center, center;
+            background-size: 900px auto, 100% 100%, 100% 100%, 100% 100%;
             pointer-events: none;
             z-index: 0;
+            opacity: 0.88;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1220px;
             margin: 0 auto;
             padding: 0 24px;
             position: relative;
@@ -90,21 +106,60 @@
 
         /* Top Bar Navigation Header */
         header {
-            padding: 20px 0;
+            padding: 20px 0 10px;
             position: relative;
             z-index: 100;
         }
-
 
         .nav-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(18, 10, 24, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-dark);
-            padding: 12px 24px;
-            border-radius: 16px;
+            background: rgba(14, 7, 20, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            padding: 12px 28px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .active-nav {
+            color: #fff !important;
+            font-weight: 700 !important;
+            position: relative;
+        }
+
+        .active-nav::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--button-gradient);
+            border-radius: 2px;
+        }
+
+        .footer-social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .footer-social-btn:hover {
+            background: rgba(255, 59, 123, 0.15);
+            border-color: var(--accent-pink);
+            color: #fff;
+            transform: translateY(-2px);
         }
 
 
@@ -312,44 +367,128 @@
             box-shadow: 0 10px 28px rgba(224, 67, 133, 0.6);
         }
 
-        .btn-cta-pink {
-            background: var(--button-pink);
+        .btn-cta-pink,
+        .btn-cta-radiant {
+            background: var(--button-gradient);
             color: #fff;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 12px 26px;
+            border-radius: 9999px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             border: none;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 14px rgba(216, 59, 125, 0.35);
+            box-shadow: 0 4px 18px rgba(255, 59, 123, 0.38);
         }
 
-        .btn-cta-pink:hover {
-            background: #0f0714;
-            color: #ff7bb3;
+        .btn-cta-pink:hover,
+        .btn-cta-radiant:hover {
             transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 28px rgba(255, 59, 123, 0.6);
+            filter: brightness(1.08);
+            color: #fff;
         }
 
         .btn-cta-outline {
-            background: transparent;
-            border: 1.5px solid #5c2045;
-            color: #5c2045;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #ffffff;
             padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 13px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
 
         .btn-cta-outline:hover {
-            background: #5c2045;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
             color: #ffffff;
-            border-color: #5c2045;
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 6px 20px rgba(92, 32, 69, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Pre-Footer CTA Card Styles */
+        .prefooter-cta-card {
+            background: linear-gradient(135deg, rgba(26, 13, 34, 0.94) 0%, rgba(16, 7, 22, 0.98) 100%);
+            border: 1px solid rgba(255, 59, 123, 0.25);
+            border-radius: 28px;
+            padding: 48px 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 59, 123, 0.08);
+        }
+
+        .prefooter-left {
+            flex: 1;
+            max-width: 620px;
+        }
+
+        .prefooter-title {
+            font-size: clamp(30px, 3.8vw, 42px);
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+        }
+
+        .prefooter-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            max-width: 520px;
+            margin-bottom: 24px;
+        }
+
+        .prefooter-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .cta-abstract-graphic {
+            width: 220px;
+            height: 220px;
+            background: #0e0513;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.9);
+        }
+
+        @media (max-width: 900px) {
+            .prefooter-cta-card {
+                flex-direction: column;
+                padding: 32px 24px;
+                text-align: center;
+            }
+
+            .prefooter-actions {
+                justify-content: center;
+            }
+
+            .prefooter-desc {
+                margin: 0 auto 24px;
+            }
+
+            #newsletter-form {
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
 
         .btn-submit-ai {
@@ -400,7 +539,8 @@
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .pill.active, .pill:hover {
+        .pill.active,
+        .pill:hover {
             background: var(--button-pink);
             color: #fff;
             border-color: #ff7bb3;
@@ -542,7 +682,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .search-box-wrapper i {
@@ -563,8 +703,8 @@
         }
 
         .search-input:-webkit-autofill,
-        .search-input:-webkit-autofill:hover, 
-        .search-input:-webkit-autofill:focus, 
+        .search-input:-webkit-autofill:hover,
+        .search-input:-webkit-autofill:focus,
         .search-input:-webkit-autofill:active {
             -webkit-text-fill-color: #ffffff !important;
             -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
@@ -635,6 +775,7 @@
             0% {
                 transform: translateX(0);
             }
+
             100% {
                 transform: translateX(-50%);
             }
@@ -847,7 +988,7 @@
 
         .visual-dial i {
             font-size: 64px;
-            color: var(--accent-pink);
+            color: black;
             transition: color 0.3s ease;
         }
 
@@ -857,8 +998,13 @@
         }
 
         @keyframes spinRecordFast {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .showcase-list {
@@ -997,7 +1143,8 @@
             transition: all 0.2s ease;
         }
 
-        .pill.active, .pill:hover {
+        .pill.active,
+        .pill:hover {
             background: var(--button-pink);
             color: #fff;
             border-color: var(--button-pink);
@@ -1106,6 +1253,28 @@
             cursor: pointer;
         }
 
+        /* Universal Robust Image Fallback */
+        .img-fallback-icon {
+            display: none;
+            /* hidden by default when image loads successfully */
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 59, 123, 0.08);
+            border: 1px solid rgba(255, 59, 123, 0.2);
+            color: #ff3b7b;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            width: 100%;
+            height: 100%;
+            min-height: 40px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        img[data-failed="true"] {
+            display: none !important;
+        }
+
         /* Community Testimonial Cards Section */
         .testimonial-section {
             padding: 80px 0;
@@ -1145,7 +1314,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            width: 460px;
+            width: 100%;
         }
 
         .t-card {
@@ -1353,6 +1522,7 @@
                 transform: translate(-50%, -50%) scale(0.8);
                 opacity: 0.5;
             }
+
             100% {
                 transform: translate(-45%, -55%) scale(1.3);
                 opacity: 0.9;
@@ -1641,7 +1811,8 @@
             transition: all 0.2s ease;
         }
 
-        .toc-box a:hover, .toc-box a.active {
+        .toc-box a:hover,
+        .toc-box a.active {
             color: var(--accent-pink);
             transform: translateX(4px);
         }
@@ -1726,14 +1897,16 @@
             font-style: italic;
         }
 
-        .article-list, .article-list-numbered {
+        .article-list,
+        .article-list-numbered {
             margin: 0 0 30px 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .article-list li strong, .article-list-numbered li strong {
+        .article-list li strong,
+        .article-list-numbered li strong {
             color: #fff;
         }
 
@@ -2103,10 +2276,21 @@
             transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .gold-border { border: 1px solid #f59e0b; }
-        .pink-border { border: 1px solid var(--accent-pink); }
-        .blue-border { border: 1px solid #3b82f6; }
-        .green-border { border: 1px solid #10b981; }
+        .gold-border {
+            border: 1px solid #f59e0b;
+        }
+
+        .pink-border {
+            border: 1px solid var(--accent-pink);
+        }
+
+        .blue-border {
+            border: 1px solid #3b82f6;
+        }
+
+        .green-border {
+            border: 1px solid #10b981;
+        }
 
         .gold-border:hover {
             transform: translateY(-8px) scale(1.03);
@@ -2147,16 +2331,31 @@
             transform: scale(1.08);
         }
 
-            padding: 4px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 12px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-bottom: 12px;
         }
 
-        .gold { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .pink { background: rgba(224, 67, 133, 0.2); color: var(--accent-pink); }
-        .blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .gold {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .pink {
+            background: rgba(224, 67, 133, 0.2);
+            color: var(--accent-pink);
+        }
+
+        .blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
 
         .pick-card h4 {
             font-size: 16px;
@@ -2609,7 +2808,8 @@
             transition: all 0.25s ease;
         }
 
-        .tab-link:hover, .tab-link.active {
+        .tab-link:hover,
+        .tab-link.active {
             color: #fff;
             border-bottom-color: var(--accent-pink);
         }
@@ -2719,7 +2919,8 @@
             gap: 24px;
         }
 
-        .pros-column h4, .cons-column h4 {
+        .pros-column h4,
+        .cons-column h4 {
             font-size: 15px;
             font-weight: 700;
             color: #fff;
@@ -3006,8 +3207,13 @@
             font-size: 12px;
         }
 
-        .check-green { color: #10b981; }
-        .check-orange { color: #f59e0b; }
+        .check-green {
+            color: #10b981;
+        }
+
+        .check-orange {
+            color: #f59e0b;
+        }
 
         /* Filter Section */
         .blog-filter-section {
@@ -3040,7 +3246,8 @@
             transition: all 0.25s ease;
         }
 
-        .blog-pill:hover, .blog-pill.active {
+        .blog-pill:hover,
+        .blog-pill.active {
             background: var(--button-gradient);
             color: #fff;
             border-color: transparent;
@@ -3502,18 +3709,35 @@
             opacity: 0.6;
         }
 
-        .c-dot:nth-child(2) { background: #a4358a; }
-        .c-dot:nth-child(3) { background: #e04385; }
-        .c-dot:nth-child(4) { background: #3b82f6; }
-        .c-dot:nth-child(5) { background: #10b981; }
+        .c-dot:nth-child(2) {
+            background: #a4358a;
+        }
+
+        .c-dot:nth-child(3) {
+            background: #e04385;
+        }
+
+        .c-dot:nth-child(4) {
+            background: #3b82f6;
+        }
+
+        .c-dot:nth-child(5) {
+            background: #10b981;
+        }
 
 
         /* Micro-Animations & Glow Effects for Interactive Components */
-        .tool-card, .showcase-item, .cat-card, .why-card, .t-card {
+        .tool-card,
+        .showcase-item,
+        .cat-card,
+        .why-card,
+        .t-card {
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .tool-card:hover, .cat-card:hover, .t-card:hover {
+        .tool-card:hover,
+        .cat-card:hover,
+        .t-card:hover {
             transform: translateY(-6px) scale(1.015);
             box-shadow: 0 16px 36px rgba(224, 67, 133, 0.2);
         }
@@ -3523,8 +3747,13 @@
         }
 
         @keyframes spinRecord {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
 
@@ -3574,12 +3803,21 @@
         }
 
         @media (max-width: 992px) {
-            .tools-grid, .why-grid, .category-grid {
+
+            .tools-grid,
+            .why-grid,
+            .category-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .showcase-grid, .cta-grid, .insights-grid, .faq-wrapper, .testimonial-section {
+
+            .showcase-grid,
+            .cta-grid,
+            .insights-grid,
+            .faq-wrapper,
+            .testimonial-section {
                 grid-template-columns: 1fr;
             }
+
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -3587,6 +3825,7 @@
     </style>
     @stack('styles')
 </head>
+
 <body>
 
     <div class="bg-wave-pattern"></div>
@@ -3603,11 +3842,14 @@
     @include('frontend.components.footer')
 
     <!-- Flash Alert Success Notification -->
-    @if(session('success'))
-        <div style="position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 16px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 12px;" id="flashSuccessAlert">
+    @if (session('success'))
+        <div style="position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 16px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 12px;"
+            id="flashSuccessAlert">
             <i class="fa-solid fa-circle-check" style="font-size: 20px;"></i>
             <span>{{ session('success') }}</span>
-            <button onclick="document.getElementById('flashSuccessAlert').remove()" style="background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; margin-left: 12px;"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="document.getElementById('flashSuccessAlert').remove()"
+                style="background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; margin-left: 12px;"><i
+                    class="fa-solid fa-xmark"></i></button>
         </div>
         <script>
             setTimeout(() => {
@@ -3618,64 +3860,101 @@
     @endif
 
     <!-- Submit Your AI Tool Modal -->
-    <div class="overlay-menu" id="submitToolModal" style="display: none; opacity: 1; visibility: visible; background: rgba(5, 2, 8, 0.88);">
-        <div style="background: #140a1b; border: 1px solid rgba(224, 67, 133, 0.4); border-radius: 24px; max-width: 600px; width: 90%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto;">
-            <button onclick="closeModal('submitToolModal')" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;"><i class="fa-solid fa-paper-plane" style="color: var(--accent-pink);"></i> Submit Your AI Tool</h2>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">List your product in TechAnalytica's software directory to reach decision-makers.</p>
+    <div class="overlay-menu" id="submitToolModal"
+        style="display: none; opacity: 1; visibility: visible; background: rgba(5, 2, 8, 0.88);">
+        <div
+            style="background: #140a1b; border: 1px solid rgba(224, 67, 133, 0.4); border-radius: 24px; max-width: 600px; width: 90%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeModal('submitToolModal')"
+                style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;"><i
+                    class="fa-solid fa-paper-plane" style="color: var(--accent-pink);"></i> Submit Your AI Tool</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">List your product in
+                TechAnalytica's software directory to reach decision-makers.</p>
 
-            <form action="{{ route('frontend.tools.submit') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+            <form action="{{ route('frontend.tools.submit') }}" method="POST"
+                style="display: flex; flex-direction: column; gap: 16px;">
                 @csrf
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Tool / Product Name *</label>
-                    <input type="text" name="name" required placeholder="e.g. Acme AI" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Tool
+                        / Product Name *</label>
+                    <input type="text" name="name" required placeholder="e.g. Acme AI"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Website URL *</label>
-                    <input type="url" name="website_url" required placeholder="https://example.com" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Website
+                        URL *</label>
+                    <input type="url" name="website_url" required placeholder="https://example.com"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Category *</label>
-                    <select name="category_id" required style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
-                        @if(isset($categories))
-                            @foreach($categories as $cat)
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Category
+                        *</label>
+                    <select name="category_id" required
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                        @if (isset($categories))
+                            @foreach ($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
                         @endif
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Short Description *</label>
-                    <textarea name="short_description" rows="3" required placeholder="Briefly describe what your AI tool does..." style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none; font-family: inherit;"></textarea>
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Short
+                        Description *</label>
+                    <textarea name="short_description" rows="3" required placeholder="Briefly describe what your AI tool does..."
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none; font-family: inherit;"></textarea>
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Pricing Model</label>
-                    <input type="text" name="pricing_text" placeholder="e.g. Free Trial / Starts at $19/mo" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Pricing
+                        Model</label>
+                    <input type="text" name="pricing_text" placeholder="e.g. Free Trial / Starts at $19/mo"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Work Email *</label>
-                    <input type="email" name="contact_email" required placeholder="you@yourcompany.com" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Work
+                        Email *</label>
+                    <input type="email" name="contact_email" required placeholder="you@yourcompany.com"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
-                <button type="submit" class="btn-cta-pink" style="margin-top: 10px; width: 100%;">Submit Product for Review</button>
+                <button type="submit" class="btn-cta-pink" style="margin-top: 10px; width: 100%;">Submit Product for
+                    Review</button>
             </form>
         </div>
     </div>
 
     <!-- Claim AI Tool Modal -->
-    <div class="overlay-menu" id="claimToolModal" style="display: none; opacity: 1; visibility: visible; background: rgba(5, 2, 8, 0.88);">
-        <div style="background: #140a1b; border: 1px solid rgba(224, 67, 133, 0.4); border-radius: 24px; max-width: 600px; width: 90%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto;">
-            <button onclick="closeModal('claimToolModal')" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;"><i class="fa-solid fa-shield-check" style="color: var(--accent-pink);"></i> Claim AI Tool Profile</h2>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">Select an unclaimed tool and provide vendor credentials to claim official ownership.</p>
+    <div class="overlay-menu" id="claimToolModal"
+        style="display: none; opacity: 1; visibility: visible; background: rgba(5, 2, 8, 0.88);">
+        <div
+            style="background: #140a1b; border: 1px solid rgba(224, 67, 133, 0.4); border-radius: 24px; max-width: 600px; width: 90%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeModal('claimToolModal')"
+                style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;"><i
+                    class="fa-solid fa-shield-check" style="color: var(--accent-pink);"></i> Claim AI Tool Profile</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">Select an unclaimed tool and
+                provide vendor credentials to claim official ownership.</p>
 
-            <form action="{{ route('frontend.claims.submit') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+            <form action="{{ route('frontend.claims.submit') }}" method="POST"
+                style="display: flex; flex-direction: column; gap: 16px;">
                 @csrf
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Select AI Tool *</label>
-                    <select name="tool_id" required style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
-                        @if(isset($unclaimedTools) && $unclaimedTools->count() > 0)
-                            @foreach($unclaimedTools as $ut)
-                                <option value="{{ $ut->id }}">{{ $ut->name }} ({{ $ut->website_url ?? 'Unclaimed' }})</option>
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Select
+                        AI Tool *</label>
+                    <select name="tool_id" required
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                        @if (isset($unclaimedTools) && $unclaimedTools->count() > 0)
+                            @foreach ($unclaimedTools as $ut)
+                                <option value="{{ $ut->id }}">{{ $ut->name }}
+                                    ({{ $ut->website_url ?? 'Unclaimed' }})</option>
                             @endforeach
                         @else
                             <option value="">No unclaimed tools currently available</option>
@@ -3683,26 +3962,43 @@
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Full Name *</label>
-                    <input type="text" name="full_name" required placeholder="John Doe" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Full
+                        Name *</label>
+                    <input type="text" name="full_name" required placeholder="John Doe"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Work Email *</label>
-                    <input type="email" name="work_email" required placeholder="john@company.com" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Work
+                        Email *</label>
+                    <input type="email" name="work_email" required placeholder="john@company.com"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Company Name</label>
-                    <input type="text" name="company_name" placeholder="Company Inc." style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Company
+                        Name</label>
+                    <input type="text" name="company_name" placeholder="Company Inc."
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Company Website</label>
-                    <input type="url" name="company_website" placeholder="https://company.com" style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Company
+                        Website</label>
+                    <input type="url" name="company_website" placeholder="https://company.com"
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Verification Information / Role</label>
-                    <textarea name="verification_info" rows="2" placeholder="e.g. I am the Founder / Marketing Lead at Company Inc..." style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none; font-family: inherit;"></textarea>
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px;">Verification
+                        Information / Role</label>
+                    <textarea name="verification_info" rows="2"
+                        placeholder="e.g. I am the Founder / Marketing Lead at Company Inc..."
+                        style="width: 100%; padding: 12px; border-radius: 10px; background: #1f1326; border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; outline: none; font-family: inherit;"></textarea>
                 </div>
-                <button type="submit" class="btn-cta-pink" style="margin-top: 10px; width: 100%;">Submit Claim Request</button>
+                <button type="submit" class="btn-cta-pink" style="margin-top: 10px; width: 100%;">Submit Claim
+                    Request</button>
             </form>
         </div>
     </div>
@@ -3715,8 +4011,10 @@
         <div class="overlay-wave-graphic"></div>
         <div class="overlay-menu-content">
             <a href="{{ route('frontend.tools.index') }}" class="overlay-link">AI Software</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('submitToolModal')" class="overlay-link">Submit AI Tool</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('claimToolModal')" class="overlay-link">Claim AI Tool</a>
+            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('submitToolModal')"
+                class="overlay-link">Submit AI Tool</a>
+            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('claimToolModal')"
+                class="overlay-link">Claim AI Tool</a>
             <a href="{{ route('frontend.blogs') }}" class="overlay-link">Blogs</a>
         </div>
     </div>
@@ -3741,16 +4039,55 @@
             element.classList.toggle('active');
         }
 
+        // Global Robust Image Error Fallback Handler
+        function triggerImageFallback(img) {
+            if (!img || img.dataset.failed === 'true') return;
+            img.style.display = 'none';
+            img.setAttribute('data-failed', 'true');
+
+            // Look for existing sibling fallback icon
+            let fallback = img.parentElement ? img.parentElement.querySelector('.img-fallback-icon') : null;
+            if (fallback) {
+                fallback.style.display = 'inline-flex';
+            } else if (img.parentElement) {
+                const iconEl = document.createElement('span');
+                iconEl.className = 'img-fallback-icon dynamic-fallback';
+                iconEl.style.display = 'inline-flex';
+                iconEl.innerHTML = '<i class="fa-solid fa-cube"></i>';
+                img.parentElement.appendChild(iconEl);
+            }
+        }
+
+        // Capture phase error handler catches image load failures everywhere on the page
+        window.addEventListener('error', function(e) {
+            if (e.target && e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
+                triggerImageFallback(e.target);
+            }
+        }, true);
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Check any images that completed with 0 natural width
+            document.querySelectorAll('img').forEach(img => {
+                if (img.complete && img.naturalWidth === 0 && img.src) {
+                    triggerImageFallback(img);
+                } else {
+                    img.addEventListener('error', () => triggerImageFallback(img));
+                }
+            });
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     }
                 });
-            }, { threshold: 0.1 });
+            }, {
+                threshold: 0.1
+            });
 
-            document.querySelectorAll('section, .tool-card, .showcase-card-left, .why-card, .cat-card, .cta-card, .t-card, .featured-insight').forEach(el => {
+            document.querySelectorAll(
+                'section, .tool-card, .showcase-card-left, .why-card, .cat-card, .cta-card, .t-card, .featured-insight'
+                ).forEach(el => {
                 el.classList.add('reveal-on-scroll');
                 observer.observe(el);
             });
@@ -3759,5 +4096,5 @@
 
     @stack('scripts')
 </body>
-</html>
 
+</html>

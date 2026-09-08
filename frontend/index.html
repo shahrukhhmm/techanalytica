@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,12 @@
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --bg-dark: #0a050d;
@@ -51,7 +54,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 50% 20%, rgba(224, 67, 133, 0.18) 0%, transparent 60%),
                 radial-gradient(circle at 100% 70%, rgba(164, 53, 138, 0.12) 0%, transparent 50%),
                 radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
@@ -169,7 +172,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .search-box-wrapper i {
@@ -418,7 +421,7 @@
 
         .visual-dial i {
             font-size: 64px;
-            color: var(--accent-pink);
+            color: black;
         }
 
         .showcase-list {
@@ -527,7 +530,8 @@
             transition: all 0.2s ease;
         }
 
-        .pill.active, .pill:hover {
+        .pill.active,
+        .pill:hover {
             background: var(--button-pink);
             color: #fff;
             border-color: var(--button-pink);
@@ -840,18 +844,28 @@
         }
 
         @media (max-width: 992px) {
-            .tools-grid, .why-grid, .category-grid {
+
+            .tools-grid,
+            .why-grid,
+            .category-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .showcase-grid, .cta-grid, .insights-grid, .faq-wrapper, .testimonial-section {
+
+            .showcase-grid,
+            .cta-grid,
+            .insights-grid,
+            .faq-wrapper,
+            .testimonial-section {
                 grid-template-columns: 1fr;
             }
+
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
         }
     </style>
 </head>
+
 <body>
 
     <div class="bg-wave-pattern"></div>
@@ -912,7 +926,8 @@
             <div class="tool-card">
                 <span class="tool-badge">Featured</span>
                 <div class="tool-header">
-                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i class="fa-solid fa-brain"></i></div>
+                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i class="fa-solid fa-brain"></i>
+                    </div>
                     <div>
                         <h3 class="tool-title">AI Tool Hub</h3>
                         <p class="tool-category">Productivity & Automation</p>
@@ -929,7 +944,8 @@
             <div class="tool-card">
                 <span class="tool-badge">Popular</span>
                 <div class="tool-header">
-                    <div class="tool-icon" style="background: rgba(164,53,138,0.15);"><i class="fa-solid fa-code"></i></div>
+                    <div class="tool-icon" style="background: rgba(164,53,138,0.15);"><i class="fa-solid fa-code"></i>
+                    </div>
                     <div>
                         <h3 class="tool-title">CodePulse AI</h3>
                         <p class="tool-category">Developer Tools</p>
@@ -946,7 +962,8 @@
             <div class="tool-card">
                 <span class="tool-badge">Trending</span>
                 <div class="tool-header">
-                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="tool-icon" style="background: rgba(224,67,133,0.15);"><i
+                            class="fa-solid fa-wand-magic-sparkles"></i></div>
                     <div>
                         <h3 class="tool-title">Synthetix Art</h3>
                         <p class="tool-category">Design & Media</p>
@@ -1029,7 +1046,8 @@
                         <i class="fa-solid fa-compact-disc"></i>
                     </div>
                     <h3>Voice Engine Pro 2.0</h3>
-                    <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">Ultra-realistic real-time voice synthesis and conversion for creators.</p>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">Ultra-realistic
+                        real-time voice synthesis and conversion for creators.</p>
                 </div>
 
                 <div class="showcase-list">
@@ -1037,21 +1055,24 @@
                         <div class="showcase-item-icon"><i class="fa-solid fa-video"></i></div>
                         <div>
                             <h4>VideoGen Studio</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Generative video engine with full scene consistency control.</p>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Generative video engine with full
+                                scene consistency control.</p>
                         </div>
                     </div>
                     <div class="showcase-item">
                         <div class="showcase-item-icon"><i class="fa-solid fa-layer-group"></i></div>
                         <div>
                             <h4>PromptForge 3D</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Text-to-3D mesh model generator for game developers.</p>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Text-to-3D mesh model generator
+                                for game developers.</p>
                         </div>
                     </div>
                     <div class="showcase-item">
                         <div class="showcase-item-icon"><i class="fa-solid fa-robot"></i></div>
                         <div>
                             <h4>AutoAgent CLI</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Autonomous agent framework for terminal command execution.</p>
+                            <p style="font-size: 13px; color: var(--text-secondary);">Autonomous agent framework for
+                                terminal command execution.</p>
                         </div>
                     </div>
                 </div>
@@ -1162,13 +1183,16 @@
     <section class="container testimonial-section">
         <div class="testimonial-text">
             <h2>What The Community Says</h2>
-            <p style="color: var(--text-secondary); margin-top: 12px;">Read real testimonials from developers, designers, and tech leaders who rely on TechAnalytica.</p>
+            <p style="color: var(--text-secondary); margin-top: 12px;">Read real testimonials from developers,
+                designers, and tech leaders who rely on TechAnalytica.</p>
             <button class="btn-submit-ai" style="margin-top: 24px;">Join Community</button>
         </div>
 
         <div class="testimonial-cards">
             <div class="t-card">
-                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-avatar"
+                    style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'); background-size: cover;">
+                </div>
                 <div class="t-info">
                     <h5>Sarah Jenkins</h5>
                     <p>Lead Developer @ TechCorp</p>
@@ -1176,7 +1200,9 @@
                 <div class="t-stars">★★★★★</div>
             </div>
             <div class="t-card">
-                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-avatar"
+                    style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80'); background-size: cover;">
+                </div>
                 <div class="t-info">
                     <h5>Michael Chang</h5>
                     <p>Product Designer @ DesignLab</p>
@@ -1184,7 +1210,9 @@
                 <div class="t-stars">★★★★★</div>
             </div>
             <div class="t-card">
-                <div class="t-avatar" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+                <div class="t-avatar"
+                    style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80'); background-size: cover;">
+                </div>
                 <div class="t-info">
                     <h5>Elena Rostova</h5>
                     <p>Head of Marketing @ GrowthX</p>
@@ -1205,12 +1233,15 @@
             <div class="insights-grid">
                 <div class="featured-insight">
                     <h3>Unlock the Power of "And" with the Hybrid CDP</h3>
-                    <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">How modern data platforms are combining warehouse power with instant operational workflows.</p>
+                    <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">How modern data platforms are combining
+                        warehouse power with instant operational workflows.</p>
                 </div>
 
                 <div class="insight-list">
                     <div class="insight-item">
-                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=80'); background-size: cover;">
+                        </div>
                         <div class="insight-content">
                             <h4>Top 10 Generative AI Tools for Coding in 2026</h4>
                             <p>5 min read • Industry Trends</p>
@@ -1218,7 +1249,9 @@
                     </div>
 
                     <div class="insight-item">
-                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=200&q=80'); background-size: cover;">
+                        </div>
                         <div class="insight-content">
                             <h4>The Ethics of Voice Cloning in Commercial Media</h4>
                             <p>8 min read • Deep Analysis</p>
@@ -1226,7 +1259,9 @@
                     </div>
 
                     <div class="insight-item">
-                        <div class="insight-img" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=200&q=80'); background-size: cover;"></div>
+                        <div class="insight-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=200&q=80'); background-size: cover;">
+                        </div>
                         <div class="insight-content">
                             <h4>How AI LLMs are Changing Search Engine Optimization</h4>
                             <p>4 min read • SEO Guide</p>
@@ -1242,7 +1277,8 @@
         <div class="container faq-wrapper">
             <div>
                 <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-desc" style="margin-top: 12px;">Everything you need to know about listing, discovering, and evaluating AI tools on TechAnalytica.</p>
+                <p class="section-desc" style="margin-top: 12px;">Everything you need to know about listing,
+                    discovering, and evaluating AI tools on TechAnalytica.</p>
             </div>
 
             <div class="faq-accordion">
@@ -1322,4 +1358,5 @@
     </footer>
 
 </body>
+
 </html>

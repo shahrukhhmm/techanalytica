@@ -97,7 +97,8 @@
                             <div style="display: flex; align-items: center; gap: 14px;">
                                 <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(224, 67, 133, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                     @if($t->logo_url)
-                                        <img src="{{ asset($t->logo_url) }}" alt="{{ $t->name }}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">
+                                        <img src="{{ asset($t->logo_url) }}" alt="{{ $t->name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">
+                                        <i class="fa-solid fa-cube img-fallback-icon" style="display:none; color: #e04385;"></i>
                                     @else
                                         <i class="fa-solid fa-brain" style="color: #e04385;"></i>
                                     @endif

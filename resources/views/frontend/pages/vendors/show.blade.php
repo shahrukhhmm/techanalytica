@@ -16,9 +16,10 @@
         <div class="vendor-header-left">
             <div class="vendor-logo-box">
                 @if ($tool->logo_url)
-                    <img src="{{ asset($tool->logo_url) }}" alt="{{ $tool->name }} Logo">
+                    <img src="{{ asset($tool->logo_url) }}" alt="{{ $tool->name }} Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="fa-solid fa-cube" style="font-size: 34px; color: #ff3b7b; display: none;"></i>
                 @else
-                    <i class="fa-solid fa-brain" style="font-size: 36px; color: #e04385;"></i>
+                    <i class="fa-solid fa-brain" style="font-size: 34px; color: #ff3b7b;"></i>
                 @endif
             </div>
 
@@ -167,7 +168,8 @@
                     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:4px;">
                         @foreach($tool->media as $mediaItem)
                             <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
-                                <img src="{{ $mediaItem->url }}" alt="{{ $tool->name }} Screenshot" style="width:100%;height:190px;object-fit:cover;display:block;">
+                                <img src="{{ $mediaItem->url }}" alt="{{ $tool->name }} Screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width:100%;height:190px;object-fit:cover;display:block;">
+                                <div class="img-fallback-icon" style="display:none; height:190px; width:100%;"><i class="fa-solid fa-image" style="font-size:32px; color:#ff3b7b;"></i></div>
                             </div>
                         @endforeach
                     </div>
@@ -295,9 +297,10 @@
                                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
                                     <div style="width:38px;height:38px;border-radius:10px;background:rgba(224,67,133,0.1);border:1px solid rgba(224,67,133,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                         @if($rel->logo_url)
-                                            <img src="{{ asset($rel->logo_url) }}" alt="{{ $rel->name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                                            <img src="{{ asset($rel->logo_url) }}" alt="{{ $rel->name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                                            <i class="fa-solid fa-cube" style="color:#ff3b7b;font-size:14px;display:none;"></i>
                                         @else
-                                            <i class="fa-solid fa-brain" style="color:#e04385;font-size:14px;"></i>
+                                            <i class="fa-solid fa-brain" style="color:#ff3b7b;font-size:14px;"></i>
                                         @endif
                                     </div>
                                     <div>
@@ -511,6 +514,9 @@
         </form>
     </div>
 </div>
+
+{{-- Pre-Footer CTA Matching Figma --}}
+@include('frontend.components.newsletter_section')
 
 @endsection
 

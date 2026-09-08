@@ -65,7 +65,11 @@ Route::get('/optimize-clear', function () {
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
+    Route::get('/admin/login', [LoginBasic::class, 'index'])->name('admin.login');
+    Route::get('/login', [LoginBasic::class, 'index'])->name('login.view');
     Route::post('/auth/login-basic', [LoginBasic::class, 'login'])->name('login');
+    Route::post('/admin/login', [LoginBasic::class, 'login']);
+    Route::post('/login', [LoginBasic::class, 'login']);
 
     Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
     Route::post('/auth/register-basic', [RegisterBasic::class, 'register'])->name('register');

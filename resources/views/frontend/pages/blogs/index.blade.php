@@ -573,26 +573,12 @@
             </div>
         @endif
 
-        {{-- CTA --}}
-        <div class="bi-cta">
-            <div>
-                <h2>Discover the best AI tools for your stack.</h2>
-                <p>Browse TechAnalytica's curated AI software database with verified reviews, pricing, and live benchmarks.</p>
-                <div class="bi-cta-btns">
-                    <a href="{{ route('frontend.tools') }}" class="btn-pink">
-                        <i class="fa-solid fa-magnifying-glass"></i> Browse AI Tools
-                    </a>
-                    <a href="{{ route('frontend.compare') }}" class="btn-outline">
-                        <i class="fa-solid fa-code-compare"></i> Compare Tools
-                    </a>
-                </div>
-            </div>
-            <div class="bi-dots">
-                <div class="bi-dot"></div><div class="bi-dot"></div><div class="bi-dot"></div>
-                <div class="bi-dot"></div><div class="bi-dot"></div>
-            </div>
-        </div>
     </div>
+
+</div>{{-- /bi-body --}}
+
+{{-- Pre-Footer CTA Matching Figma --}}
+@include('frontend.components.newsletter_section')
 
 </div>{{-- /bi-body --}}
 
