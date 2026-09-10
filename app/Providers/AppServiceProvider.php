@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         view()->composer('backend.vendor.*', function ($view) {
             $permissions = [];
             if (auth()->check() && auth()->user()->vendor) {

@@ -11,9 +11,25 @@ use File;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::with(['author', 'category'])->latest()->get();
+        $query = Blog::with(['author', 'category'])->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhereHas('category', function ($cq) use ($search) {
+                      $cq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $blogs = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.blogs.index', compact('blogs'));
     }
 

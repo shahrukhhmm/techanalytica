@@ -110,33 +110,72 @@ class Analytics extends Controller
 
     public function compareTools(Request $request)
     {
-        $tool1Id = $request->query('tool1');
-        $tool2Id = $request->query('tool2');
+        $tool1Id = $request->query('t1', $request->query('tool1'));
+        $tool2Id = $request->query('t2', $request->query('tool2'));
 
-        $tool1 = Tool::with(['reviews', 'categories', 'tier'])->find($tool1Id);
-        $tool2 = Tool::with(['reviews', 'categories', 'tier'])->find($tool2Id);
-
-        if (!$tool1 || !$tool2) {
-            return response()->json(['error' => 'One or both tools not found'], 404);
+        if (!$tool1Id && !$tool2Id) {
+            return response()->json(['status' => 'error', 'message' => 'No tool ID provided'], 400);
         }
 
-        return response()->json([
-            'tool1' => [
-                'name' => $tool1->name,
-                'rating' => $tool1->reviews->avg('rating') ?: 0,
-                'reviews_count' => $tool1->reviews->count(),
-                'score' => $tool1->score,
-                'tier' => $tool1->tier->name ?? 'N/A',
-                'categories' => $tool1->categories->pluck('name'),
-            ],
-            'tool2' => [
-                'name' => $tool2->name,
-                'rating' => $tool2->reviews->avg('rating') ?: 0,
-                'reviews_count' => $tool2->reviews->count(),
-                'score' => $tool2->score,
-                'tier' => $tool2->tier->name ?? 'N/A',
-                'categories' => $tool2->categories->pluck('name'),
-            ]
-        ]);
+        $formatTool = function ($id) {
+            if (!$id) {
+                return null;
+            }
+
+            $tool = Tool::with(['vendor', 'tier', 'categories', 'industries'])
+                ->withCount(['categories', 'industries', 'media', 'reviews'])
+                ->find($id);
+
+            if (!$tool) {
+                return null;
+            }
+
+            $logoUrl = null;
+            if ($tool->logo_url) {
+                $logoUrl = filter_var($tool->logo_url, FILTER_VALIDATE_URL) 
+                    ? $tool->logo_url 
+                    : asset('storage/' . $tool->logo_url);
+            }
+
+            return [
+                'id' => $tool->id,
+                'name' => $tool->name,
+                'slug' => $tool->slug,
+                'logo_url' => $logoUrl,
+                'short_description' => $tool->short_description,
+                'status' => $tool->status,
+                'pricing_text' => $tool->pricing_text,
+                'website_url' => $tool->website_url,
+                'cta_type' => $tool->cta_type,
+                'cta_url' => $tool->cta_url,
+                'vendor' => $tool->vendor ? ['company_name' => $tool->vendor->company_name] : null,
+                'tier' => $tool->tier ? [
+                    'name' => $tool->tier->name,
+                    'monthly_price' => $tool->tier->monthly_price,
+                ] : null,
+                'categories' => $tool->categories->map(fn($c) => ['name' => $c->name])->values(),
+                'industries' => $tool->industries->map(fn($i) => ['name' => $i->name])->values(),
+                'categories_count' => $tool->categories_count ?? 0,
+                'industries_count' => $tool->industries_count ?? 0,
+                'media_count' => $tool->media_count ?? 0,
+                'reviews_count' => $tool->reviews_count ?? 0,
+            ];
+        };
+
+        $result = ['status' => 'success'];
+        if ($tool1Id) {
+            $formatted1 = $formatTool($tool1Id);
+            if ($formatted1) {
+                $result['tool1'] = $formatted1;
+            }
+        }
+        if ($tool2Id) {
+            $formatted2 = $formatTool($tool2Id);
+            if ($formatted2) {
+                $result['tool2'] = $formatted2;
+            }
+        }
+
+        return response()->json($result);
     }
 }

@@ -110,6 +110,14 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $claims->firstItem() ?? 0 }} to {{ $claims->lastItem() ?? 0 }} of {{ $claims->total() }} entries
+                    </div>
+                    <div>
+                        {{ $claims->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -117,7 +125,12 @@
 @section('page-script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#claims-table');
+            if (document.getElementById('claims-table')) {
+                new DataTable('#claims-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

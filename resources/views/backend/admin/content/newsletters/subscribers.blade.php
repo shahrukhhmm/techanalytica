@@ -62,12 +62,25 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $subscribers->firstItem() ?? 0 }} to {{ $subscribers->lastItem() ?? 0 }} of {{ $subscribers->total() }} entries
+                    </div>
+                    <div>
+                        {{ $subscribers->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#subscribers-table');
+            if (document.getElementById('subscribers-table')) {
+                new DataTable('#subscribers-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

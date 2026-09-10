@@ -85,12 +85,25 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $vendors->firstItem() ?? 0 }} to {{ $vendors->lastItem() ?? 0 }} of {{ $vendors->total() }} entries
+                    </div>
+                    <div>
+                        {{ $vendors->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#vendors-table');
+            if (document.getElementById('vendors-table')) {
+                new DataTable('#vendors-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

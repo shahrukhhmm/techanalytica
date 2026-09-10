@@ -10,9 +10,25 @@ use Illuminate\Support\Str;
 
 class SubmissionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $submissions = Submission::with('vendor')->latest()->get();
+        $query = Submission::with('vendor')->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhereHas('vendor', function ($vq) use ($search) {
+                      $vq->where('company_name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $submissions = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.submissions.index', compact('submissions'));
     }
 

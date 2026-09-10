@@ -8,9 +8,26 @@ use Illuminate\Http\Request;
 
 class ClaimController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $claims = Claim::with(['tool', 'vendor'])->latest()->get();
+        $query = Claim::with(['tool', 'vendor'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('email', 'like', "%{$search}%")
+                  ->orWhere('work_email', 'like', "%{$search}%")
+                  ->orWhereHas('tool', function ($tq) use ($search) {
+                      $tq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $claims = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.tools.claims.index', compact('claims'));
     }
 

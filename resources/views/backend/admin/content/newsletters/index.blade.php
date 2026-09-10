@@ -94,6 +94,14 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                            <div class="text-muted small">
+                                Showing {{ $newsletters->firstItem() ?? 0 }} to {{ $newsletters->lastItem() ?? 0 }} of {{ $newsletters->total() }} entries
+                            </div>
+                            <div>
+                                {{ $newsletters->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,7 +109,12 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#newsletter-table');
+            if (document.getElementById('newsletter-table')) {
+                new DataTable('#newsletter-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

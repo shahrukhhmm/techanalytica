@@ -46,8 +46,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         initColors();
 
-        const tool1Select = $('#compareTool1');
-        const tool2Select = $('#compareTool2');
+        const tool1El = document.getElementById('compareTool1');
+        const tool2El = document.getElementById('compareTool2');
+
+        const tool1Select = typeof $ !== 'undefined' ? $('#compareTool1') : null;
+        const tool2Select = typeof $ !== 'undefined' ? $('#compareTool2') : null;
         const comparisonContainer = document.getElementById('comparisonChartContainer');
         const loadingIndicator = document.getElementById('comparisonLoading');
 
@@ -55,17 +58,44 @@
         let currentTool1Data = null;
         let currentTool2Data = null;
 
-        // Manual select2 init removed as theme handles it.
+        // Attach listeners via jQuery if available
+        if (typeof $ !== 'undefined') {
+            $(document).on('change select2:select', '#compareTool1', function (e) {
+                fetchToolData($(this).val(), true);
+            });
 
-        $(document).on('change select2:select', '#compareTool1', function (e) {
-            console.log("Tool 1 changed event fired. Value:", $(this).val());
-            fetchToolData($(this).val(), true);
-        });
+            $(document).on('change select2:select', '#compareTool2', function (e) {
+                fetchToolData($(this).val(), false);
+            });
+        }
 
-        $(document).on('change select2:select', '#compareTool2', function (e) {
-            console.log("Tool 2 changed event fired. Value:", $(this).val());
-            fetchToolData($(this).val(), false);
-        });
+        // Also attach native listeners to guarantee triggers
+        if (tool1El) {
+            tool1El.addEventListener('change', function () {
+                fetchToolData(this.value, true);
+            });
+        }
+        if (tool2El) {
+            tool2El.addEventListener('change', function () {
+                fetchToolData(this.value, false);
+            });
+        }
+
+        // Auto-render chart on page load if tools are selected
+        const initT1 = tool1El ? tool1El.value : null;
+        const initT2 = tool2El ? tool2El.value : null;
+        if (initT1 && initT2) {
+            fetch(`/api/compare-tools?t1=${initT1}&t2=${initT2}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success' && data.tool1 && data.tool2) {
+                        currentTool1Data = data.tool1;
+                        currentTool2Data = data.tool2;
+                        renderComparisonChart(currentTool1Data, currentTool2Data);
+                    }
+                })
+                .catch(e => console.error("Initial comparison chart error:", e));
+        }
 
         async function fetchToolData(toolId, isTool1) {
             if (!toolId) {
@@ -107,8 +137,8 @@
         }
 
         function checkCompareButton() {
-            const t1Value = tool1Select.val();
-            const t2Value = tool2Select.val();
+            const t1Value = (tool1Select && tool1Select.val) ? tool1Select.val() : (tool1El ? tool1El.value : '');
+            const t2Value = (tool2Select && tool2Select.val) ? tool2Select.val() : (tool2El ? tool2El.value : '');
 
             if (t1Value && t2Value && t1Value !== t2Value && currentTool1Data && currentTool2Data) {
                 const chartSection = document.getElementById('radarChartSection');
@@ -241,7 +271,13 @@
                 }
             };
 
-            comparisonChartInstance = new ApexCharts(chartEl, chartConfig);
+            const Apex = window.ApexCharts || (typeof ApexCharts !== 'undefined' ? ApexCharts : null);
+            if (!Apex) {
+                console.error('ApexCharts is not available');
+                return;
+            }
+
+            comparisonChartInstance = new Apex(chartEl, chartConfig);
             comparisonChartInstance.render();
         }
 

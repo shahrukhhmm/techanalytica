@@ -9,16 +9,38 @@ use Illuminate\Http\Request;
 
 class NewsletterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $newsletters = Newsletter::latest()->get();
+        $query = Newsletter::latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('subject', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $newsletters = $query->paginate(15)->withQueryString();
         
         return view('backend.admin.content.newsletters.index', compact('newsletters'));
     }
 
-    public function subscribers()
+    public function subscribers(Request $request)
     {
-        $subscribers = Subscriber::latest()->get();
+        $query = Subscriber::latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('email', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $subscribers = $query->paginate(15)->withQueryString();
         
         return view('backend.admin.content.newsletters.subscribers', compact('subscribers'));
     }

@@ -10,9 +10,15 @@ use Illuminate\Support\Str;
 
 class IndustryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $industries = Industry::with('suggestedByVendor')->orderBy('name')->get();
+        $query = Industry::with('suggestedByVendor')->orderBy('name');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $industries = $query->paginate(15)->withQueryString();
 
         return view('backend.admin.content.industries.index', compact('industries'));
     }

@@ -49,23 +49,20 @@
                     </tbody>
                 </table>
             </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                <div class="text-muted small">
+                    Showing {{ $submissions->firstItem() ?? 0 }} to {{ $submissions->lastItem() ?? 0 }} of {{ $submissions->total() }} entries
+                </div>
+                <div>
+                    {{ $submissions->links() }}
+                </div>
+            </div>
         </div>
     </div>
 
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-        }
-
         .dataTables_wrapper .dataTables_length,
         .dataTables_wrapper .dataTables_filter {
-            margin: 1rem 1.5rem;
-        }
-
-        .dataTables_wrapper .dataTables_info,
-        .dataTables_wrapper .dataTables_paginate {
             margin: 1rem 1.5rem;
         }
     </style>
@@ -74,7 +71,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (document.getElementById('submissions-table')) {
                 new DataTable('#submissions-table', {
-                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t',
                     language: {
                         search: "",
                         searchPlaceholder: "Search Submissions...",
@@ -83,7 +80,8 @@
                     order: [
                         [3, "desc"]
                     ],
-                    pageLength: 10,
+                    paging: false,
+                    info: false,
                     responsive: true
                 });
 

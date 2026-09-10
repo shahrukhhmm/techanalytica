@@ -8,9 +8,27 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = Review::with('tool')->latest()->get();
+        $query = Review::with('tool')->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('comment', 'like', "%{$search}%")
+                  ->orWhere('user_name', 'like', "%{$search}%")
+                  ->orWhereHas('tool', function ($tq) use ($search) {
+                      $tq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $reviews = $query->paginate(15)->withQueryString();
+
         return view('backend.admin.content.reviews.index', compact('reviews'));
     }
 

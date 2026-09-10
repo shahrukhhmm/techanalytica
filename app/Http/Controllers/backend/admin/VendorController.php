@@ -9,9 +9,24 @@ use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $vendors = Vendor::with('user')->latest()->get();
+        $query = Vendor::with('user')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('company_name', 'like', "%{$search}%")
+                  ->orWhere('billing_email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%")
+                         ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $vendors = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.vendors.index', compact('vendors'));
     }
 

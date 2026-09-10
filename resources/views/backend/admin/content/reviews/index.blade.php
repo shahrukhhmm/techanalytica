@@ -97,12 +97,25 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $reviews->firstItem() ?? 0 }} to {{ $reviews->lastItem() ?? 0 }} of {{ $reviews->total() }} entries
+                    </div>
+                    <div>
+                        {{ $reviews->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#reviews-table');
+            if (document.getElementById('reviews-table')) {
+                new DataTable('#reviews-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

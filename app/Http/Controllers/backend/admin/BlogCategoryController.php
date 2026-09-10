@@ -9,9 +9,15 @@ use Illuminate\Support\Str;
 
 class BlogCategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = BlogCategory::withCount('blogs')->latest()->get();
+        $query = BlogCategory::withCount('blogs')->latest();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $categories = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.blogs.categories', compact('categories'));
     }
 

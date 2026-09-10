@@ -66,12 +66,25 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $blogs->firstItem() ?? 0 }} to {{ $blogs->lastItem() ?? 0 }} of {{ $blogs->total() }} entries
+                    </div>
+                    <div>
+                        {{ $blogs->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#blogs-table');
+            if (document.getElementById('blogs-table')) {
+                new DataTable('#blogs-table', {
+                    paging: false,
+                    info: false
+                });
+            }
         });
     </script>
 @endsection

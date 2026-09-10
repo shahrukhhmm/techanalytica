@@ -58,6 +58,25 @@
   margin-top: 0 !important;
 }
 
+/* Fix select and option color in dark theme */
+select, .form-select {
+  color-scheme: dark !important;
+}
+select option,
+select optgroup,
+.form-select option,
+.form-select optgroup {
+  background-color: #1a0e22 !important;
+  color: #ffffff !important;
+}
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #e04385 !important;
+  color: #ffffff !important;
+}
+
+
 .demo-vertical-spacing-lg > * {
   margin-top: 1.875rem !important;
   margin-bottom: 0 !important;

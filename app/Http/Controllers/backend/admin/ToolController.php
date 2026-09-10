@@ -16,7 +16,18 @@ class ToolController extends Controller
 {
     public function index(Request $request)
     {
-        $tools = Tool::with(['vendor', 'tier', 'categories'])->latest()->get();
+        $query = Tool::with(['vendor', 'tier', 'categories'])->latest();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('slug', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tools = $query->paginate(15)->withQueryString();
 
         return view('backend.admin.content.tools.index', compact('tools'));
     }
@@ -232,11 +243,34 @@ class ToolController extends Controller
         return redirect()->route('admin.tools.index')->with('success', 'Tool deleted successfully.');
     }
 
-    public function compare()
+    public function compare(Request $request)
     {
-        $allTools = Tool::select('id', 'name')->orderBy('name')->get();
+        $allTools = Tool::with(['categories', 'tier', 'reviews', 'media', 'vendor'])->orderBy('name')->get();
 
-        return view('backend.admin.content.tools.compare', compact('allTools'));
+        $tool1Id = $request->input('tool1', $request->input('t1'));
+        $tool2Id = $request->input('tool2', $request->input('t2'));
+
+        $tool1 = null;
+        if ($tool1Id) {
+            $tool1 = is_numeric($tool1Id) 
+                ? $allTools->firstWhere('id', (int)$tool1Id)
+                : $allTools->firstWhere('slug', $tool1Id);
+        }
+        if (!$tool1) {
+            $tool1 = $allTools->first();
+        }
+
+        $tool2 = null;
+        if ($tool2Id) {
+            $tool2 = is_numeric($tool2Id) 
+                ? $allTools->firstWhere('id', (int)$tool2Id)
+                : $allTools->firstWhere('slug', $tool2Id);
+        }
+        if (!$tool2) {
+            $tool2 = $allTools->where('id', '!=', $tool1?->id)->first() ?? $allTools->skip(1)->first() ?? $tool1;
+        }
+
+        return view('backend.admin.content.tools.compare', compact('allTools', 'tool1', 'tool2'));
     }
 
     public function toggleFeatured(Tool $tool)

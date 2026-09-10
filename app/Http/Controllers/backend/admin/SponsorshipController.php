@@ -8,9 +8,26 @@ use Illuminate\Http\Request;
 
 class SponsorshipController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sponsorships = Sponsorship::with(['tool', 'vendor', 'category'])->latest()->get();
+        $query = Sponsorship::with(['tool', 'vendor', 'category'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('tool', function ($tq) use ($search) {
+                    $tq->where('name', 'like', "%{$search}%");
+                })->orWhereHas('vendor', function ($vq) use ($search) {
+                    $vq->where('company_name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $sponsorships = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.sponsorships.index', compact('sponsorships'));
     }
 

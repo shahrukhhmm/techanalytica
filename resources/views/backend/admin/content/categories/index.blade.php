@@ -129,9 +129,22 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
+                    <div class="text-muted small">
+                        Showing {{ $categories->firstItem() ?? 0 }} to {{ $categories->lastItem() ?? 0 }} of {{ $categories->total() }} entries
+                    </div>
+                    <div>
+                        {{ $categories->links() }}
+                    </div>
+                </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        new DataTable('#table');
+                        if (document.getElementById('table')) {
+                            new DataTable('#table', {
+                                paging: false,
+                                info: false
+                            });
+                        }
                     });
                 </script>
             </div>

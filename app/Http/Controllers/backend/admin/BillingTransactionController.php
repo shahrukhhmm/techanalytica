@@ -8,9 +8,27 @@ use Illuminate\Http\Request;
 
 class BillingTransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = BillingTransaction::with(['vendor', 'tool'])->latest()->get();
+        $query = BillingTransaction::with(['vendor', 'tool'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('transaction_id', 'like', "%{$search}%")
+                  ->orWhereHas('vendor', function ($vq) use ($search) {
+                      $vq->where('company_name', 'like', "%{$search}%");
+                  })->orWhereHas('tool', function ($tq) use ($search) {
+                      $tq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $transactions = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.billing.index', compact('transactions'));
     }
 

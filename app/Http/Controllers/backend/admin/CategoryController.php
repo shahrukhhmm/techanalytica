@@ -36,7 +36,8 @@ class CategoryController extends Controller
         $categories = $query->orderByRaw('COALESCE(parent_id, id)')
             ->orderBy('weight')
             ->orderBy('name')
-            ->get();
+            ->paginate(15)
+            ->withQueryString();
 
         // Load root categories with their children (for hierarchical dropdown)
         $rootCategories = Category::whereNull('parent_id')

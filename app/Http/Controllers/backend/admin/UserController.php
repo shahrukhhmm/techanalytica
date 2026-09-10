@@ -10,9 +10,20 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->get();
+        $query = User::latest();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->paginate(15)->withQueryString();
         return view('backend.admin.content.users.index', compact('users'));
     }
 

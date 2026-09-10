@@ -265,6 +265,9 @@
     }
 
     /* Form Controls */
+    select, .form-select {
+      color-scheme: dark !important;
+    }
     .form-control, .form-select {
       background-color: #120917 !important;
       border: 1px solid var(--border-dark) !important;
@@ -274,6 +277,19 @@
     .form-control:focus, .form-select:focus {
       border-color: var(--accent-pink) !important;
       box-shadow: 0 0 0 3px rgba(224, 67, 133, 0.2) !important;
+    }
+    select option,
+    select optgroup,
+    .form-select option,
+    .form-select optgroup {
+      background-color: #1a0e22 !important;
+      color: #ffffff !important;
+    }
+    select option:hover,
+    select option:focus,
+    select option:checked {
+      background-color: #e04385 !important;
+      color: #ffffff !important;
     }
 
     /* Modals & Dropdowns */
