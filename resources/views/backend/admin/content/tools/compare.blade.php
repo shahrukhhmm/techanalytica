@@ -1,6 +1,15 @@
 @extends('backend.admin.layouts.contentNavbarLayout')
 
-@section('title', ($tool1 && $tool2) ? ($tool1->name . ' vs ' . $tool2->name . ' - Head-to-Head Comparison') : 'Tool Comparison')
+@php
+    $t1 = $tool1 ?? $allTools->first();
+    $t2 = $tool2 ?? ($allTools->where('id', '!=', $t1?->id)->first() ?? $allTools->first());
+    $winnerTool = ($t1 && $t2 && $t1->score >= $t2->score) ? $t1 : ($t2 ?? $t1);
+    $runnerUpTool = ($t1 && $t2 && $t1->score >= $t2->score) ? $t2 : ($t1 ?? $t2);
+    $t1AvgRating = $t1 ? number_format($t1->reviews->avg('rating') ?: 4.6, 1) : '4.6';
+    $t2AvgRating = $t2 ? number_format($t2->reviews->avg('rating') ?: 4.4, 1) : '4.4';
+@endphp
+
+@section('title', ($t1 && $t2) ? ($t1->name . ' vs ' . $t2->name . ' - Head-to-Head Comparison') : 'Tool Comparison')
 
 @section('page-style')
     @vite('resources/assets/vendor/libs/apex-charts/apex-charts.scss')
@@ -418,22 +427,150 @@
 @endsection
 
 @section('page-script')
-    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/js/tools-compare.js'])
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartEl = document.querySelector('#toolComparisonRadarChart');
+            if (!chartEl) return;
+
+            const ApexClass = window.ApexCharts || (typeof ApexCharts !== 'undefined' ? ApexCharts : null);
+            if (!ApexClass) {
+                console.error('ApexCharts library could not be loaded');
+                return;
+            }
+
+            @if($t1 && $t2)
+            const chartOptions = {
+                series: [
+                    {
+                        name: "{{ addslashes($t1->name) }}",
+                        data: [
+                            {{ (int)($t1->score ?? 75) }},
+                            {{ round(((float)$t1AvgRating / 5) * 100) }},
+                            {{ min(100, $t1->reviews->count() * 10) }},
+                            {{ min(100, $t1->categories->count() * 20) }},
+                            {{ min(100, $t1->industries->count() * 20) }},
+                            {{ min(100, $t1->media->count() * 20) }},
+                            {{ min(100, (int)($t1->tier->monthly_price ?? 0)) }}
+                        ]
+                    },
+                    {
+                        name: "{{ addslashes($t2->name) }}",
+                        data: [
+                            {{ (int)($t2->score ?? 70) }},
+                            {{ round(((float)$t2AvgRating / 5) * 100) }},
+                            {{ min(100, $t2->reviews->count() * 10) }},
+                            {{ min(100, $t2->categories->count() * 20) }},
+                            {{ min(100, $t2->industries->count() * 20) }},
+                            {{ min(100, $t2->media->count() * 20) }},
+                            {{ min(100, (int)($t2->tier->monthly_price ?? 0)) }}
+                        ]
+                    }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: 420,
+                    toolbar: { show: false },
+                    background: 'transparent'
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        dataLabels: { position: 'top' },
+                        barHeight: '65%',
+                        borderRadius: 6
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opt) {
+                        const rawValues1 = [
+                            '{{ (int)($t1->score ?? 75) }}/100',
+                            '{{ $t1AvgRating }} / 5.0',
+                            '{{ $t1->reviews->count() }} reviews',
+                            '{{ $t1->categories->count() }} categories',
+                            '{{ $t1->industries->count() }} industries',
+                            '{{ $t1->media->count() }} media files',
+                            '${{ (int)($t1->tier->monthly_price ?? 0) }}/mo'
+                        ];
+                        const rawValues2 = [
+                            '{{ (int)($t2->score ?? 70) }}/100',
+                            '{{ $t2AvgRating }} / 5.0',
+                            '{{ $t2->reviews->count() }} reviews',
+                            '{{ $t2->categories->count() }} categories',
+                            '{{ $t2->industries->count() }} industries',
+                            '{{ $t2->media->count() }} media files',
+                            '${{ (int)($t2->tier->monthly_price ?? 0) }}/mo'
+                        ];
+                        return opt.seriesIndex === 0 ? rawValues1[opt.dataPointIndex] : rawValues2[opt.dataPointIndex];
+                    },
+                    offsetX: 35,
+                    style: {
+                        fontSize: '11.5px',
+                        fontWeight: 700,
+                        colors: ['#ffffff']
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: [
+                        'TechScore Benchmark',
+                        'User Rating Score',
+                        'Review Volume',
+                        'Category Diversity',
+                        'Industry Reach',
+                        'Media File Assets',
+                        'Monthly Pricing Tier'
+                    ],
+                    labels: {
+                        show: false
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: '#cbd5e1',
+                            fontSize: '13px',
+                            fontWeight: 600
+                        }
+                    }
+                },
+                colors: ['#ff3b7b', '#9f55ff'],
+                grid: {
+                    borderColor: 'rgba(255, 255, 255, 0.08)',
+                    strokeDashArray: 4
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'center',
+                    labels: { colors: '#ffffff' },
+                    fontSize: '14px',
+                    markers: { radius: 12 }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    shared: true,
+                    intersect: false
+                }
+            };
+
+            const chart = new ApexClass(chartEl, chartOptions);
+            chart.render();
+            @endif
+        });
+    </script>
 @endsection
 
 @section('content')
     <h4 class="py-3 mb-4">
         <span class="text-muted fw-light">Tools /</span> Compare Tools
     </h4>
-
-    @php
-        $t1 = $tool1 ?? $allTools->first();
-        $t2 = $tool2 ?? ($allTools->where('id', '!=', $t1?->id)->first() ?? $allTools->first());
-        $winnerTool = ($t1 && $t2 && $t1->score >= $t2->score) ? $t1 : ($t2 ?? $t1);
-        $runnerUpTool = ($t1 && $t2 && $t1->score >= $t2->score) ? $t2 : ($t1 ?? $t2);
-        $t1AvgRating = $t1 ? number_format($t1->reviews->avg('rating') ?: 4.6, 1) : '4.6';
-        $t2AvgRating = $t2 ? number_format($t2->reviews->avg('rating') ?: 4.4, 1) : '4.4';
-    @endphp
 
     <!-- 1. INTERACTIVE SELECTOR FORM -->
     <form action="{{ route('admin.tools.compare') }}" method="GET" class="cmp-selector-form">
