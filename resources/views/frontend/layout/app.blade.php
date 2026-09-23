@@ -76,24 +76,51 @@
             color: #ffffff !important;
         }
 
-        /* SVG & Mesh Wave Background */
+        /*
+         * Repeating Mesh Wave Background — applied globally via app.blade.php.
+         * Covers 100% of the body height. `overflow: hidden` clips any partial
+         * tile that extends beyond the bottom of the page.
+         */
         .bg-wave-pattern {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image:
-                url('/assets/img/backgrounds/mesh-wave.png'),
-                radial-gradient(circle at 80% 12%, rgba(255, 59, 123, 0.14) 0%, transparent 55%),
-                radial-gradient(circle at 15% 55%, rgba(159, 85, 255, 0.11) 0%, transparent 50%),
-                radial-gradient(circle at 85% 85%, rgba(255, 115, 92, 0.09) 0%, transparent 45%);
-            background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-            background-position: right top, center, center, center;
-            background-size: 900px auto, 100% 100%, 100% 100%, 100% 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.88;
+            overflow: hidden;
+        }
+
+        /*
+         * Each tile is exactly 1024×803px (native image size).
+         * Every tile — normal AND inverted — is placed at top: i * 803px
+         * so tiles stack sequentially with no gaps.
+         */
+        .wave-layer {
+            position: absolute;
+            left: 50%;
+            width: 1024px;
+            height: 803px;
+            background-image: url('/assets/img/backgrounds/mesh-wave.png');
+            background-repeat: no-repeat;
+            background-size: 1024px 803px;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        /* Even tiles (0, 2, 4…): center horizontally */
+        .wave-normal {
+            transform: translateX(-50%);
+        }
+
+        /*
+         * Odd tiles (1, 3, 5…): center horizontally AND flip vertically in-place.
+         * translateX(-50%) centers the 1024px tile; scaleY(-1) mirrors vertically.
+         */
+        .wave-inverted {
+            transform: translateX(-50%) scaleY(-1);
+            transform-origin: center center;
         }
 
         .container {
@@ -3826,9 +3853,23 @@
     @stack('styles')
 </head>
 
-<body>
+<body style="position: relative; background-color: #0b020e;">
 
-    <div class="bg-wave-pattern"></div>
+    {{--
+        Mesh-wave tiles repeat across the entire page height.
+        All tiles — normal and inverted — share the same formula: top = i * 803px.
+        Even tiles render normally. Odd tiles use scaleY(-1) with transform-origin:center center
+        to mirror in-place within the same 803px slot, creating a seamless repeat.
+        30 tiles × 803px ≈ 24,090px covers any realistic page length.
+        .bg-wave-pattern has overflow:hidden so a partial tile at the bottom is clipped cleanly.
+    --}}
+    <div class="bg-wave-pattern">
+        @for ($i = 0; $i < 30; $i++)
+            <div class="wave-layer {{ $i % 2 === 0 ? 'wave-normal' : 'wave-inverted' }}"
+                 style="top: {{ $i * 803 }}px;"
+                 aria-hidden="true"></div>
+        @endfor
+    </div>
 
     <!-- Layout Header -->
     @include('frontend.components.header')
@@ -3954,7 +3995,8 @@
                         @if (isset($unclaimedTools) && $unclaimedTools->count() > 0)
                             @foreach ($unclaimedTools as $ut)
                                 <option value="{{ $ut->id }}">{{ $ut->name }}
-                                    ({{ $ut->website_url ?? 'Unclaimed' }})</option>
+                                    ({{ $ut->website_url ?? 'Unclaimed' }})
+                                </option>
                             @endforeach
                         @else
                             <option value="">No unclaimed tools currently available</option>
@@ -4087,7 +4129,7 @@
 
             document.querySelectorAll(
                 'section, .tool-card, .showcase-card-left, .why-card, .cat-card, .cta-card, .t-card, .featured-insight'
-                ).forEach(el => {
+            ).forEach(el => {
                 el.classList.add('reveal-on-scroll');
                 observer.observe(el);
             });
