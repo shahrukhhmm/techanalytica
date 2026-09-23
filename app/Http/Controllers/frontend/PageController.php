@@ -50,13 +50,15 @@ class PageController extends Controller
         $featuredTools = (clone $query)->where('is_featured', true)->latest()->take(6)->get();
         $tools = $query->take(6)->get();
         $categories = Category::withCount('tools')->get();
-        $latestBlogs = Blog::with('author')->where('status', 'published')->latest()->take(3)->get();
+        $newReleases = Tool::with(['categories', 'tier'])->where('status', 'published')->latest()->take(4)->get();
+        $latestBlogs = Blog::with('author')->where('status', 'published')->latest()->take(4)->get();
         $unclaimedTools = Tool::where('is_claimed', false)->where('status', 'published')->get();
         $navIndustries = Industry::where('approved', true)->withCount('tools')->take(6)->get();
 
         return view('frontend.pages.home.index', compact(
             'tools',
             'featuredTools',
+            'newReleases',
             'categories',
             'latestBlogs',
             'unclaimedTools',

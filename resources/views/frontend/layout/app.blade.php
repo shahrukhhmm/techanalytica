@@ -585,7 +585,6 @@
             width: 40px;
             height: 40px;
             border-radius: 8px;
-            display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
@@ -3847,6 +3846,106 @@
 
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ─── Navbar: hide hamburger on desktop ─────────────────────── */
+        .hamburger-btn {
+            display: none;
+        }
+
+        /* ─── Mobile Navbar ≤ 768px ──────────────────────────────────── */
+        @media (max-width: 768px) {
+
+            /* Show hamburger, hide desktop nav & CTA button */
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none !important;
+            }
+
+            .btn-calc {
+                display: none !important;
+            }
+
+            /* Keep nav bar compact & pill-shaped on mobile */
+            .nav-inner {
+                padding: 10px 18px;
+                border-radius: 9999px;
+            }
+
+            /* Logo slightly smaller on phone */
+            .logo {
+                font-size: 18px;
+            }
+
+            /* Overlay menu link font smaller on phones */
+            .overlay-link {
+                font-size: 28px;
+                gap: 24px;
+            }
+
+            .overlay-menu-content {
+                gap: 24px;
+            }
+
+            /* Footer */
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            /* Hero adjustments */
+            .hero-title {
+                font-size: 34px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                font-size: 14px;
+            }
+
+            .search-box-wrapper {
+                padding: 6px 6px 6px 16px;
+            }
+
+            /* Tools / category grids → single column on phones */
+            .tools-grid,
+            .why-grid,
+            .category-grid,
+            .showcase-grid,
+            .cta-grid,
+            .insights-grid,
+            .faq-wrapper,
+            .testimonial-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ─── Narrow tablet 769–992px ────────────────────────────────── */
+        @media (min-width: 769px) and (max-width: 992px) {
+
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none !important;
+            }
+
+            .btn-calc {
+                display: none !important;
+            }
+
+            .nav-inner {
+                padding: 10px 22px;
             }
         }
     </style>

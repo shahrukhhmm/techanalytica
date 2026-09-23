@@ -3,8 +3,7 @@
     <div class="prefooter-cta-card">
         <div class="prefooter-left">
             <h2 class="prefooter-title">
-                Try <span style="background: linear-gradient(90deg, #ff3b7b, #ff735c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TechAnalytica</span><br>
-                <span style="font-style: italic; font-weight: 400; color: #ff8359;">free</span> for 30 days.
+                Try <span style="background: linear-gradient(90deg, #ff3b7b, #ff735c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TechAnalytica</span>
             </h2>
             <p class="prefooter-desc">
                 Actionable intelligence, benchmarks, and curated tool directory for modern engineering leaders and fast-growing teams.
