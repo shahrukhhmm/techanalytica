@@ -577,21 +577,25 @@
 
 
         .hamburger-btn {
-            background: transparent;
-            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .hamburger-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 59, 123, 0.45);
+            color: #ff3b7b;
+            transform: translateY(-1px);
         }
 
         /* Fullscreen Overlay Menu */
@@ -603,13 +607,16 @@
             height: 100vh;
             background-color: rgba(6, 2, 8, 0.96);
             backdrop-filter: blur(24px);
-            z-index: 999;
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
+            overflow-y: auto;
+            padding: 80px 24px 40px;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
@@ -622,46 +629,59 @@
             position: absolute;
             top: 28px;
             right: 40px;
-            background: transparent;
-            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #ffffff;
-            font-size: 28px;
+            font-size: 22px;
             cursor: pointer;
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s, transform 0.2s;
+            transition: background 0.2s, transform 0.2s, border-color 0.2s;
             z-index: 1000;
         }
 
         .overlay-close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
+            background: rgba(255, 59, 123, 0.2);
+            border-color: rgba(255, 59, 123, 0.5);
+            color: #ff3b7b;
+            transform: scale(1.08) rotate(90deg);
         }
 
         .overlay-menu-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 36px;
+            gap: 28px;
             text-align: center;
             z-index: 1000;
+            width: 100%;
+            max-width: 500px;
         }
 
         .overlay-link {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: 800;
             color: #ffffff;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             letter-spacing: -0.5px;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
         }
 
         .overlay-link:hover {
             color: var(--accent-pink);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.04);
+            text-shadow: 0 0 25px rgba(255, 59, 123, 0.45);
+        }
+
+        /* Mobile-only links in hamburger: hidden on desktop, shown on responsive screens */
+        .nav-mobile-only {
+            display: none !important;
         }
 
         /* Curved Red Wave Overlay Graphic */
@@ -3783,25 +3803,107 @@
         }
 
 
-        /* Footer Styling */
+        /* ── Footer Styling ─────────────────────────────────────── */
         footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 80px 0 40px;
+            border-top: none;
+            padding: 0 0 0;
             background: #070309;
             position: relative;
             z-index: 1;
         }
 
-        .footer-grid {
+        .footer-top-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 60px;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 64px;
+            padding: 72px 0 60px;
+        }
+
+        .footer-brand-col {
+            max-width: 420px;
+        }
+
+        .footer-brand-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        /* Newsletter */
+        .footer-newsletter {
+            margin-bottom: 28px;
+        }
+
+        .footer-newsletter-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ff7bb3;
+            margin-bottom: 10px;
+        }
+
+        .footer-newsletter-label i {
+            margin-right: 6px;
+        }
+
+        .footer-newsletter-form {
+            display: flex;
+            gap: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .footer-email-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 11px 18px;
+            font-size: 13px;
+            color: #fff;
+            font-family: inherit;
+        }
+
+        .footer-email-input::placeholder { color: #5a4a62; }
+
+        .footer-subscribe-btn {
+            background: var(--button-gradient);
+            color: #fff;
+            border: none;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: filter 0.2s;
+            border-radius: 0 9999px 9999px 0;
+        }
+
+        .footer-subscribe-btn:hover { filter: brightness(1.12); }
+
+        .footer-socials {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Link columns */
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding-top: 4px;
         }
 
         .footer-col h5 {
-            font-size: 15px;
+            font-size: 12px;
             font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
             margin-bottom: 20px;
         }
 
@@ -3809,24 +3911,84 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            font-size: 13px;
+            gap: 11px;
+            font-size: 14px;
             color: var(--text-secondary);
+        }
+
+        .footer-col ul a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
         .footer-col ul a:hover {
             color: #fff;
+            transform: translateX(3px);
         }
 
+        /* Divider */
+        .footer-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 28px;
+        }
+
+        /* Bottom Bar */
         .footer-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 30px;
+            padding-bottom: 40px;
             font-size: 12px;
             color: var(--text-secondary);
+            gap: 16px;
+            flex-wrap: wrap;
         }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-bottom-dot { color: var(--text-muted); }
+
+        .footer-bottom-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .footer-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse-green 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
 
         @media (max-width: 992px) {
 
@@ -3844,24 +4006,20 @@
                 grid-template-columns: 1fr;
             }
 
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
+            .footer-top-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-links-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        /* ─── Navbar: hide hamburger on desktop ─────────────────────── */
-        .hamburger-btn {
-            display: none;
-        }
+        /* ─── Tablet & Mobile Navbar ≤ 992px ─────────────────────────── */
+        @media (max-width: 992px) {
 
-        /* ─── Mobile Navbar ≤ 768px ──────────────────────────────────── */
-        @media (max-width: 768px) {
-
-            /* Show hamburger, hide desktop nav & CTA button */
-            .hamburger-btn {
-                display: flex;
-            }
-
+            /* Hide desktop inline links & comparison button; move items into hamburger */
             .nav-links {
                 display: none !important;
             }
@@ -3869,6 +4027,18 @@
             .btn-calc {
                 display: none !important;
             }
+
+            .nav-mobile-only {
+                display: block !important;
+            }
+
+            .nav-inner {
+                padding: 10px 22px;
+            }
+        }
+
+        /* ─── Mobile Navbar ≤ 768px ──────────────────────────────────── */
+        @media (max-width: 768px) {
 
             /* Keep nav bar compact & pill-shaped on mobile */
             .nav-inner {
@@ -3883,23 +4053,40 @@
 
             /* Overlay menu link font smaller on phones */
             .overlay-link {
-                font-size: 28px;
-                gap: 24px;
+                font-size: 26px;
             }
 
             .overlay-menu-content {
-                gap: 24px;
+                gap: 20px;
+            }
+
+            .overlay-close-btn {
+                top: 20px;
+                right: 20px;
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
             }
 
             /* Footer */
-            .footer-grid {
+            .footer-top-grid {
                 grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-links-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
 
             .footer-bottom {
                 flex-direction: column;
-                gap: 12px;
+                gap: 14px;
                 text-align: center;
+            }
+
+            .footer-bottom-left, .footer-bottom-right {
+                justify-content: center;
             }
 
             /* Hero adjustments */
@@ -3926,26 +4113,6 @@
             .faq-wrapper,
             .testimonial-section {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        /* ─── Narrow tablet 769–992px ────────────────────────────────── */
-        @media (min-width: 769px) and (max-width: 992px) {
-
-            .hamburger-btn {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none !important;
-            }
-
-            .btn-calc {
-                display: none !important;
-            }
-
-            .nav-inner {
-                padding: 10px 22px;
             }
         }
     </style>
@@ -4144,27 +4311,42 @@
         </div>
     </div>
 
-    <!-- Mobile / Fullscreen Hamburger Overlay Menu -->
+    <!-- Fullscreen Hamburger Overlay Menu -->
     <div class="overlay-menu" id="hamburgerMenu">
         <button class="overlay-close-btn" onclick="toggleMenu()" aria-label="Close Menu">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <div class="overlay-wave-graphic"></div>
         <div class="overlay-menu-content">
-            <a href="{{ route('frontend.tools.index') }}" class="overlay-link">AI Software</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('submitToolModal')"
-                class="overlay-link">Submit AI Tool</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('claimToolModal')"
-                class="overlay-link">Claim AI Tool</a>
-            <a href="{{ route('frontend.blogs') }}" class="overlay-link">Blogs</a>
+            {{-- Navigation options moved into hamburger menu on mobile/responsive screens --}}
+            <a href="{{ route('frontend.tools.index') }}" class="overlay-link nav-mobile-only {{ request()->routeIs('frontend.tools*') ? 'active-nav-link' : '' }}" onclick="toggleMenu()">Tools</a>
+            <a href="{{ route('frontend.leaderboard') }}" class="overlay-link nav-mobile-only {{ request()->routeIs('frontend.leaderboard*') ? 'active-nav-link' : '' }}" onclick="toggleMenu()">Top Rated</a>
+            <a href="{{ route('frontend.blogs') }}" class="overlay-link nav-mobile-only {{ request()->routeIs('frontend.blogs*') ? 'active-nav-link' : '' }}" onclick="toggleMenu()">Blogs</a>
+            <a href="{{ route('frontend.vendors.index') }}" class="overlay-link nav-mobile-only {{ request()->routeIs('frontend.vendors*') ? 'active-nav-link' : '' }}" onclick="toggleMenu()">Vendors</a>
+
+            {{-- Main options displayed on both Desktop and Mobile views --}}
+            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('submitToolModal')" class="overlay-link">Submit AI Tool</a>
+            <a href="{{ route('frontend.about') }}" class="overlay-link {{ request()->routeIs('frontend.about') ? 'active-nav-link' : '' }}" onclick="toggleMenu()">About</a>
+            <a href="{{ route('frontend.tools.index') }}" class="overlay-link" onclick="toggleMenu()">Write a Review</a>
         </div>
     </div>
 
     <script>
         function toggleMenu() {
             const menu = document.getElementById('hamburgerMenu');
-            menu.classList.toggle('active');
+            if (!menu) return;
+            const isActive = menu.classList.toggle('active');
+            document.body.style.overflow = isActive ? 'hidden' : '';
         }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const menu = document.getElementById('hamburgerMenu');
+                if (menu && menu.classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        });
 
         function openModal(modalId) {
             const modal = document.getElementById(modalId);

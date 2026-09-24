@@ -1339,8 +1339,8 @@
         </div>
     </section>
 
-    <!-- 4. LIGHT SECTION: WHY TECHANALYTICA? -->
-    <section class="why-section">
+    <!-- 4. LIGHT SECTION: WHY TECHANALYTICA? (ABOUT) -->
+    <section class="why-section" id="about" style="scroll-margin-top: 80px;">
         <div class="container">
             <h2 class="section-title">Why TechAnalytica?</h2>
             <p class="section-desc">Zero sponsored fluff. Transparent review metrics. Real community insights.</p>

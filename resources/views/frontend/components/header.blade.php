@@ -14,35 +14,36 @@
             </a>
             
             <ul class="nav-links">
-                <li><a href="{{ route('frontend.blogs') }}" class="{{ request()->routeIs('frontend.blogs*') ? 'active-nav' : '' }}">Content Hub</a></li>
-                <li><a href="{{ route('frontend.leaderboard') }}">Top Rated</a></li>
-                <li><a href="{{ route('frontend.tools.index') }}" class="{{ request()->routeIs('frontend.tools*') ? 'active-nav' : '' }}">Tools Directory</a></li>
+                <li><a href="{{ route('frontend.tools.index') }}" class="{{ request()->routeIs('frontend.tools*') ? 'active-nav' : '' }}">Tools</a></li>
+                <li><a href="{{ route('frontend.leaderboard') }}" class="{{ request()->routeIs('frontend.leaderboard*') ? 'active-nav' : '' }}">Top Rated</a></li>
+                <li><a href="{{ route('frontend.blogs') }}" class="{{ request()->routeIs('frontend.blogs*') ? 'active-nav' : '' }}">Blogs</a></li>
+                <li><a href="{{ route('frontend.vendors.index') }}" class="{{ request()->routeIs('frontend.vendors*') ? 'active-nav' : '' }}">Vendors</a></li>
                 
-                <!-- Industries / Categories Dropdown -->
+                <!-- Categories Dropdown -->
                 <li class="nav-dropdown">
                     <a href="{{ route('frontend.tools.index') }}" class="nav-dropdown-trigger">
-                        <span>{{ (isset($navIndustries) && $navIndustries->count() > 0) ? 'Industries' : 'Categories' }}</span>
+                        <span>Categories</span>
                         <i class="fa-solid fa-chevron-down nav-arrow"></i>
                     </a>
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-inner">
-                            @if(isset($navIndustries) && $navIndustries->count() > 0)
-                                @foreach($navIndustries as $ind)
-                                    <a href="{{ route('frontend.tools.index') }}" class="dropdown-item">
-                                        <div class="dropdown-icon" style="background: rgba(255, 59, 123, 0.15); color: #ff3b7b;"><i class="fa-solid fa-layer-group"></i></div>
-                                        <div class="dropdown-info">
-                                            <div class="dropdown-title">{{ $ind->name }}</div>
-                                            <div class="dropdown-desc">{{ $ind->tools_count }} software tools</div>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            @elseif(isset($categories) && $categories->count() > 0)
+                            @if(isset($categories) && $categories->count() > 0)
                                 @foreach($categories->take(6) as $cat)
                                     <a href="{{ route('frontend.tools.index', ['category_id' => $cat->id]) }}" class="dropdown-item">
                                         <div class="dropdown-icon" style="background: rgba(255, 59, 123, 0.15); color: #ff3b7b;"><i class="fa-solid fa-shapes"></i></div>
                                         <div class="dropdown-info">
                                             <div class="dropdown-title">{{ $cat->name }}</div>
                                             <div class="dropdown-desc">{{ $cat->tools_count }} software tools</div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @elseif(isset($navIndustries) && $navIndustries->count() > 0)
+                                @foreach($navIndustries as $ind)
+                                    <a href="{{ route('frontend.tools.index') }}" class="dropdown-item">
+                                        <div class="dropdown-icon" style="background: rgba(255, 59, 123, 0.15); color: #ff3b7b;"><i class="fa-solid fa-layer-group"></i></div>
+                                        <div class="dropdown-info">
+                                            <div class="dropdown-title">{{ $ind->name }}</div>
+                                            <div class="dropdown-desc">{{ $ind->tools_count }} software tools</div>
                                         </div>
                                     </a>
                                 @endforeach
@@ -56,13 +57,11 @@
                         </div>
                     </div>
                 </li>
-
-                <li><a href="{{ route('frontend.compare') }}" class="{{ request()->routeIs('frontend.compare*') ? 'active-nav' : '' }}">Compare</a></li>
             </ul>
 
             <div class="nav-actions">
                 <a href="{{ route('frontend.compare') }}" class="btn-calc">
-                    <span>Comparisons Calculator</span>
+                    <span>Comparison Calculator</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
 

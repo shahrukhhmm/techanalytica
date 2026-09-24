@@ -1,585 +1,1939 @@
 @extends('frontend.layout.app')
 
-@section('title', 'TechAnalytica Blog — AI Insights, Guides & Engineering Deep-Dives')
+@section('title', 'TechAnalytica Editorial — Sharper Thinking for AI Builders')
+@section('meta_description', 'Real-world stories, technical deep-dives, benchmarks, and breakdowns from founders and engineers shipping products with AI.')
 
 @push('styles')
 <style>
-/* =============================================
-   BLOG INDEX — Premium Redesign
-   ============================================= */
+/* ==========================================================================
+   BLOG EDITORIAL — FIGMA PIXEL-PERFECT REPLICA
+   ========================================================================== */
 
-/* --- Hero --- */
-.bi-hero {
+/* ── Typography & Global Reset Helpers ── */
+.blog-page-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 24px;
     position: relative;
-    padding: 60px 0 50px;
-    background: linear-gradient(150deg, #0c0412 0%, #110718 50%, #0a050d 100%);
-    border-bottom: 1px solid rgba(224,67,133,0.1);
+    z-index: 2;
+}
+
+.gradient-text-pink {
+    background: linear-gradient(135deg, #ff3b7b 0%, #ff735c 50%, #c0428d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline;
+}
+
+.gradient-word {
+    background: linear-gradient(90deg, #ff3b7b, #a554ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    font-weight: 800;
+}
+
+/* ── 1. Hero Section ── */
+.b-hero {
+    padding: 48px 0 36px;
+    position: relative;
+}
+
+.b-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.b-hero-left {
+    max-width: 620px;
+}
+
+.b-hero-title {
+    font-size: clamp(34px, 4.4vw, 54px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin-bottom: 18px;
+}
+
+.b-hero-sub {
+    font-size: 16px;
+    color: #a89cad;
+    line-height: 1.65;
+    margin-bottom: 24px;
+    max-width: 520px;
+}
+
+.b-hero-btn-row {
+    margin-bottom: 26px;
+}
+
+.btn-read-latest {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(90deg, #ff3b7b, #ff735c);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 22px;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(255, 59, 123, 0.4);
+    transition: all 0.25s ease;
+}
+
+.btn-read-latest:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 59, 123, 0.55);
+}
+
+.b-hero-search {
+    display: flex;
+    align-items: center;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: 4px 6px 4px 20px;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.b-hero-search:focus-within {
+    border-color: rgba(255, 59, 123, 0.5);
+    box-shadow: 0 0 20px rgba(255, 59, 123, 0.25);
+}
+
+.b-hero-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+}
+
+.b-hero-search input::placeholder {
+    color: #7b7086;
+}
+
+.btn-hero-search {
+    background: linear-gradient(90deg, #ff3b7b, #ff735c);
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 9999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s;
+    font-family: inherit;
+}
+
+.btn-hero-search:hover {
+    filter: brightness(1.1);
+}
+
+/* ── Hero Featured Card (Right) ── */
+.b-hero-card {
+    background: #14091a;
+    border: 1px solid rgba(224, 67, 133, 0.35);
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.b-hero-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 59, 123, 0.65);
+    box-shadow: 0 20px 56px rgba(255, 59, 123, 0.2);
+}
+
+.badge-must-read {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #ff3b7b, #ff735c);
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.b-hero-card-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.b-hero-card-desc {
+    font-size: 13px;
+    color: #a89cad;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 360px;
+}
+
+.b-hero-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.b-avatar-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a4358a, #ff3b7b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.b-hero-author-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.b-hero-date {
+    font-size: 11px;
+    color: #8c7e94;
+}
+
+.b-hero-card-crescent {
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff5e80 0%, #a4358a 70%, transparent 100%);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* ── 2. Category Filter Pills Bar ── */
+.b-pills-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    background: rgba(11, 2, 14, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 12px 0;
+    margin-bottom: 40px;
+}
+
+.b-pills-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.b-pills-scroll {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.b-pills-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.b-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a89cad;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.b-pill:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 59, 123, 0.35);
+}
+
+.b-pill.active {
+    background: #ffffff;
+    color: #110717;
+    border-color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+}
+
+.b-pills-search-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #a89cad;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.b-pills-search-btn:hover {
+    background: rgba(255, 59, 123, 0.15);
+    border-color: rgba(255, 59, 123, 0.4);
+    color: #ff3b7b;
+}
+
+/* ── 3. Main Two-Column Layout ── */
+.b-layout-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 36px;
+    align-items: start;
+    margin-bottom: 60px;
+}
+
+/* ── Sidebar ── */
+.b-sidebar {
+    position: sticky;
+    top: 76px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.b-sidebar-card {
+    background: rgba(20, 10, 26, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(14px);
+}
+
+.b-sidebar-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.b-sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #a89cad;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.b-sidebar-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: all 0.2s ease;
+}
+
+.b-sidebar-nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.b-sidebar-nav-link:hover .b-sidebar-dot,
+.b-sidebar-nav-link.active .b-sidebar-dot {
+    background: #ff3b7b;
+    box-shadow: 0 0 8px rgba(255, 59, 123, 0.8);
+}
+
+.b-sidebar-nav-link.active {
+    color: #fff;
+    background: rgba(255, 59, 123, 0.12);
+}
+
+/* Newsletter Card */
+.b-newsletter-card {
+    background: #14091b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.b-newsletter-glow {
+    height: 60px;
+    background: linear-gradient(180deg, rgba(255, 94, 128, 0.3) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.b-newsletter-body {
+    padding: 0 18px 20px;
+    margin-top: -30px;
+    position: relative;
+    z-index: 2;
+}
+
+.b-newsletter-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.35;
+    margin-bottom: 8px;
+}
+
+.b-newsletter-desc {
+    font-size: 12px;
+    color: #9a8c9e;
+    line-height: 1.55;
+    margin-bottom: 16px;
+}
+
+.b-newsletter-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #1c0e25;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 12.5px;
+    outline: none;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.b-newsletter-input:focus {
+    border-color: rgba(255, 59, 123, 0.5);
+}
+
+.btn-newsletter-sub {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ff3b7b, #ff735c);
+    border: none;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+    font-family: inherit;
+}
+
+.btn-newsletter-sub:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+/* ── Content Column ── */
+.b-content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    min-width: 0;
+}
+
+/* Section Header Shared */
+.b-sec-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+.b-sec-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.b-sec-icon-square {
+    width: 9px;
+    height: 9px;
+    border-radius: 2.5px;
+    background: #ff3b7b;
+    box-shadow: 0 0 10px rgba(255, 59, 123, 0.8);
+}
+
+.b-sec-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.b-sec-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ff3b7b;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease, opacity 0.2s ease;
+}
+
+.b-sec-link:hover {
+    gap: 7px;
+    opacity: 0.9;
+}
+
+/* ── SECTION 1: Featured ── */
+.b-section-anchor {
+    scroll-margin-top: 85px;
+}
+
+.b-featured-card {
+    background: #14091a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.b-featured-card:hover {
+    border-color: rgba(255, 59, 123, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* 3D Abstract Graphic Canvas */
+.b-featured-art-canvas {
+    background: linear-gradient(135deg, #ff5e80 0%, #ff8c7a 50%, #b23b82 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.art-shape-orb-top {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffcad4 30%, #ff8c7a 70%, #d83b7d 100%);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+.art-shape-orb-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffcad4 30%, #ff8c7a 75%);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.art-shape-cube {
+    position: absolute;
+    bottom: 30px;
+    right: 36px;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+    transform: rotate(-15deg) skewX(8deg);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.b-featured-content {
+    padding: 32px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.b-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.b-badge-pill {
+    padding: 3.5px 11px;
+    border-radius: 9999px;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.b-badge-pill.pink-solid {
+    background: #ff3b7b;
+    color: #fff;
+}
+
+.b-badge-pill.outline {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2d9e6;
+}
+
+.b-featured-heading {
+    font-size: 21px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.b-featured-excerpt {
+    font-size: 13px;
+    color: #a89cad;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.b-author-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.b-author-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.b-author-date {
+    font-size: 11px;
+    color: #8c7e94;
+}
+
+/* ── SECTION 2: Trends & Insights (2x2 Grid) ── */
+.b-trends-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.b-trend-card {
+    background: #14091a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+}
+
+.b-trend-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 59, 123, 0.4);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+.b-trend-art-box {
+    height: 145px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 4 Distinct Figma Geometric Pastel Art Backgrounds */
+.art-bg-peach-1 {
+    background: linear-gradient(135deg, #ff9ca7 0%, #ffbaa5 100%);
+}
+
+.art-bg-peach-2 {
+    background: linear-gradient(135deg, #ff9ca7 0%, #ffbaa5 100%);
+}
+
+.art-bg-coral-3 {
+    background: linear-gradient(135deg, #ff5e6c 0%, #ff7854 100%);
+}
+
+.art-bg-magenta-4 {
+    background: linear-gradient(135deg, #ff3b68 0%, #ff527b 100%);
+}
+
+/* Geometric elements inside art boxes */
+.shape-purple-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #a4358a;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    margin-right: 8px;
+}
+
+.shape-pink-square {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #ff5252;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.shape-wireframe-windows {
+    display: flex;
+    gap: 8px;
+}
+
+.shape-wire-win {
+    width: 60px;
+    height: 48px;
+    border-radius: 8px;
+    background: #ff6e8a;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.shape-wire-win::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.shape-donut-ring {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #111a2e;
+    box-shadow: inset 0 0 0 16px #1e2438, 0 8px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shape-donut-inner {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ff7854;
+}
+
+.shape-neon-wave-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shape-neon-wave {
+    width: 70px;
+    height: 38px;
+    background: #c6ff00;
+    border-radius: 30px 10px 30px 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.shape-neon-orb {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ff3b68;
+    border: 2px solid #ffffff;
+}
+
+.b-trend-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.b-trend-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: #ff3b7b;
+    color: #fff;
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.b-trend-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.38;
+    margin-bottom: 8px;
+}
+
+.b-trend-excerpt {
+    font-size: 12.5px;
+    color: #a89cad;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.bi-hero::before {
-    content:'';position:absolute;inset:0;
-    background:
-        radial-gradient(ellipse 60% 70% at 5% 50%, rgba(224,67,133,0.11) 0%, transparent 65%),
-        radial-gradient(ellipse 45% 55% at 95% 10%, rgba(110,39,141,0.09) 0%, transparent 65%);
-    pointer-events:none;
-}
-.bi-hero-inner {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:40px;
-    flex-wrap:wrap;
-}
-.bi-hero-left { flex:1; min-width:280px; }
-.bi-eyebrow {
-    display:inline-flex;align-items:center;gap:7px;
-    background:rgba(224,67,133,0.1);border:1px solid rgba(224,67,133,0.2);
-    color:#e04385;font-size:12px;font-weight:700;
-    padding:5px 14px;border-radius:20px;margin-bottom:16px;
-    letter-spacing:0.4px;
-}
-.bi-title {
-    font-size:clamp(28px,4vw,46px);font-weight:800;
-    color:#fff;letter-spacing:-0.5px;line-height:1.13;margin-bottom:14px;
-}
-.bi-title span {
-    background:linear-gradient(135deg,#e04385 0%,#fa709a 55%,#c86dd4 100%);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.bi-desc { font-size:15px;color:#b8a8bf;line-height:1.7;margin-bottom:26px;max-width:500px; }
 
-/* Search */
-.bi-search {
-    display:flex;max-width:460px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:14px;overflow:hidden;
-    transition:border-color 0.2s;
-}
-.bi-search:focus-within { border-color:rgba(224,67,133,0.4); }
-.bi-search input {
-    flex:1;padding:13px 18px;background:transparent;border:none;
-    color:#fff;font-size:14px;font-family:inherit;outline:none;
-}
-.bi-search input::placeholder { color:#6b5c73; }
-.bi-search button {
-    padding:12px 20px;background:linear-gradient(90deg,#e04385,#fa709a);
-    border:none;color:#fff;font-weight:700;font-size:13px;
-    cursor:pointer;white-space:nowrap;
-    display:flex;align-items:center;gap:7px;transition:filter 0.2s;
-}
-.bi-search button:hover { filter:brightness(1.1); }
-
-/* Hero Stats */
-.bi-stats {
-    display:flex;align-items:center;gap:24px;margin-top:22px;
-    padding-top:20px;border-top:1px solid rgba(255,255,255,0.06);
-    flex-wrap:wrap;
-}
-.bi-stat { text-align:center; }
-.bi-stat .num { font-size:22px;font-weight:800;color:#fff;display:block; }
-.bi-stat .lbl { font-size:11px;color:#9a8c9e;text-transform:uppercase;letter-spacing:0.8px; }
-
-/* Hero Right — Latest post card */
-.bi-hero-card {
-    width:320px;flex-shrink:0;
-    background:rgba(21,13,26,0.9);
-    border:1.5px solid rgba(224,67,133,0.2);
-    border-radius:20px;overflow:hidden;
-    text-decoration:none;display:block;
-    transition:all 0.3s ease;
-}
-.bi-hero-card:hover { border-color:rgba(224,67,133,0.45);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.6); }
-.bi-hero-card-thumb {
-    height:160px;background-size:cover;background-position:center;
-    background-color:#1a0d22;position:relative;
-    display:flex;align-items:center;justify-content:center;
-}
-.bi-hero-card-thumb .overlay {
-    position:absolute;inset:0;
-    background:linear-gradient(to bottom, transparent 40%, rgba(10,5,13,0.8) 100%);
-}
-.bi-hero-card-body { padding:20px; }
-.bi-hero-card-badge {
-    display:inline-flex;padding:4px 12px;
-    background:linear-gradient(90deg,#e04385,#fa709a);
-    color:#fff;font-size:11px;font-weight:700;border-radius:20px;margin-bottom:10px;
-}
-.bi-hero-card-body h3 { font-size:16px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:8px; }
-.bi-hero-card-body p  { font-size:12.5px;color:#9a8c9e;line-height:1.55;margin-bottom:14px; }
-.bi-hero-card-meta { display:flex;align-items:center;gap:8px;font-size:12px;color:#6b5c73; }
-.bi-card-avatar {
-    width:26px;height:26px;border-radius:50%;
-    background:linear-gradient(135deg,#e04385,#a4358a);
-    display:flex;align-items:center;justify-content:center;
-    font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+.b-trend-meta {
+    font-size: 11px;
+    color: #8c7e94;
+    margin-top: auto;
 }
 
-/* --- Filter Tabs --- */
-.bi-filter {
-    position:sticky;top:0;z-index:100;
-    background:rgba(8,4,12,0.94);
-    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border-bottom:1px solid rgba(255,255,255,0.06);
-}
-.bi-filter-inner { display:flex;align-items:center;overflow-x:auto;scrollbar-width:none; }
-.bi-filter-inner::-webkit-scrollbar { display:none; }
-.bi-tab {
-    display:inline-flex;align-items:center;gap:6px;
-    padding:15px 20px;
-    font-size:13.5px;font-weight:600;color:#9a8c9e;
-    background:none;border:none;border-bottom:2px solid transparent;
-    cursor:pointer;white-space:nowrap;
-    text-decoration:none;font-family:inherit;
-    transition:all 0.2s ease;
-}
-.bi-tab:hover,.bi-tab.active { color:#fff;border-bottom-color:#e04385; }
-.bi-tab-count {
-    font-size:10.5px;opacity:0.55;
-    background:rgba(255,255,255,0.07);
-    padding:2px 7px;border-radius:8px;
+/* ── Quote / Callout Banner ── */
+.b-quote-banner {
+    background: linear-gradient(135deg, #d83b7d 0%, #ff5c8a 45%, #a855f7 100%);
+    border-radius: 20px;
+    padding: 36px 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 44px rgba(216, 59, 125, 0.35);
 }
 
-/* --- Main Body --- */
-.bi-body {
-    display:grid;
-    grid-template-columns:240px 1fr;
-    gap:32px;
-    padding-top:32px;
-    padding-bottom:80px;
-    align-items:start;
+.b-quote-text {
+    font-size: clamp(17px, 2.2vw, 22px);
+    font-weight: 700;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.45;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
 }
 
-/* Sidebar */
-.bi-sidebar { position:sticky;top:58px; }
-.bi-sidebar-box {
-    background:rgba(18,10,22,0.9);
-    border:1px solid rgba(255,255,255,0.07);
-    border-radius:18px;padding:20px;margin-bottom:18px;
-}
-.bi-sidebar-box h5 {
-    font-size:11px;font-weight:700;color:#9a8c9e;
-    text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;
-}
-.bi-cat-list { list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px; }
-.bi-cat-item a {
-    display:flex;align-items:center;gap:10px;
-    padding:9px 12px;border-radius:10px;
-    font-size:13.5px;font-weight:600;color:#b8a8bf;
-    text-decoration:none;transition:all 0.2s;
-}
-.bi-cat-item a:hover,.bi-cat-item a.active {
-    background:rgba(224,67,133,0.1);color:#fff;
-}
-.bi-cat-item a i { color:#e04385;font-size:12px;width:14px; }
-.bi-cat-badge {
-    margin-left:auto;font-size:11px;color:#6b5c73;
-    background:rgba(255,255,255,0.05);
-    padding:2px 8px;border-radius:8px;
+.b-quote-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12.5px;
+    font-weight: 600;
 }
 
-/* Newsletter */
-.bi-newsletter {
-    background:linear-gradient(135deg,rgba(224,67,133,0.1),rgba(110,39,141,0.14));
-    border:1.5px solid rgba(224,67,133,0.2);
-    border-radius:18px;padding:22px;text-align:center;
-}
-.bi-newsletter i { font-size:24px;color:#e04385;margin-bottom:10px;display:block; }
-.bi-newsletter h4 { font-size:14px;font-weight:700;color:#fff;margin-bottom:8px; }
-.bi-newsletter p  { font-size:12px;color:#9a8c9e;line-height:1.55;margin-bottom:14px; }
-.bi-nl-input {
-    width:100%;padding:10px 13px;
-    background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-    border-radius:10px;color:#fff;font-size:13px;font-family:inherit;
-    outline:none;margin-bottom:9px;transition:border-color 0.2s;
-}
-.bi-nl-input:focus { border-color:rgba(224,67,133,0.4); }
-.bi-nl-input::placeholder { color:#6b5c73; }
-.bi-nl-btn {
-    width:100%;padding:10px;
-    background:linear-gradient(90deg,#e04385,#fa709a);
-    color:#fff;font-weight:700;font-size:13px;border:none;border-radius:10px;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
-    transition:all 0.25s ease;
-}
-.bi-nl-btn:hover { filter:brightness(1.1);transform:translateY(-1px); }
-
-/* Feed */
-.bi-feed { min-width:0; }
-
-/* Cards Grid */
-.bi-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
-    gap:22px;
-    margin-bottom:36px;
+.b-quote-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
 }
 
-.bi-card {
-    background:rgba(18,10,22,0.9);
-    border:1px solid rgba(255,255,255,0.07);
-    border-radius:18px;overflow:hidden;
-    text-decoration:none;display:block;
-    transition:all 0.3s ease;
-    position:relative;
-}
-.bi-card:hover {
-    border-color:rgba(224,67,133,0.3);
-    transform:translateY(-5px);
-    box-shadow:0 20px 48px rgba(0,0,0,0.55),0 0 0 1px rgba(224,67,133,0.1);
+/* ── SECTION 3: Comparisons & How-to Guides (List Rows) ── */
+.b-guides-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.bi-card-thumb {
-    height:178px;background-size:cover;background-position:center;
-    background-color:#150c1e;position:relative;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-}
-.bi-card-thumb::after {
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(to bottom, transparent 55%, rgba(18,10,22,0.9) 100%);
-}
-.bi-card-tag {
-    position:absolute;top:14px;left:14px;z-index:1;
-    padding:4px 12px;
-    background:linear-gradient(90deg,#e04385,#fa709a);
-    color:#fff;font-size:11px;font-weight:700;border-radius:20px;
-}
-.bi-card-placeholder-icon {
-    font-size:36px;color:rgba(224,67,133,0.2);z-index:1;
+.b-guide-item {
+    background: rgba(20, 10, 26, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
 }
 
-.bi-card-body { padding:20px; }
-.bi-card-body h3 {
-    font-size:15.5px;font-weight:800;color:#fff;
-    line-height:1.38;margin-bottom:9px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+.b-guide-item:hover {
+    background: rgba(26, 12, 34, 0.85);
+    border-color: rgba(255, 59, 123, 0.4);
+    transform: translateX(4px);
 }
-.bi-card-body p {
-    font-size:13px;color:#9a8c9e;line-height:1.6;margin-bottom:14px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-.bi-card-footer {
-    display:flex;align-items:center;justify-content:space-between;
-    padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);
-    gap:8px;flex-wrap:wrap;
-}
-.bi-card-meta { font-size:12px;color:#6b5c73;display:flex;align-items:center;gap:5px; }
-.bi-read-link {
-    display:inline-flex;align-items:center;gap:5px;
-    font-size:12px;font-weight:700;color:#e04385;
-    transition:gap 0.2s;
-}
-.bi-read-link:hover { gap:8px; }
 
-/* Empty State */
-.bi-empty {
-    text-align:center;padding:64px 24px;
-    background:rgba(255,255,255,0.02);
-    border-radius:20px;border:1px dashed rgba(255,255,255,0.08);
-    grid-column:1/-1;
+.b-guide-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
-.bi-empty i  { font-size:48px;color:#3a2645;margin-bottom:16px;display:block; }
-.bi-empty h3 { font-size:20px;font-weight:700;color:#fff;margin-bottom:10px; }
-.bi-empty p  { font-size:14px;color:#9a8c9e; }
-.bi-empty a  { color:#e04385; }
 
-/* Pagination */
-.bi-pagination {
-    display:flex;justify-content:center;align-items:center;
-    gap:6px;margin-bottom:40px;flex-wrap:wrap;
+.b-guide-icon-sq {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
 }
-.bi-pagination a,.bi-pagination span {
-    display:inline-flex;align-items:center;justify-content:center;
-    min-width:38px;height:38px;padding:0 12px;
-    border-radius:10px;font-size:13.5px;font-weight:600;
-    text-decoration:none;transition:all 0.2s;
-    border:1px solid rgba(255,255,255,0.07);
-    color:#b8a8bf;background:rgba(18,10,22,0.9);
-}
-.bi-pagination a:hover {
-    background:rgba(224,67,133,0.12);border-color:rgba(224,67,133,0.3);color:#e04385;
-}
-.bi-pagination .pg-active {
-    background:linear-gradient(90deg,#e04385,#fa709a);color:#fff;border-color:transparent;
-}
-.bi-pagination .pg-disabled { opacity:0.35;pointer-events:none; }
 
-/* CTA */
-.bi-cta {
-    background:linear-gradient(135deg,rgba(224,67,133,0.1),rgba(110,39,141,0.14));
-    border:1.5px solid rgba(224,67,133,0.2);
-    border-radius:22px;padding:36px 40px;
-    display:flex;align-items:center;justify-content:space-between;
-    gap:28px;flex-wrap:wrap;
-    position:relative;overflow:hidden;
+.b-guide-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.35;
+    margin-bottom: 2px;
 }
-.bi-cta::before {
-    content:'';position:absolute;top:-50px;right:-50px;
-    width:220px;height:220px;border-radius:50%;
-    background:rgba(224,67,133,0.06);pointer-events:none;
-}
-.bi-cta h2 { font-size:22px;font-weight:800;color:#fff;margin-bottom:8px; }
-.bi-cta p  { font-size:14px;color:#b8a8bf;margin-bottom:20px;max-width:420px;line-height:1.6; }
-.bi-cta-btns { display:flex;gap:10px;flex-wrap:wrap; }
 
-.btn-pink {
-    display:inline-flex;align-items:center;gap:7px;padding:12px 22px;
-    background:linear-gradient(90deg,#e04385,#fa709a);color:#fff;
-    font-weight:700;font-size:14px;border:none;border-radius:12px;
-    cursor:pointer;transition:all 0.25s;
-    box-shadow:0 4px 16px rgba(224,67,133,0.3);text-decoration:none;
+.b-guide-sub {
+    font-size: 11.5px;
+    color: #9a8c9e;
 }
-.btn-pink:hover { transform:translateY(-2px);box-shadow:0 8px 28px rgba(224,67,133,0.45); }
 
-.btn-outline {
-    display:inline-flex;align-items:center;gap:7px;padding:11px 22px;
-    background:rgba(255,255,255,0.06);color:#fff;
-    font-weight:600;font-size:14px;
-    border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;
-    cursor:pointer;transition:all 0.25s;text-decoration:none;
+.b-guide-arrow {
+    color: #8c7e94;
+    font-size: 13px;
+    transition: color 0.2s, transform 0.2s;
 }
-.btn-outline:hover { background:rgba(255,255,255,0.1);transform:translateY(-2px); }
 
-/* Dots */
-.bi-dots { display:flex;gap:10px;flex-wrap:wrap;max-width:140px;opacity:0.55;align-items:center; }
-.bi-dot {
-    width:12px;height:12px;border-radius:50%;background:#e04385;
-    animation:dpulse 2s ease-in-out infinite alternate;
+.b-guide-item:hover .b-guide-arrow {
+    color: #ff3b7b;
+    transform: translateX(3px);
 }
-.bi-dot:nth-child(2){ animation-delay:.3s;background:#fa709a; }
-.bi-dot:nth-child(3){ animation-delay:.6s;background:#c86dd4; }
-.bi-dot:nth-child(4){ animation-delay:.9s; }
-.bi-dot:nth-child(5){ animation-delay:1.2s; }
-@keyframes dpulse { from{transform:scale(1);opacity:.5} to{transform:scale(1.3);opacity:1} }
 
-/* Container */
-.container { max-width:1200px;margin:0 auto;padding:0 24px; }
+/* ── SECTION 4: News & PR (Divided List) ── */
+.b-news-box {
+    background: rgba(20, 10, 26, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+}
 
-/* Responsive */
-@media (max-width:1024px) {
-    .bi-body { grid-template-columns:1fr; }
-    .bi-sidebar { position:static;display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+.b-news-row {
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s ease;
 }
-@media (max-width:768px) {
-    .bi-hero-card { display:none; }
-    .bi-body { grid-template-columns:1fr; }
-    .bi-sidebar { display:flex;flex-direction:column; }
-    .bi-cta { padding:24px 20px; }
-    .bi-dots { display:none; }
+
+.b-news-row:last-child {
+    border-bottom: none;
 }
-@media (max-width:480px) {
-    .bi-grid { grid-template-columns:1fr; }
-    .bi-title { font-size:26px; }
+
+.b-news-row:hover {
+    background: rgba(255, 59, 123, 0.05);
+}
+
+.b-news-date {
+    width: 95px;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+    color: #9a8c9e;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.b-news-info {
+    flex: 1;
+}
+
+.b-news-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.35;
+    margin-bottom: 3px;
+}
+
+.b-news-sub {
+    font-size: 11.5px;
+    color: #9a8c9e;
+}
+
+.b-news-cta {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #ff3b7b;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s;
+}
+
+.b-news-row:hover .b-news-cta {
+    gap: 7px;
+}
+
+/* ── SECTION 5: Founder Stories (4 Distinct Atmospheric Cards) ── */
+.b-founders-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.b-founder-card {
+    border-radius: 18px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+.b-founder-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* The 4 Atmospheric Colors */
+.f-card-plum {
+    background: #251336;
+    border-color: rgba(168, 85, 247, 0.25);
+}
+.f-card-plum:hover { border-color: rgba(168, 85, 247, 0.5); }
+
+.f-card-teal {
+    background: #0f2c30;
+    border-color: rgba(20, 184, 166, 0.25);
+}
+.f-card-teal:hover { border-color: rgba(20, 184, 166, 0.5); }
+
+.f-card-rust {
+    background: #3e1c18;
+    border-color: rgba(249, 115, 22, 0.25);
+}
+.f-card-rust:hover { border-color: rgba(249, 115, 22, 0.5); }
+
+.f-card-indigo {
+    background: #141f45;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+.f-card-indigo:hover { border-color: rgba(59, 130, 246, 0.5); }
+
+.b-founder-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.b-founder-brand {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.b-founder-tag {
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: #ff3b7b;
+    color: #fff;
+}
+
+.b-founder-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.38;
+    margin-bottom: 8px;
+}
+
+.b-founder-excerpt {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.55;
+    margin-bottom: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.b-founder-author {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: auto;
+}
+
+/* ── SECTION 6: Research & Data (Split Grid) ── */
+.b-research-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.b-research-left-card {
+    background: #14091a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.b-res-corner-circle {
+    position: absolute;
+    bottom: -35px;
+    right: -35px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224, 67, 133, 0.45) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.b-res-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: #ff3b7b;
+    color: #fff;
+    align-self: flex-start;
+    margin-bottom: 12px;
+}
+
+.b-res-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.35;
+}
+
+.b-res-desc {
+    font-size: 12.5px;
+    color: #a89cad;
+    line-height: 1.55;
+    margin-bottom: 22px;
+}
+
+.b-res-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.b-res-stat-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ff3b7b;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.b-res-stat-lbl {
+    font-size: 10.5px;
+    color: #8c7e94;
+    line-height: 1.3;
+}
+
+.btn-download-rep {
+    background: transparent;
+    border: 1px solid rgba(255, 59, 123, 0.5);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    align-self: flex-start;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-download-rep:hover {
+    background: #ff3b7b;
+    border-color: #ff3b7b;
+}
+
+.b-research-right-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.b-res-pub-card {
+    background: rgba(20, 10, 26, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.b-res-pub-card:hover {
+    background: rgba(26, 12, 34, 0.85);
+    border-color: rgba(255, 59, 123, 0.4);
+    transform: translateY(-2px);
+}
+
+.b-res-pub-tag {
+    font-size: 9.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #ff3b7b;
+    letter-spacing: 0.04em;
+}
+
+.b-res-pub-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.35;
+}
+
+.b-res-pub-date {
+    font-size: 11px;
+    color: #8c7e94;
+}
+
+/* ── SECTION 7: Bottom CTA Banner ── */
+.b-cta-banner {
+    background: #14091a;
+    border: 1px solid rgba(224, 67, 133, 0.35);
+    border-radius: 22px;
+    padding: 36px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 70px;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5);
+}
+
+.b-cta-title {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.b-cta-sub {
+    font-size: 14px;
+    color: #a89cad;
+    margin-bottom: 22px;
+}
+
+.b-cta-btns {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-cta-pink-fill {
+    background: linear-gradient(90deg, #ff3b7b, #ff735c);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 24px;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(255, 59, 123, 0.4);
+    transition: all 0.25s ease;
+}
+
+.btn-cta-pink-fill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 59, 123, 0.55);
+}
+
+.btn-cta-outline-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 24px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.btn-cta-outline-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 59, 123, 0.4);
+    color: #ff3b7b;
+}
+
+.b-cta-matrix-card {
+    width: 170px;
+    height: 150px;
+    border-radius: 18px;
+    background: #0f0514;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.b-dots-cluster {
+    position: relative;
+    width: 110px;
+    height: 90px;
+}
+
+.b-cluster-dot {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 14px currentColor;
+}
+
+/* ── Filter / Search Fallback View ── */
+.b-search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+/* ── Responsive Media Queries ── */
+@media (max-width: 1024px) {
+    .b-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    .b-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    .b-sidebar {
+        display: none; /* In-page navigation handled by sticky pills bar */
+    }
+}
+
+@media (max-width: 768px) {
+    .b-featured-card {
+        grid-template-columns: 1fr;
+    }
+    .b-trends-grid,
+    .b-founders-grid,
+    .b-research-grid,
+    .b-search-results-grid {
+        grid-template-columns: 1fr;
+    }
+    .b-cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 24px;
+    }
+    .b-news-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 }
 </style>
 @endpush
 
 @section('content')
+<div class="blog-page-container">
 
-{{-- ===== HERO ===== --}}
-<section class="bi-hero">
-    <div class="container">
-        <div class="bi-hero-inner">
-            <div class="bi-hero-left">
-                <div class="bi-eyebrow">
-                    <i class="fa-solid fa-newspaper" style="font-size:11px;"></i>
-                    TechAnalytica Blog
-                </div>
-                <h1 class="bi-title">
-                    Sharper thinking for people<br>
-                    <span>building what's next.</span>
+    {{-- ── 1. HERO SECTION ── --}}
+    <section class="b-hero">
+        <div class="b-hero-grid">
+            <div class="b-hero-left">
+                <h1 class="b-hero-title">
+                    Sharper thinking for the people <span class="gradient-word">building</span> what's next.
                 </h1>
-                <p class="bi-desc">Deep-dive research, expert software analysis, and engineering guides for technology leaders.</p>
-
-                <form action="{{ route('frontend.blogs') }}" method="GET">
-                    @if($categoryId)<input type="hidden" name="category_id" value="{{ $categoryId }}">@endif
-                    <div class="bi-search">
-                        <input type="text" name="q" placeholder="Search articles, guides, topics..." value="{{ request('q') }}">
-                        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-                    </div>
-                </form>
-
-                <div class="bi-stats">
-                    <div class="bi-stat">
-                        <span class="num">{{ \App\Models\Blog::where('status','published')->count() }}</span>
-                        <span class="lbl">Published</span>
-                    </div>
-                    <div class="bi-stat">
-                        <span class="num">{{ $blogCategories->count() }}</span>
-                        <span class="lbl">Categories</span>
-                    </div>
-                    <div class="bi-stat">
-                        <span class="num">Weekly</span>
-                        <span class="lbl">Updates</span>
-                    </div>
+                <p class="b-hero-sub">
+                    Real-world stories and breakdowns from the builders, founders, and engineers shipping products with AI.
+                </p>
+                <div class="b-hero-btn-row">
+                    <a href="#featured" class="btn-read-latest">Read Latest</a>
                 </div>
+
+                {{-- Search Bar --}}
+                <form action="{{ route('frontend.blogs') }}" method="GET" class="b-hero-search">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search stories, guides, and research...">
+                    <button type="submit" class="btn-hero-search">Search</button>
+                </form>
             </div>
 
-            {{-- Latest post card --}}
-            @if($featuredBlog)
-            <a href="{{ route('frontend.blogs.show', $featuredBlog->slug) }}" class="bi-hero-card">
-                <div class="bi-hero-card-thumb"
-                     style="{{ $featuredBlog->og_image ? 'background-image:url('.asset($featuredBlog->og_image).');' : 'background:linear-gradient(135deg,rgba(224,67,133,0.18),rgba(110,39,141,0.22));' }}">
-                    <div class="overlay"></div>
-                    @if(!$featuredBlog->og_image)
-                        <i class="fa-solid fa-newspaper" style="font-size:38px;color:rgba(224,67,133,0.25);z-index:1;"></i>
-                    @endif
-                </div>
-                <div class="bi-hero-card-body">
-                    <span class="bi-hero-card-badge">{{ $featuredBlog->category->name ?? 'Latest' }}</span>
-                    <h3>{{ Str::limit($featuredBlog->title, 72) }}</h3>
-                    <p>{{ Str::limit($featuredBlog->meta_description ?: strip_tags($featuredBlog->body), 85) }}</p>
-                    <div class="bi-hero-card-meta">
-                        <div class="bi-card-avatar">{{ strtoupper(substr($featuredBlog->author->name ?? 'T',0,1)) }}</div>
-                        <span>{{ $featuredBlog->author->name ?? 'TechAnalytica' }}</span>
-                        <span>·</span>
-                        <span>{{ max(1,(int)(str_word_count(strip_tags($featuredBlog->body))/200)) }} min</span>
+            {{-- Hero Featured Card (Must Read) --}}
+            @if(isset($heroBlog) && $heroBlog)
+                <a href="{{ route('frontend.blogs.show', $heroBlog->slug) }}" class="b-hero-card">
+                    <span class="badge-must-read">Must Read</span>
+                    <h3 class="b-hero-card-title">{{ $heroBlog->title }}</h3>
+                    <p class="b-hero-card-desc">{{ Str::limit($heroBlog->meta_description ?? strip_tags($heroBlog->body), 130) }}</p>
+                    <div class="b-hero-card-meta">
+                        <div class="b-avatar-circle">
+                            {{ substr($heroBlog->author->name ?? 'Alex Rivera', 0, 1) }}
+                        </div>
+                        <div>
+                            <div class="b-hero-author-name">{{ $heroBlog->author->name ?? 'Alex Rivera' }}</div>
+                            <div class="b-hero-date">{{ $heroBlog->published_at ? $heroBlog->published_at->format('M d, Y') : 'Jan 15, 2026' }} · 8 min read</div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                    <div class="b-hero-card-crescent"></div>
+                </a>
             @endif
         </div>
-    </div>
-</section>
+    </section>
 
-{{-- ===== CATEGORY TABS ===== --}}
-<div class="bi-filter">
-    <div class="container">
-        <div class="bi-filter-inner">
-            <a href="{{ route('frontend.blogs') }}" class="bi-tab {{ !$categoryId ? 'active' : '' }}">
-                <i class="fa-solid fa-border-all" style="font-size:11px;"></i> All
-                <span class="bi-tab-count">{{ \App\Models\Blog::where('status','published')->count() }}</span>
-            </a>
-            @foreach($blogCategories as $cat)
-                <a href="{{ route('frontend.blogs', ['category_id'=>$cat->id]) }}"
-                   class="bi-tab {{ $categoryId==$cat->id ? 'active' : '' }}">
-                    {{ $cat->name }}
-                    @if($cat->blogs_count > 0)<span class="bi-tab-count">{{ $cat->blogs_count }}</span>@endif
+</div>
+
+{{-- ── 2. STICKY CATEGORY PILLS BAR ── --}}
+<div class="b-pills-bar-wrap">
+    <div class="blog-page-container">
+        <div class="b-pills-bar">
+            <div class="b-pills-scroll">
+                <a href="{{ route('frontend.blogs') }}" class="b-pill {{ (!request('category_id') && !request('q')) ? 'active' : '' }}">
+                    All Posts
                 </a>
-            @endforeach
+                <a href="#featured" class="b-pill">Featured</a>
+                <a href="#trends-insights" class="b-pill">Trends & Insights</a>
+                <a href="#comparisons-guides" class="b-pill">Comparisons & Guides</a>
+                <a href="#news-pr" class="b-pill">News & PR</a>
+                <a href="#founder-stories" class="b-pill">Founder Stories</a>
+                <a href="#research-data" class="b-pill">Research & Data</a>
+            </div>
+
+            <button type="button" class="b-pills-search-btn" onclick="document.querySelector('.b-hero-search input')?.focus();" aria-label="Search blogs">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
         </div>
     </div>
 </div>
 
-{{-- ===== MAIN BODY ===== --}}
-<div class="container bi-body">
+<div class="blog-page-container">
 
-    {{-- Sidebar --}}
-    <aside class="bi-sidebar">
-        <div class="bi-sidebar-box">
-            <h5>Categories</h5>
-            <ul class="bi-cat-list">
-                <li class="bi-cat-item">
-                    <a href="{{ route('frontend.blogs') }}" class="{{ !$categoryId ? 'active' : '' }}">
-                        <i class="fa-solid fa-layer-group"></i> All Posts
-                        <span class="bi-cat-badge">{{ \App\Models\Blog::where('status','published')->count() }}</span>
-                    </a>
-                </li>
-                @forelse($blogCategories as $cat)
-                    <li class="bi-cat-item">
-                        <a href="{{ route('frontend.blogs', ['category_id'=>$cat->id]) }}"
-                           class="{{ $categoryId==$cat->id ? 'active' : '' }}">
-                            <i class="fa-solid fa-folder"></i>
-                            {{ $cat->name }}
-                            <span class="bi-cat-badge">{{ $cat->blogs_count }}</span>
-                        </a>
-                    </li>
-                @empty
-                    <li class="bi-cat-item"><a href="#"><i class="fa-solid fa-chart-line"></i> Trends</a></li>
-                    <li class="bi-cat-item"><a href="#"><i class="fa-solid fa-book-open"></i> Guides</a></li>
-                    <li class="bi-cat-item"><a href="#"><i class="fa-solid fa-newspaper"></i> News</a></li>
-                @endforelse
-            </ul>
-        </div>
-
-        <div class="bi-newsletter">
-            <i class="fa-solid fa-envelope-open-text"></i>
-            <h4>Weekly Digest</h4>
-            <p>Join 45,000+ tech leaders. No spam, just signal.</p>
-            <input type="email" class="bi-nl-input" placeholder="your@email.com">
-            <button class="bi-nl-btn"><i class="fa-solid fa-paper-plane"></i> Subscribe</button>
-        </div>
-    </aside>
-
-    {{-- Feed --}}
-    <div class="bi-feed">
-        <div class="bi-grid">
-            @forelse($blogs as $blog)
-                <a href="{{ route('frontend.blogs.show', $blog->slug) }}" class="bi-card">
-                    <div class="bi-card-thumb"
-                         style="{{ $blog->og_image ? 'background-image:url('.asset($blog->og_image).');' : 'background:linear-gradient(135deg,rgba(224,67,133,0.12),rgba(110,39,141,0.18));' }}">
-                        <span class="bi-card-tag">{{ $blog->category->name ?? 'Article' }}</span>
-                        @if(!$blog->og_image)
-                            <i class="fa-solid fa-newspaper bi-card-placeholder-icon"></i>
-                        @endif
-                    </div>
-                    <div class="bi-card-body">
-                        <h3>{{ $blog->title }}</h3>
-                        <p>{{ Str::limit($blog->meta_description ?: strip_tags($blog->body), 95) }}</p>
-                        <div class="bi-card-footer">
-                            <span class="bi-card-meta">
-                                <i class="fa-regular fa-clock"></i>
-                                {{ max(1,(int)(str_word_count(strip_tags($blog->body))/200)) }} min read
-                            </span>
-                            <span class="bi-card-meta">
-                                {{ $blog->published_at ? $blog->published_at->diffForHumans() : $blog->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-                        <div style="margin-top:10px;">
-                            <span class="bi-read-link">
-                                Read article <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i>
-                            </span>
-                        </div>
-                    </div>
-                </a>
-            @empty
-                <div class="bi-empty">
-                    <i class="fa-solid fa-newspaper"></i>
-                    <h3>{{ $categoryId ? 'No posts in this category.' : 'No blog posts yet.' }}</h3>
-                    <p>
-                        @if($categoryId)
-                            <a href="{{ route('frontend.blogs') }}">Browse all posts</a> or check back soon.
-                        @else
-                            Articles are published regularly. Check back soon.
-                        @endif
-                    </p>
-                </div>
-            @endforelse
-        </div>
-
-        {{-- Pagination --}}
-        @if($blogs->hasPages())
-            <div class="bi-pagination">
-                @if($blogs->onFirstPage())
-                    <span class="pg-disabled">&larr; Prev</span>
-                @else
-                    <a href="{{ $blogs->previousPageUrl() }}">&larr; Prev</a>
-                @endif
-
-                @foreach($blogs->getUrlRange(max(1,$blogs->currentPage()-2), min($blogs->lastPage(),$blogs->currentPage()+2)) as $page => $url)
-                    @if($page == $blogs->currentPage())
-                        <span class="pg-active">{{ $page }}</span>
+    {{-- ── CONDITIONAL: Search or Specific Category Filter View ── --}}
+    @if(request('q') || request('category_id'))
+        <div style="margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">
+                    @if(request('q'))
+                        Search results for "<span style="color: #ff3b7b;">{{ request('q') }}</span>"
                     @else
-                        <a href="{{ $url }}">{{ $page }}</a>
+                        Category Filtered Posts
                     @endif
-                @endforeach
-
-                @if($blogs->hasMorePages())
-                    <a href="{{ $blogs->nextPageUrl() }}">Next &rarr;</a>
-                @else
-                    <span class="pg-disabled">Next &rarr;</span>
-                @endif
+                    <span style="font-size: 14px; font-weight: 400; color: #9a8c9e;">({{ $blogs->total() }} results)</span>
+                </h2>
+                <a href="{{ route('frontend.blogs') }}" class="b-sec-link">
+                    <i class="fa-solid fa-arrow-left"></i> View Full Editorial
+                </a>
             </div>
-        @endif
 
-    </div>
+            <div class="b-search-results-grid">
+                @forelse($blogs as $b)
+                    <a href="{{ route('frontend.blogs.show', $b->slug) }}" class="b-trend-card">
+                        <div class="b-trend-art-box art-bg-peach-1">
+                            <div class="shape-purple-circle"></div>
+                            <div class="shape-pink-square"></div>
+                        </div>
+                        <div class="b-trend-body">
+                            <span class="b-trend-tag">{{ $b->category->name ?? 'Article' }}</span>
+                            <h4 class="b-trend-title">{{ $b->title }}</h4>
+                            <p class="b-trend-excerpt">{{ Str::limit($b->meta_description ?? strip_tags($b->body), 110) }}</p>
+                            <span class="b-trend-meta">{{ $b->published_at ? $b->published_at->format('M d, Y') : 'Jan 2026' }}</span>
+                        </div>
+                    </a>
+                @empty
+                    <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: #9a8c9e; background: rgba(255,255,255,0.03); border-radius: 16px;">
+                        <i class="fa-solid fa-newspaper" style="font-size: 32px; color: #ff3b7b; margin-bottom: 12px; display: block;"></i>
+                        <h3>No articles found</h3>
+                        <p style="font-size: 13px; margin-top: 6px;">Try adjusting your query or browse the categories below.</p>
+                    </div>
+                @endforelse
+            </div>
 
-</div>{{-- /bi-body --}}
+            <div style="margin-bottom: 40px;">
+                {{ $blogs->links() }}
+            </div>
+        </div>
+    @else
 
-{{-- Pre-Footer CTA Matching Figma --}}
-@include('frontend.components.newsletter_section')
+        {{-- ── 3. MAIN TWO-COLUMN EDITORIAL VIEW ── --}}
+        <div class="b-layout-grid">
 
-</div>{{-- /bi-body --}}
+            {{-- ── LEFT SIDEBAR ── --}}
+            <aside class="b-sidebar">
+                {{-- Quick Jump Links --}}
+                <div class="b-sidebar-card">
+                    <ul class="b-sidebar-nav-list">
+                        <li>
+                            <a href="#featured" class="b-sidebar-nav-link active">
+                                <span class="b-sidebar-dot"></span>
+                                Featured
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#trends-insights" class="b-sidebar-nav-link">
+                                <span class="b-sidebar-dot"></span>
+                                Trends & Insights
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#comparisons-guides" class="b-sidebar-nav-link">
+                                <span class="b-sidebar-dot"></span>
+                                Comparisons & Guides
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#news-pr" class="b-sidebar-nav-link">
+                                <span class="b-sidebar-dot"></span>
+                                News & PR
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#founder-stories" class="b-sidebar-nav-link">
+                                <span class="b-sidebar-dot"></span>
+                                Founder Stories
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#research-data" class="b-sidebar-nav-link">
+                                <span class="b-sidebar-dot"></span>
+                                Research & Data
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
+                {{-- Newsletter Card --}}
+                <div class="b-newsletter-card">
+                    <div class="b-newsletter-glow"></div>
+                    <div class="b-newsletter-body">
+                        <h4 class="b-newsletter-title">The weekly digest for AI builders</h4>
+                        <p class="b-newsletter-desc">Get actionable briefs on AI dev, architectures, & benchmarks in your inbox.</p>
+                        <form action="javascript:void(0)" onsubmit="alert('Thank you for subscribing to TechAnalytica newsletter!');">
+                            <input type="email" required placeholder="your@email.com" class="b-newsletter-input">
+                            <button type="submit" class="btn-newsletter-sub">Subscribe &rarr;</button>
+                        </form>
+                    </div>
+                </div>
+            </aside>
+
+            {{-- ── RIGHT CONTENT COLUMN ── --}}
+            <main class="b-content-col">
+
+                {{-- ── SECTION 1: Featured ── --}}
+                <section class="b-section-anchor" id="featured">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">Featured</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'featured')?->id ?? '']) }}" class="b-sec-link">
+                            View all featured &rarr;
+                        </a>
+                    </div>
+
+                    @if(isset($mainFeaturedStory) && $mainFeaturedStory)
+                        <a href="{{ route('frontend.blogs.show', $mainFeaturedStory->slug) }}" class="b-featured-card">
+                            <div class="b-featured-art-canvas">
+                                <div class="art-shape-orb-top"></div>
+                                <div class="art-shape-orb-bottom"></div>
+                                <div class="art-shape-cube"></div>
+                            </div>
+                            <div class="b-featured-content">
+                                <div class="b-badge-row">
+                                    <span class="b-badge-pill pink-solid">Deep Dive</span>
+                                    <span class="b-badge-pill outline">AI Engineering</span>
+                                </div>
+                                <h3 class="b-featured-heading">{{ $mainFeaturedStory->title }}</h3>
+                                <p class="b-featured-excerpt">{{ Str::limit($mainFeaturedStory->meta_description ?? strip_tags($mainFeaturedStory->body), 160) }}</p>
+                                <div class="b-author-row">
+                                    <div class="b-avatar-circle">
+                                        {{ substr($mainFeaturedStory->author->name ?? 'Elena Rostova', 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="b-author-name">{{ $mainFeaturedStory->author->name ?? 'Elena Rostova' }}</div>
+                                        <div class="b-author-date">{{ $mainFeaturedStory->published_at ? $mainFeaturedStory->published_at->format('M d, Y') : 'Jan 14, 2026' }} · 11 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endif
+                </section>
+
+                {{-- ── SECTION 2: Trends & Insights ── --}}
+                <section class="b-section-anchor" id="trends-insights">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">Trends & Insights</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'trends-insights')?->id ?? '']) }}" class="b-sec-link">
+                            View 12 stories &rarr;
+                        </a>
+                    </div>
+
+                    <div class="b-trends-grid">
+                        @php
+                            $artBgs = ['art-bg-peach-1', 'art-bg-peach-2', 'art-bg-coral-3', 'art-bg-magenta-4'];
+                            $tags = ['Architecture', 'UI/UX', 'Security', 'Workflow'];
+                        @endphp
+
+                        @foreach($trendsBlogs as $idx => $tBlog)
+                            <a href="{{ route('frontend.blogs.show', $tBlog->slug) }}" class="b-trend-card">
+                                <div class="b-trend-art-box {{ $artBgs[$idx % 4] }}">
+                                    @if($idx === 0)
+                                        <div class="shape-purple-circle"></div>
+                                        <div class="shape-pink-square"></div>
+                                    @elseif($idx === 1)
+                                        <div class="shape-wireframe-windows">
+                                            <div class="shape-wire-win"></div>
+                                            <div class="shape-wire-win"></div>
+                                        </div>
+                                    @elseif($idx === 2)
+                                        <div class="shape-donut-ring">
+                                            <div class="shape-donut-inner"></div>
+                                        </div>
+                                    @else
+                                        <div class="shape-neon-wave-wrap">
+                                            <div class="shape-neon-wave"></div>
+                                            <div class="shape-neon-orb"></div>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="b-trend-body">
+                                    <span class="b-trend-tag">{{ $tags[$idx % 4] }}</span>
+                                    <h4 class="b-trend-title">{{ $tBlog->title }}</h4>
+                                    <p class="b-trend-excerpt">{{ Str::limit($tBlog->meta_description ?? strip_tags($tBlog->body), 110) }}</p>
+                                    <span class="b-trend-meta">{{ $tBlog->published_at ? $tBlog->published_at->format('M d, Y') : 'Jan 13, 2026' }} · 6 min read</span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+
+                {{-- ── Quote / Callout Banner ── --}}
+                <div class="b-quote-banner">
+                    <p class="b-quote-text">
+                        "In five years, everyone who won didn't have better algorithms; they had more data, tighter feedback loops, and more bias toward shipping than discussing."
+                    </p>
+                    <div class="b-quote-author">
+                        <div class="b-quote-avatar">TA</div>
+                        <span>TechAnalytica Editorial, 2026 &middot; Leadership Survey</span>
+                    </div>
+                </div>
+
+                {{-- ── SECTION 3: Comparisons & How-to Guides ── --}}
+                <section class="b-section-anchor" id="comparisons-guides">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">Comparisons & How-to Guides</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'comparisons-guides')?->id ?? '']) }}" class="b-sec-link">
+                            View 8 guides &rarr;
+                        </a>
+                    </div>
+
+                    <div class="b-guides-stack">
+                        @php
+                            $guideIcons = [
+                                ['bg' => '#1e293b', 'color' => '#38bdf8', 'icon' => 'fa-solid fa-code-compare'],
+                                ['bg' => '#0f172a', 'color' => '#ffffff', 'icon' => 'fa-solid fa-x'],
+                                ['bg' => '#14532d', 'color' => '#4ade80', 'icon' => 'fa-solid fa-laptop-code'],
+                                ['bg' => '#3b0764', 'color' => '#c084fc', 'icon' => 'fa-solid fa-database'],
+                                ['bg' => '#1e1b4b', 'color' => '#818cf8', 'icon' => 'fa-solid fa-shield-halved'],
+                            ];
+                        @endphp
+
+                        @foreach($comparisonGuides as $idx => $gBlog)
+                            @php $ic = $guideIcons[$idx % 5]; @endphp
+                            <a href="{{ route('frontend.blogs.show', $gBlog->slug) }}" class="b-guide-item">
+                                <div class="b-guide-left">
+                                    <div class="b-guide-icon-sq" style="background: {{ $ic['bg'] }}; color: {{ $ic['color'] }};">
+                                        <i class="{{ $ic['icon'] }}"></i>
+                                    </div>
+                                    <div>
+                                        <div class="b-guide-title">{{ $gBlog->title }}</div>
+                                        <div class="b-guide-sub">{{ Str::limit($gBlog->meta_description ?? 'Benchmark results & latency breakdowns', 80) }}</div>
+                                    </div>
+                                </div>
+                                <div class="b-guide-arrow">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+
+                {{-- ── SECTION 4: News & PR ── --}}
+                <section class="b-section-anchor" id="news-pr">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">News & PR</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'news-pr')?->id ?? '']) }}" class="b-sec-link">
+                            All news &rarr;
+                        </a>
+                    </div>
+
+                    <div class="b-news-box">
+                        @foreach($newsBlogs as $nBlog)
+                            <a href="{{ route('frontend.blogs.show', $nBlog->slug) }}" class="b-news-row">
+                                <div class="b-news-date">{{ $nBlog->published_at ? $nBlog->published_at->format('M d, Y') : 'JAN 12, 2026' }}</div>
+                                <div class="b-news-info">
+                                    <div class="b-news-title">{{ $nBlog->title }}</div>
+                                    <div class="b-news-sub">{{ Str::limit($nBlog->meta_description ?? strip_tags($nBlog->body), 110) }}</div>
+                                </div>
+                                <div class="b-news-cta">
+                                    Read Story &rarr;
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+
+                {{-- ── SECTION 5: Founder Stories ── --}}
+                <section class="b-section-anchor" id="founder-stories">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">Founder Stories</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'founder-stories')?->id ?? '']) }}" class="b-sec-link">
+                            All founders &rarr;
+                        </a>
+                    </div>
+
+                    <div class="b-founders-grid">
+                        @php
+                            $fCards = [
+                                ['class' => 'f-card-plum', 'brand' => 'Prism AI', 'tag' => 'Founder Story', 'author' => 'Marcus Chen · Founder & CEO'],
+                                ['class' => 'f-card-teal', 'brand' => 'Nexus AI', 'tag' => 'Q&A', 'author' => 'Sarah Lin · Co-founder & CTO'],
+                                ['class' => 'f-card-rust', 'brand' => 'ComputeStack', 'tag' => 'Case Study', 'author' => 'David Vance · VP Engineering'],
+                                ['class' => 'f-card-indigo', 'brand' => 'Synapse', 'tag' => 'Engineering Lead', 'author' => 'Tanya Meyer · Principal Architect'],
+                            ];
+                        @endphp
+
+                        @foreach($founderStories as $idx => $fBlog)
+                            @php $fc = $fCards[$idx % 4]; @endphp
+                            <a href="{{ route('frontend.blogs.show', $fBlog->slug) }}" class="b-founder-card {{ $fc['class'] }}">
+                                <div class="b-founder-top">
+                                    <span class="b-founder-brand">{{ $fc['brand'] }}</span>
+                                    <span class="b-founder-tag">{{ $fc['tag'] }}</span>
+                                </div>
+                                <h4 class="b-founder-title">{{ $fBlog->title }}</h4>
+                                <p class="b-founder-excerpt">{{ Str::limit($fBlog->meta_description ?? strip_tags($fBlog->body), 140) }}</p>
+                                <div class="b-founder-author">{{ $fc['author'] }}</div>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+
+                {{-- ── SECTION 6: Research & Data ── --}}
+                <section class="b-section-anchor" id="research-data">
+                    <div class="b-sec-header">
+                        <div class="b-sec-title-wrap">
+                            <span class="b-sec-icon-square"></span>
+                            <h2 class="b-sec-title">Research & Data</h2>
+                        </div>
+                        <a href="{{ route('frontend.blogs', ['category_id' => $blogCategories->firstWhere('slug', 'research-data')?->id ?? '']) }}" class="b-sec-link">
+                            View reports &rarr;
+                        </a>
+                    </div>
+
+                    <div class="b-research-grid">
+                        {{-- Left Featured Report --}}
+                        <div class="b-research-left-card">
+                            <span class="b-res-tag">ANNUAL REPORT</span>
+                            <h3 class="b-res-title">Annual AI Operations Report 2026</h3>
+                            <p class="b-res-desc">1,200+ engineering leaders surveyed on compute spend, model governance, latency budgets, and tooling consolidation.</p>
+                            
+                            <div class="b-res-stats-row">
+                                <div>
+                                    <span class="b-res-stat-val">64%</span>
+                                    <span class="b-res-stat-lbl">Enterprise models running open-weight variants</span>
+                                </div>
+                                <div>
+                                    <span class="b-res-stat-val">3.4X</span>
+                                    <span class="b-res-stat-lbl">Average increase in AI infrastructure budget</span>
+                                </div>
+                                <div>
+                                    <span class="b-res-stat-val">$94k</span>
+                                    <span class="b-res-stat-lbl">Median monthly inference spend per team</span>
+                                </div>
+                            </div>
+
+                            <a href="javascript:void(0)" onclick="alert('Downloading TechAnalytica 2026 Annual AI Operations Report...');" class="btn-download-rep">
+                                Download Free 48-Page Report
+                            </a>
+
+                            <div class="b-res-corner-circle"></div>
+                        </div>
+
+                        {{-- Right 4 Stacked Publications --}}
+                        <div class="b-research-right-stack">
+                            @php
+                                $rTags = ['BENCHMARK', 'DATASET', 'ARCHITECTURE', 'GOVERNANCE'];
+                                $repSlice = $researchReports->slice(1, 4)->values();
+                            @endphp
+
+                            @if($repSlice->count() > 0)
+                                @foreach($repSlice as $idx => $rBlog)
+                                    <a href="{{ route('frontend.blogs.show', $rBlog->slug) }}" class="b-res-pub-card">
+                                        <span class="b-res-pub-tag">{{ $rTags[$idx % 4] }}</span>
+                                        <div class="b-res-pub-title">{{ $rBlog->title }}</div>
+                                        <div class="b-res-pub-date">{{ $rBlog->published_at ? $rBlog->published_at->format('M d, Y') : 'Jan 11, 2026' }} · {{ 14 + ($idx * 6) }} pp</div>
+                                    </a>
+                                @endforeach
+                            @else
+                                <a href="#" class="b-res-pub-card">
+                                    <span class="b-res-pub-tag">BENCHMARK</span>
+                                    <div class="b-res-pub-title">LLM Inference Cost Index: Q1 2026 Pricing Changes and Provider Margins</div>
+                                    <div class="b-res-pub-date">Jan 11, 2026 · 14 pp</div>
+                                </a>
+                                <a href="#" class="b-res-pub-card">
+                                    <span class="b-res-pub-tag">DATASET</span>
+                                    <div class="b-res-pub-title">The 2026 State of Vector Databases: Latency, Recall, and Cost Benchmarks</div>
+                                    <div class="b-res-pub-date">Jan 09, 2026 · 28 pp</div>
+                                </a>
+                                <a href="#" class="b-res-pub-card">
+                                    <span class="b-res-pub-tag">ARCHITECTURE</span>
+                                    <div class="b-res-pub-title">Survey: How 400 Engineering Teams Structure Their Production AI Stacks</div>
+                                    <div class="b-res-pub-date">Jan 04, 2026 · 18 pp</div>
+                                </a>
+                                <a href="#" class="b-res-pub-card">
+                                    <span class="b-res-pub-tag">GOVERNANCE</span>
+                                    <div class="b-res-pub-title">Enterprise AI Governance Playbook: Audit Trails, Evals, and Red Teaming</div>
+                                    <div class="b-res-pub-date">Dec 29, 2025 · 32 pp</div>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </section>
+
+                {{-- ── SECTION 7: Bottom CTA Banner ── --}}
+                <div class="b-cta-banner">
+                    <div>
+                        <h2 class="b-cta-title">
+                            Try TechAnalytica <span class="gradient-word">free</span> for 30 days.
+                        </h2>
+                        <p class="b-cta-sub">
+                            Compare AI tools, access benchmarks, and discover software built for your stack.
+                        </p>
+                        <div class="b-cta-btns">
+                            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink-fill">Start Free Trial</a>
+                            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-outline-glass">Browse Directory</a>
+                        </div>
+                    </div>
+
+                    {{-- Brand Dot Matrix Graphic --}}
+                    <div class="b-cta-matrix-card">
+                        <div class="b-dots-cluster">
+                            <span class="b-cluster-dot" style="top: 10px; left: 18px; width: 14px; height: 14px; background: #ff3b7b; color: #ff3b7b;"></span>
+                            <span class="b-cluster-dot" style="top: 8px; left: 48px; width: 16px; height: 16px; background: #ff735c; color: #ff735c;"></span>
+                            <span class="b-cluster-dot" style="top: 14px; left: 78px; width: 12px; height: 12px; background: #a4358a; color: #a4358a;"></span>
+                            <span class="b-cluster-dot" style="top: 38px; left: 28px; width: 18px; height: 18px; background: #ff735c; color: #ff735c;"></span>
+                            <span class="b-cluster-dot" style="top: 40px; left: 62px; width: 15px; height: 15px; background: #ff3b7b; color: #ff3b7b;"></span>
+                            <span class="b-cluster-dot" style="top: 64px; left: 42px; width: 13px; height: 13px; background: #a4358a; color: #a4358a;"></span>
+                            <span class="b-cluster-dot" style="top: 60px; left: 74px; width: 14px; height: 14px; background: #ff735c; color: #ff735c;"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+
+    @endif
+
+</div>
+
+<script>
+    // Smooth scroll and active state sync for sidebar & pills
+    document.addEventListener('DOMContentLoaded', function () {
+        const sections = document.querySelectorAll('.b-section-anchor');
+        const sidebarLinks = document.querySelectorAll('.b-sidebar-nav-link');
+        const pillLinks = document.querySelectorAll('.b-pills-scroll .b-pill');
+
+        window.addEventListener('scroll', function () {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    });
+</script>
 @endsection

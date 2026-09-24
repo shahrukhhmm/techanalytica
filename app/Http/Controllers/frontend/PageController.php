@@ -386,22 +386,95 @@ class PageController extends Controller
     public function blogs(Request $request)
     {
         $categoryId = $request->input('category_id');
+        $searchQ    = $request->input('q');
 
-        $query = Blog::with(['author', 'category', 'tags'])->where('status', 'published');
+        // ── Paginated / filtered query (used when filtering or searching) ──
+        $query = Blog::with(['author', 'category'])->where('status', 'published');
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
 
-        $blogs = $query->latest()->paginate(9)->withQueryString();
-        $featuredBlog = Blog::with(['author', 'category'])->where('status', 'published')->latest()->first();
-        $unclaimedTools = Tool::where('is_claimed', false)->where('status', 'published')->get();
-        $categories = Category::withCount('tools')->get();
-        $blogCategories = BlogCategory::withCount('blogs')->get();
-        $navIndustries = Industry::where('approved', true)->withCount('tools')->take(6)->get();
+        if ($searchQ) {
+            $query->where(function ($q) use ($searchQ) {
+                $q->where('title', 'like', "%{$searchQ}%")
+                  ->orWhere('body', 'like', "%{$searchQ}%")
+                  ->orWhere('meta_description', 'like', "%{$searchQ}%");
+            });
+        }
 
-        return view('frontend.pages.blogs.index', compact('blogs', 'featuredBlog', 'blogCategories', 'unclaimedTools', 'categories', 'navIndustries', 'categoryId'));
+        $blogs = $query->latest()->paginate(9)->withQueryString();
+
+        // ── Section-specific queries for the Figma layout ──
+        $heroBlog = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->where('slug', '2026-state-generative-ai-spend-llm-economics')
+            ->first() ?? Blog::with(['author', 'category'])->where('status', 'published')->latest()->first();
+
+        $mainFeaturedStory = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->where('slug', 'the-quiet-rewrite-how-small-teams-out-shipping-giants-2026')
+            ->first() ?? Blog::with(['author', 'category'])->whereHas('category', fn($q) => $q->where('slug', 'featured'))->first() ?? $heroBlog;
+
+        $trendsBlogs = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('slug', 'trends-insights'))
+            ->latest('published_at')
+            ->take(4)
+            ->get();
+
+        $comparisonGuides = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('slug', 'comparisons-guides'))
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        $newsBlogs = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('slug', 'news-pr'))
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        $founderStories = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('slug', 'founder-stories'))
+            ->latest('published_at')
+            ->take(4)
+            ->get();
+
+        $researchReports = Blog::with(['author', 'category'])
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('slug', 'research-data'))
+            ->latest('published_at')
+            ->get();
+
+        // ── Blog categories with counts (for tabs and sidebar) ──
+        $blogCategories = BlogCategory::withCount(['blogs' => fn($q) => $q->where('status', 'published')])->get();
+
+        $unclaimedTools = Tool::where('is_claimed', false)->where('status', 'published')->get();
+        $categories     = Category::withCount('tools')->get();
+        $navIndustries  = Industry::where('approved', true)->withCount('tools')->take(6)->get();
+
+        return view('frontend.pages.blogs.index', compact(
+            'blogs',
+            'heroBlog',
+            'mainFeaturedStory',
+            'trendsBlogs',
+            'comparisonGuides',
+            'newsBlogs',
+            'founderStories',
+            'researchReports',
+            'blogCategories',
+            'unclaimedTools',
+            'categories',
+            'navIndustries',
+            'categoryId',
+            'searchQ'
+        ));
     }
+
 
     public function blogDetail($slug = null)
     {
@@ -425,5 +498,44 @@ class PageController extends Controller
     public function vendorDetail($slug)
     {
         return $this->toolDetail($slug);
+    }
+
+    public function vendors()
+    {
+        $tools = Tool::with(['categories', 'tier', 'reviews'])
+            ->where('status', 'published')
+            ->latest()
+            ->take(20)
+            ->get();
+
+        $categories = Category::withCount('tools')->get();
+        $navIndustries = Industry::where('approved', true)->withCount('tools')->take(6)->get();
+        $unclaimedTools = Tool::where('is_claimed', false)->where('status', 'published')->get();
+
+        return view('frontend.pages.vendors.crm', compact(
+            'tools',
+            'categories',
+            'navIndustries',
+            'unclaimedTools'
+        ));
+    }
+
+    public function about()
+    {
+        $categories = Category::withCount('tools')->get();
+        $navIndustries = Industry::where('approved', true)->withCount('tools')->take(6)->get();
+        $unclaimedTools = Tool::where('is_claimed', false)->where('status', 'published')->get();
+        $totalTools = Tool::where('status', 'published')->count();
+        $totalReviews = \App\Models\Review::where('status', 'approved')->count();
+        $totalCategories = Category::count();
+
+        return view('frontend.pages.about.index', compact(
+            'categories',
+            'navIndustries',
+            'unclaimedTools',
+            'totalTools',
+            'totalReviews',
+            'totalCategories'
+        ));
     }
 }

@@ -34,5 +34,15 @@ class AppServiceProvider extends ServiceProvider
             }
             $view->with('current_vendor_permissions', $permissions);
         });
+
+        view()->composer(['frontend.components.header', 'frontend.layout.app'], function ($view) {
+            if (!isset($view->getData()['categories'])) {
+                try {
+                    $view->with('categories', \App\Models\Category::withCount('tools')->get());
+                } catch (\Throwable $e) {
+                    // Fallback gracefully if database is not reachable
+                }
+            }
+        });
     }
 }

@@ -50,7 +50,9 @@ Route::name('frontend.')->group(function () {
     Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs.index');
     Route::get('/blogs-all', [PageController::class, 'blogs'])->name('blogs');
     Route::get('/blogs/{slug?}', [PageController::class, 'blogDetail'])->name('blogs.show');
+    Route::get('/vendors', [PageController::class, 'vendors'])->name('vendors.index');
     Route::get('/vendors/{slug}', [PageController::class, 'vendorDetail'])->name('vendors.show');
+    Route::get('/about', [PageController::class, 'about'])->name('about');
 });
 
 // Cache Clearing & Optimization Utility
