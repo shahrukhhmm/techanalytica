@@ -4008,14 +4008,12 @@
         <button class="overlay-close-btn" onclick="toggleMenu()" aria-label="Close Menu">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        <div class="overlay-wave-graphic"></div>
-        <div class="overlay-menu-content">
-            <a href="{{ route('frontend.tools.index') }}" class="overlay-link">AI Software</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('submitToolModal')"
-                class="overlay-link">Submit AI Tool</a>
-            <a href="javascript:void(0)" onclick="toggleMenu(); openModal('claimToolModal')"
-                class="overlay-link">Claim AI Tool</a>
-            <a href="{{ route('frontend.blogs') }}" class="overlay-link">Blogs</a>
+        <!-- The background wave graphic is assumed to be handled by CSS or an image -->
+        <div class="overlay-wave-graphic" style="background-image: url('{{ asset('assets/images/red-waves.png') }}'); background-size: cover; opacity: 0.5;"></div>
+        <div class="overlay-menu-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <a href="#" class="overlay-link" style="font-size: 40px; font-weight: 700; margin-bottom: 30px;">About</a>
+            <a href="#" class="overlay-link" style="font-size: 40px; font-weight: 700; margin-bottom: 30px;">Write a review</a>
+            <a href="#" class="overlay-link" style="font-size: 40px; font-weight: 700;">Legal</a>
         </div>
     </div>
 

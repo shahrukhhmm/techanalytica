@@ -245,85 +245,108 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Showcase Section */
-    .showcase-section {
-        padding: 50px 0;
+    /* Why TechAnalytica Section */
+    .why-section {
+        background: #ffffff;
+        padding: 70px 0;
+        color: #0c0612;
     }
-    .showcase-banner {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
-        border-radius: 9999px;
-        font-size: 12px;
-        font-weight: 800;
-        color: #ff735c;
-        background: rgba(255, 115, 92, 0.15);
-        border: 1px solid rgba(255, 115, 92, 0.3);
-        margin-bottom: 14px;
+    .why-section .section-title {
+        color: #0c0612;
     }
-    .showcase-grid {
+    .why-section .section-desc {
+        color: #666;
+    }
+    .why-grid {
         display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 24px;
-        align-items: center;
-    }
-    .showcase-card-left {
-        background: linear-gradient(145deg, rgba(28, 14, 38, 0.95), rgba(16, 8, 22, 0.98));
-        border: 1px solid rgba(255, 59, 123, 0.25);
-        border-radius: 22px;
-        padding: 36px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        margin-top: 50px;
         text-align: center;
     }
-    .visual-dial {
-        width: 90px;
-        height: 90px;
+    .why-card h4 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        color: #0c0612;
+    }
+    .why-card p {
+        font-size: 13.5px;
+        color: #555;
+        line-height: 1.6;
+    }
+    .why-icon {
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #ff3b7b, #ff735c);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 36px;
+        font-size: 26px;
         color: #fff;
-        margin: 0 auto 20px;
-        box-shadow: 0 10px 30px rgba(255, 59, 123, 0.4);
+        margin: 0 auto 24px;
     }
-    .showcase-list {
+
+    /* Browse Categories Section */
+    .category-section {
+        padding: 70px 0;
+        background: var(--bg-dark);
+    }
+    .category-pills {
         display: flex;
-        flex-direction: column;
-        gap: 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 40px;
     }
-    .showcase-item {
+    .cat-pill {
+        padding: 8px 20px;
+        border-radius: 9999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-size: 13.5px;
+        font-weight: 600;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .cat-pill.active, .cat-pill:hover {
+        background: #ff3b7b;
+        border-color: #ff3b7b;
+    }
+    .platforms-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .platform-card {
         background: rgba(20, 10, 26, 0.88);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px;
-        padding: 18px 22px;
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        transition: border-color 0.2s, transform 0.2s;
+        padding: 24px;
+        text-align: left;
     }
-    .showcase-item:hover {
-        border-color: rgba(255, 59, 123, 0.35);
-        transform: translateX(4px);
-    }
-    .showcase-item-icon {
-        width: 44px;
-        height: 44px;
+    .platform-icon {
+        width: 48px;
+        height: 48px;
         border-radius: 12px;
-        background: rgba(255, 59, 123, 0.15);
-        color: #ff3b7b;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
-        flex-shrink: 0;
-    }
-    .showcase-item h4 {
-        font-size: 15.5px;
-        font-weight: 700;
+        font-size: 24px;
+        margin-bottom: 16px;
         color: #fff;
-        margin-bottom: 3px;
+    }
+    .platform-card h4 {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+    .platform-card p {
+        color: var(--text-secondary);
+        font-size: 12px;
     }
 
     /* Dual CTA Cards */
@@ -334,33 +357,44 @@
         margin: 60px 0;
     }
     .cta-card {
-        background: linear-gradient(135deg, rgba(28, 14, 38, 0.95) 0%, rgba(16, 7, 22, 0.98) 100%);
-        border: 1px solid rgba(255, 59, 123, 0.25);
         border-radius: 20px;
-        padding: 36px;
+        padding: 40px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 220px;
+        min-height: 250px;
         transition: all 0.25s ease;
-    }
-    .cta-card:hover {
-        border-color: rgba(255, 59, 123, 0.45);
-        transform: translateY(-2px);
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+        position: relative;
     }
     .cta-card h3 {
-        font-size: 22px;
+        font-size: 28px;
         font-weight: 800;
-        color: #fff;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
+        color: #0c0612;
         line-height: 1.3;
     }
     .cta-card p {
-        font-size: 14.5px;
-        color: var(--text-secondary);
+        color: #444;
+        font-size: 15px;
         line-height: 1.6;
-        margin-bottom: 24px;
+        margin-bottom: 30px;
+    }
+    .cta-buttons {
+        display: flex;
+        gap: 12px;
+    }
+    .cta-buttons a {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+    }
+    .cta-card-left {
+        background: #ffd6e4;
+    }
+    .cta-card-right {
+        background: #ffe8f0;
     }
 
     /* Community Testimonials */
@@ -390,87 +424,138 @@
         gap: 16px;
     }
     .t-card {
-        background: linear-gradient(135deg, rgba(24, 12, 32, 0.85) 0%, rgba(14, 7, 20, 0.95) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 16px;
-        padding: 18px 22px;
+        padding: 24px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 16px;
         transition: all 0.2s ease;
+        position: relative;
     }
     .t-card:hover {
         border-color: rgba(255, 59, 123, 0.35);
         transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
     .t-avatar {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         flex-shrink: 0;
+        object-fit: cover;
     }
     .t-info {
         flex: 1;
     }
     .t-info h5 {
-        font-size: 15.5px;
-        font-weight: 700;
-        color: #fff;
-        margin: 0 0 2px;
+        font-size: 16px;
+        font-weight: 800;
+        color: #0c0612;
+        margin: 0 0 4px;
     }
     .t-info p {
-        font-size: 12px;
-        color: var(--text-secondary);
+        font-size: 13px;
+        color: #666;
         margin: 0;
+        line-height: 1.5;
     }
     .t-stars {
         color: #ffb703;
         font-size: 13px;
         letter-spacing: 2px;
-        flex-shrink: 0;
+        margin-bottom: 6px;
+    }
+    .t-quote-icon {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        color: #e2e8f0;
+        font-size: 28px;
     }
 
     /* Insights Section */
     .insights-section {
-        padding: 50px 0;
+        padding: 70px 0;
+        background: #ffffff;
+        color: #0c0612;
+    }
+    .insights-section .section-title {
+        color: #0c0612;
+    }
+    .insights-section .section-desc {
+        color: #666;
     }
     .insights-grid {
         display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 24px;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
     }
     .featured-insight {
-        background: linear-gradient(135deg, rgba(32, 14, 40, 0.95), rgba(18, 9, 24, 0.98));
-        border: 1px solid rgba(255, 59, 123, 0.25);
-        border-radius: 22px;
-        padding: 36px;
+        background: #000000;
+        border-radius: 20px;
+        padding: 40px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        justify-content: center;
         position: relative;
         overflow: hidden;
-        min-height: 280px;
+        min-height: 400px;
+    }
+    .featured-insight h3 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.2;
+        margin-bottom: 16px;
+    }
+    .featured-insight p {
+        color: #a1a1aa;
+        font-size: 15px;
     }
     .insight-list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 20px;
     }
     .insight-item {
-        background: rgba(20, 10, 26, 0.88);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
         border-radius: 16px;
-        padding: 18px 22px;
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 20px;
         text-decoration: none;
         color: inherit;
         transition: all 0.2s ease;
     }
     .insight-item:hover {
-        border-color: rgba(255, 59, 123, 0.35);
         transform: translateX(4px);
+    }
+    .insight-img-box {
+        width: 140px;
+        height: 100px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .insight-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .insight-item h4 {
+        font-size: 16px;
+        font-weight: 800;
+        color: #0c0612;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    .insight-item p {
+        font-size: 13px;
+        color: #666;
+        margin: 0;
     }
     .insight-icon-box {
         width: 48px;
@@ -564,20 +649,20 @@
                 Find AI tools <span class="gradient-text">Worth Adopting</span>
             </h1>
             <p class="hero-subtitle">
-                Discover real products, real reviews, & honest AI insights.
+                Discover. Evaluate. Build a Smarter AI Stack
             </p>
 
             <form action="{{ route('frontend.tools.index') }}" method="GET" class="search-box-wrapper" onsubmit="if(!this.search.value.trim()){ return false; }">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" name="search" value="{{ request('search') }}" class="search-input" placeholder="Search for AI tools, categories or features..." required>
-                <button type="submit" class="btn-search">Search</button>
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-secondary);"></i>
+                <input type="text" name="search" value="{{ request('search') }}" class="search-input" placeholder="Search Anything" required>
+                <button type="submit" class="btn-search" style="padding: 10px 24px; border-radius: 9999px;"><i class="fa-solid fa-arrow-right"></i></button>
             </form>
 
             <!-- Sponsors Ticker -->
             <div class="sponsors-bar-wrapper">
                 <div class="sponsors-bar-track">
-                    <div class="sponsor-item"><i class="fa-brands fa-figma"></i> Figma</div>
-                    <div class="sponsor-item"><i class="fa-brands fa-slack"></i> Slack</div>
+                    <div class="sponsor-item">ActiveCampaign<i class="fa-solid fa-chevron-right" style="font-size: 14px; margin-left: 4px;"></i></div>
+                    <div class="sponsor-item"><i class="fa-solid fa-cube"></i> Podium</div>
                     <div class="sponsor-item"><i class="fa-brands fa-github"></i> GitHub</div>
                     <div class="sponsor-item"><i class="fa-brands fa-intercom"></i> Intercom</div>
                     <div class="sponsor-item"><i class="fa-brands fa-stripe"></i> Stripe</div>
@@ -603,16 +688,18 @@
     <section class="container" style="padding-bottom: 50px;">
         <div class="section-header">
             <h2 class="section-title">The AI Tools Making Real Noise</h2>
-            <p class="section-desc">Hand-curated software tools that generate proven ROI for teams worldwide.</p>
+            <p class="section-desc">Verified and trusted AI software for businesses at every stage.</p>
         </div>
 
         <div class="tools-grid">
             @forelse($tools as $tool)
                 <div class="tool-card">
-                    @if($tool->is_featured)
-                        <span class="tool-badge"><i class="fa-solid fa-crown" style="font-size: 10px;"></i> Featured</span>
-                    @elseif($tool->is_verified)
-                        <span class="tool-badge" style="background: rgba(16,185,129,0.15); color: #10b981; border-color: rgba(16,185,129,0.3);"><i class="fa-solid fa-check"></i> Verified</span>
+                    @if($loop->iteration % 3 == 1)
+                        <span class="tool-badge" style="background: #ff3b7b; color: #fff; border: none; padding: 6px 12px; font-weight: 600;">Most Popular</span>
+                    @elseif($loop->iteration % 3 == 2)
+                        <span class="tool-badge" style="background: #ff735c; color: #fff; border: none; padding: 6px 12px; font-weight: 600;">Editor Choice</span>
+                    @else
+                        <span class="tool-badge" style="background: #ff4757; color: #fff; border: none; padding: 6px 12px; font-weight: 600;">Enterprise Ready</span>
                     @endif
 
                     <div>
@@ -635,9 +722,9 @@
                         <p class="tool-desc">{{ Str::limit($tool->short_description, 90) }}</p>
                     </div>
 
-                    <div class="tool-footer">
-                        <span class="pricing-tag">{{ $tool->pricing_text ?? ($tool->tier->name ?? 'Free / Freemium') }}</span>
-                        <a href="{{ route('frontend.tools.show', $tool->slug) }}" class="btn-visit" style="font-size: 13px;">View Details <i class="fa-solid fa-arrow-right"></i></a>
+                    <div class="tool-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; margin-top: 16px;">
+                        <span style="font-size: 13px; color: var(--text-secondary);"><i class="fa-solid fa-star" style="color: #ff3b7b; margin-right: 4px;"></i> (1240 reviews)</span>
+                        <span style="font-size: 13px; font-weight: 700; color: #ff3b7b;">From $29/mo</span>
                     </div>
                 </div>
             @empty
@@ -648,160 +735,213 @@
         </div>
 
         <div style="text-align: right; margin-top: 24px;">
-            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink" style="text-decoration: none;">
-                <span>View All Tools</span>
-                <i class="fa-solid fa-arrow-right"></i>
+            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink" style="text-decoration: none; border-radius: 8px; padding: 10px 24px;">
+                <span>View All</span>
             </a>
         </div>
     </section>
 
-    <!-- 3. NEW AI TOOL RELEASES SHOWCASE SECTION -->
-    <section class="showcase-section">
+
+
+    <!-- 3. WHY TECH ANALYTICA -->
+    <section class="why-section">
         <div class="container">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <div class="showcase-banner">
-                    <i class="fa-solid fa-fire"></i> New AI Tool Releases
-                </div>
-                <h2 class="section-title">Fresh releases, updated features, and cutting-edge products</h2>
+            <div class="section-header">
+                <h2 class="section-title">Why TechAnalytica?</h2>
+                <p class="section-desc">We make finding and comparing AI tools simple, transparent, and trustworthy.</p>
             </div>
-
-            <div class="showcase-grid">
-                <div class="showcase-card-left">
-                    <div class="visual-dial">
-                        <i class="fa-solid fa-compact-disc"></i>
-                    </div>
-                    <h3 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px;">Voice Engine Pro 2.0</h3>
-                    <p style="color: var(--text-secondary); font-size: 14.5px; line-height: 1.6;">Ultra-realistic real-time voice synthesis and conversion for modern audio and media creators.</p>
+            
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon" style="background: #ff735c;"><i class="fa-solid fa-rocket"></i></div>
+                    <h4>Ahead of The Curve</h4>
+                    <p>The AI tool market moves fast. TechAnalytica spotlights the most promising new launches the moment they matter, keeping your AI stack one step ahead.</p>
                 </div>
-
-                <div class="showcase-list">
-                    <div class="showcase-item">
-                        <div class="showcase-item-icon"><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <h4>VideoGen Studio</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Generative video engine with full scene consistency control.</p>
-                        </div>
-                    </div>
-
-                    <div class="showcase-item">
-                        <div class="showcase-item-icon"><i class="fa-solid fa-code"></i></div>
-                        <div>
-                            <h4>DevAgent Refactor</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Autonomous codebase refactoring with full regression test synthesis.</p>
-                        </div>
-                    </div>
-
-                    <div class="showcase-item">
-                        <div class="showcase-item-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                        <div>
-                            <h4>DesignMatrix Studio</h4>
-                            <p style="font-size: 13px; color: var(--text-secondary);">Automated vector design system generator for cross-platform products.</p>
-                        </div>
-                    </div>
+                <div class="why-card">
+                    <div class="why-icon" style="background: #ffa07a;"><i class="fa-solid fa-brain"></i></div>
+                    <h4>Built for AI</h4>
+                    <p>AI tools organised for how businesses actually work: by function, use case, and impact. Helping teams adopt AI with confidence and direction.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon" style="background: #ff4757;"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <h4>Structured Research and Analysis</h4>
+                    <p>In-depth analysis, comparison frameworks, and research-backed insights, built to help you evaluate tools with clarity.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon" style="background: #ff3b7b;"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                    <h4>Faster, Clearer Decisions</h4>
+                    <p>Side-by-side comparisons, clear takeaways, and prioritised tools, everything you need to go from research to decision without getting stuck in the process.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 4. WHY TECH ANALYTICA / DUAL CTA CARDS -->
-    <section class="container">
+    <!-- 4. BROWSE OUR AI CATEGORIES -->
+    <section class="category-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Browse Our AI Categories</h2>
+                <p class="section-desc">Browse by use case, industry, or function, and find the tools built for exactly what your business does.</p>
+            </div>
+
+            <div class="category-pills">
+                <a href="#" class="cat-pill">Project Management</a>
+                <a href="#" class="cat-pill">Video Conferencing</a>
+                <a href="#" class="cat-pill active">E-Commerce Platforms</a>
+                <a href="#" class="cat-pill">Marketing Automation</a>
+                <a href="#" class="cat-pill">Accounting</a>
+                <a href="#" class="cat-pill">CRM</a>
+                <a href="#" class="cat-pill">Expense Management</a>
+                <a href="#" class="cat-pill">ERP Systems</a>
+                <a href="#" class="cat-pill">Online Backup</a>
+                <a href="#" class="cat-pill">AI Chatbots</a>
+            </div>
+
+            <div class="platforms-grid">
+                <div class="platform-card">
+                    <div class="platform-icon" style="background: #10b981;"><i class="fa-brands fa-shopify"></i></div>
+                    <h4>Shopify</h4>
+                    <p><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-regular fa-star" style="color: #ff3b7b;"></i><br>(28,934)</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon" style="background: #9f55ff;"><i class="fa-brands fa-wordpress"></i></div>
+                    <h4>WooCommerce</h4>
+                    <p><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-regular fa-star" style="color: #ff3b7b;"></i><br>(22,567)</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon" style="background: #ff735c;"><i class="fa-brands fa-magento"></i></div>
+                    <h4>Magento</h4>
+                    <p><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-regular fa-star" style="color: #ff3b7b;"></i><br>(14,321)</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon" style="background: #3b82f6;"><i class="fa-brands fa-aws"></i></div>
+                    <h4>BigCommerce</h4>
+                    <p><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-solid fa-star" style="color: #ff3b7b;"></i><i class="fa-regular fa-star" style="color: #ff3b7b;"></i><br>(16,789)</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#" class="btn-cta-pink" style="border-radius: 9999px; padding: 12px 30px; text-decoration: none;">View All New Releases <i class="fa-solid fa-chevron-right" style="font-size: 12px; margin-left: 6px;"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. DUAL CTA CARDS -->
+    <section class="container" style="padding-bottom: 70px;">
         <div class="cta-grid">
-            <div class="cta-card">
-                <div class="cta-content">
-                    <h3>Own an AI Product? Claim your Profile</h3>
-                    <p>Get verified, collect authentic reviews, and reach thousands of potential customers looking for AI tools.</p>
-                    <div class="cta-buttons">
-                        <a href="javascript:void(0)" onclick="openModal('claimToolModal')" class="btn-cta-pink" style="text-decoration: none; display: inline-block;">Claim AI Tool</a>
-                    </div>
+            <div class="cta-card cta-card-left">
+                <div>
+                    <i class="fa-regular fa-file-lines" style="font-size: 24px; color: #ff3b7b; margin-bottom: 16px;"></i>
+                    <h3>Are you an AI Software Vendor?</h3>
+                    <p>Get your tool in front of businesses actively searching for AI software. Claim your listing and take control of how you're found.</p>
+                </div>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" onclick="openModal('claimToolModal')" style="background: #9f55ff; color: #fff;">Claim Your AI Software</a>
+                    <a href="#" style="background: #14091a; color: #fff;">View Vendor Plans</a>
                 </div>
             </div>
 
-            <div class="cta-card">
-                <div class="cta-content">
-                    <h3>Used an AI Tool? Share Your Experience</h3>
-                    <p>Help millions of professionals make informed decisions by writing honest reviews.</p>
-                    <div class="cta-buttons">
-                        <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink" style="text-decoration: none; display: inline-block;">Write a Review</a>
+            <div class="cta-card cta-card-right">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                        <i class="fa-regular fa-comment-dots" style="font-size: 24px; color: #ff3b7b;"></i>
+                        <span style="font-size: 11px; font-weight: 700; color: #ff3b7b; background: rgba(255,59,123,0.1); padding: 4px 8px; border-radius: 4px;">• 12,450+ Reviews &nbsp; • 100% Verified &nbsp; • Trusted by 50K+ Users</span>
                     </div>
+                    <h3>Used an AI tool?<br>Share Your Experience</h3>
+                    <p>Tell the community what worked and what didn't.<br>Help businesses make smarter AI decisions.</p>
+                </div>
+                <div class="cta-buttons">
+                    <a href="{{ route('frontend.tools.index') }}" style="background: #ff3b7b; color: #fff;"><i class="fa-regular fa-star"></i> Submit a review</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 5. COMMUNITY TESTIMONIALS -->
+    <!-- 6. COMMUNITY TESTIMONIALS -->
     <section class="container testimonial-section">
         <div class="testimonial-text">
-            <h2>What The Community Says</h2>
-            <p style="color: var(--text-secondary); margin-top: 12px; font-size: 15px; line-height: 1.6;">Read real testimonials from developers, designers, and tech leaders who rely on TechAnalytica.</p>
-            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink" style="margin-top: 24px; text-decoration: none; display: inline-block;">Join Community</a>
+            <h2 style="font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; color: #fff; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 10px;">What Our Community Says</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6; max-width: 400px;">Real feedback from businesses and founders using TechAnalytica to build smarter AI stacks.</p>
+            <a href="{{ route('frontend.tools.index') }}" class="btn-cta-pink" style="margin-top: 24px; text-decoration: none; display: inline-block; padding: 10px 24px; border-radius: 8px;">View More</a>
         </div>
 
         <div class="testimonial-cards">
             <div class="t-card">
-                <div class="t-avatar" style="background: linear-gradient(135deg, #ff3b7b, #ff735c); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff;">SJ</div>
+                <img src="/assets/img/avatars/1.png" alt="Mehwish" class="t-avatar" style="background: #e2e8f0;">
                 <div class="t-info">
-                    <h5>Sarah Jenkins</h5>
-                    <p>Lead Developer @ TechCorp</p>
+                    <h5>Mehwish</h5>
+                    <div class="t-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>Compliment interested discretion estimating on stimulated apartments oh.</p>
                 </div>
-                <div class="t-stars">★★★★★</div>
+                <i class="fa-solid fa-quote-right t-quote-icon"></i>
             </div>
             <div class="t-card">
-                <div class="t-avatar" style="background: linear-gradient(135deg, #ff735c, #ffa07a); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff;">MC</div>
+                <img src="/assets/img/avatars/2.png" alt="Elizabeth Jeff" class="t-avatar" style="background: #e2e8f0;">
                 <div class="t-info">
-                    <h5>Michael Chang</h5>
-                    <p>Product Designer @ DesignLab</p>
+                    <h5>Elizabeth Jeff</h5>
+                    <div class="t-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>Dear so sing when in find read of call. As distrusts behaviour abilities defective is.</p>
                 </div>
-                <div class="t-stars">★★★★★</div>
+                <i class="fa-solid fa-quote-right t-quote-icon"></i>
             </div>
             <div class="t-card">
-                <div class="t-avatar" style="background: linear-gradient(135deg, #9f55ff, #ff3b7b); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff;">ER</div>
+                <img src="/assets/img/avatars/3.png" alt="Emily Thomas" class="t-avatar" style="background: #e2e8f0;">
                 <div class="t-info">
-                    <h5>Elena Rostova</h5>
-                    <p>Head of Marketing @ GrowthX</p>
+                    <h5>Emily Thomas</h5>
+                    <div class="t-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                    <p>Never at water me might. On formed merits hunted unable merely by my whence or.</p>
                 </div>
-                <div class="t-stars">★★★★★</div>
+                <i class="fa-solid fa-quote-right t-quote-icon"></i>
             </div>
         </div>
     </section>
 
-    <!-- 6. AI INSIGHTS WORTH READING -->
+    <!-- 7. AI INSIGHTS WORTH READING -->
     <section class="insights-section">
         <div class="container">
-            <div class="section-header" style="text-align: left;">
-                <h2 class="section-title">AI Insights Worth Reading</h2>
-                <p class="section-desc" style="margin-left: 0;">Stay updated with breaking AI trends, research, and analysis.</p>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                <h2 class="section-title" style="margin: 0; font-size: 40px; font-weight: 800; max-width: 400px; line-height: 1.1;">AI Insights Worth Reading</h2>
+                <div style="max-width: 400px;">
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">Stay ahead of the AI curve. Get the latest tool releases, in-depth reviews, and industry insights, straight to your inbox.</p>
+                    <form style="display: flex; gap: 8px;">
+                        <input type="email" placeholder="Email Address" required style="flex: 1; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;">
+                        <button type="submit" style="background: #ff3b7b; color: #fff; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">Subscribe</button>
+                    </form>
+                </div>
             </div>
 
             <div class="insights-grid">
-                <a href="{{ route('frontend.blogs') }}" class="featured-insight" style="text-decoration: none; color: inherit;">
-                    <div style="position: absolute; width: 140px; height: 140px; border-radius: 50%; background: #ff3b7b; top: -30px; right: -30px; opacity: 0.25; filter: blur(25px);"></div>
-                    <span style="font-size: 11px; font-weight: 800; color: #ff3b7b; text-transform: uppercase; margin-bottom: 8px;"><i class="fa-solid fa-sparkles"></i> EDITORIAL REPORT</span>
-                    <h3 style="font-size: 22px; font-weight: 800; color: #fff; line-height: 1.35; margin-bottom: 10px;">Unlock the Power of "And" with the Hybrid CDP</h3>
-                    <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">How modern data platforms are combining warehouse power with instant operational workflows for high-growth teams.</p>
+                <a href="{{ route('frontend.blogs') }}" class="featured-insight" style="text-decoration: none;">
+                    <div style="margin-bottom: auto;"></div>
+                    <h3 style="font-size: 42px; font-weight: 800; color: #ffffff; line-height: 1.15; margin-bottom: 16px;">Unlock the Power of "And" with the Hybrid CDP</h3>
+                    <p style="font-size: 15px; color: #a1a1aa; max-width: 90%;">Available across Snowflake, Databricks, BigQuery, and Redshift, mParticle's Hybrid CDP brings the power of "and" to enterprise data strategy...</p>
+                    <div style="margin-top: 24px;">
+                        <span style="display: inline-block; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 9999px; color: #fff; font-size: 13px;">Read the full article</span>
+                    </div>
                 </a>
 
                 <div class="insight-list">
                     <a href="{{ route('frontend.blogs') }}" class="insight-item">
-                        <div class="insight-icon-box" style="background: linear-gradient(135deg, #ff3b7b, #ff735c);"><i class="fa-solid fa-code"></i></div>
+                        <div class="insight-img-box"><img src="/assets/img/blog/1.jpg" alt="Blog 1"></div>
                         <div>
-                            <h4 style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px;">Top 10 Generative AI Tools for Coding in 2026</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">5 min read • Industry Trends</p>
+                            <span style="color: #ff3b7b; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; display: block;">PRODUCT</span>
+                            <h4>How Hybrid Activation Improves Real-Time Relevancy</h4>
                         </div>
                     </a>
 
                     <a href="{{ route('frontend.blogs') }}" class="insight-item">
-                        <div class="insight-icon-box" style="background: linear-gradient(135deg, #9f55ff, #ff3b7b);"><i class="fa-solid fa-microphone"></i></div>
+                        <div class="insight-img-box"><img src="/assets/img/blog/2.jpg" alt="Blog 2"></div>
                         <div>
-                            <h4 style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px;">The Ethics of Voice Cloning in Commercial Media</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">8 min read • Deep Analysis</p>
+                            <span style="color: #ff3b7b; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; display: block;">PRODUCT</span>
+                            <h4>mParticle Innovations: Building for What's Next</h4>
                         </div>
                     </a>
 
                     <a href="{{ route('frontend.blogs') }}" class="insight-item">
-                        <div class="insight-icon-box" style="background: linear-gradient(135deg, #ff735c, #ffa07a);"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                        <div class="insight-img-box"><img src="/assets/img/blog/3.jpg" alt="Blog 3"></div>
                         <div>
-                            <h4 style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px;">How AI LLMs are Changing Search Engine Optimization</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">4 min read • SEO Guide</p>
+                            <span style="color: #ff3b7b; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; display: block;">PRODUCT</span>
+                            <h4>It's Time to Close the Match Rate Gap</h4>
                         </div>
                     </a>
                 </div>

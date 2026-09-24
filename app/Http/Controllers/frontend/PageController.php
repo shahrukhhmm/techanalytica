@@ -385,7 +385,7 @@ class PageController extends Controller
     {
         $categoryId = $request->input('category_id');
 
-        $query = Blog::with(['author', 'category', 'tags'])->where('status', 'published');
+        $query = Blog::with(['author', 'category'])->where('status', 'published');
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
@@ -403,7 +403,7 @@ class PageController extends Controller
 
     public function blogDetail($slug = null)
     {
-        $query = Blog::with(['author', 'category', 'tags'])->where('status', 'published');
+        $query = Blog::with(['author', 'category'])->where('status', 'published');
         $blog = null;
         if ($slug) {
             $blog = (clone $query)->where('slug', $slug)->first();

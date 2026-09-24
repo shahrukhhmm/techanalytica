@@ -4,6 +4,139 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('frontend/css/vendor-details.css') }}">
+    <style>
+        /* Modern Glassmorphism Modal Styles */
+        .modal-lead {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 2, 10, 0.85);
+            backdrop-filter: blur(16px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-lead.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-lead-content {
+            background: linear-gradient(145deg, rgba(30, 15, 45, 0.9), rgba(15, 5, 25, 0.95));
+            border: 1px solid rgba(224, 67, 133, 0.3);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-lead.active .modal-lead-content {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 24px; right: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close-btn:hover {
+            background: var(--accent-pink);
+            transform: rotate(90deg);
+        }
+        .modern-form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .modern-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .modern-input, .modern-select, .modern-textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .modern-input:focus, .modern-select:focus, .modern-textarea:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            background: rgba(224, 67, 133, 0.05);
+            box-shadow: 0 0 0 4px rgba(224, 67, 133, 0.1);
+        }
+        .modern-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .modern-submit {
+            background: linear-gradient(90deg, #ff3b7b, #ff735c);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modern-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(224, 67, 133, 0.4);
+        }
+        /* Custom Star Rating */
+        .star-rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .star-rating-input input {
+            display: none;
+        }
+        .star-rating-input label {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .star-rating-input label:hover,
+        .star-rating-input label:hover ~ label,
+        .star-rating-input input:checked ~ label {
+            color: #ffb703;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -417,36 +550,39 @@
 {{-- ========== LEAD CAPTURE MODAL ========== --}}
 <div id="leadModal" class="modal-lead">
     <div class="modal-lead-content">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <div>
-                <h3 style="font-size:20px;font-weight:800;color:#fff;margin:0 0 4px;">Connect with {{ $tool->name }}</h3>
-                <p style="font-size:13px;color:#9a8c9e;margin:0;">Request a personalized demo or custom pricing proposal.</p>
+        <button type="button" onclick="closeLeadModal()" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div style="margin-bottom: 30px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: rgba(224, 67, 133, 0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--accent-pink); font-size: 24px;">
+                <i class="fa-solid fa-paper-plane"></i>
             </div>
-            <button type="button" onclick="closeLeadModal()" class="modal-close-btn">&times;</button>
+            <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;">Connect with {{ $tool->name }}</h3>
+            <p style="font-size: 14px; color: var(--text-secondary);">Request a personalized demo or custom pricing proposal directly from the vendor team.</p>
         </div>
 
         <form action="{{ route('frontend.tools.lead', $tool->slug) }}" method="POST">
             @csrf
             <input type="hidden" name="intent_type" id="lead_intent_type" value="demo">
 
-            <div class="modal-field">
-                <label class="modal-label">Your Name *</label>
-                <input type="text" name="name" required class="form-control" placeholder="Jane Doe">
-            </div>
-
-            <div class="modal-field">
-                <label class="modal-label">Work Email *</label>
-                <input type="email" name="email" required class="form-control" placeholder="jane@company.com">
-            </div>
-
-            <div class="modal-row-2">
-                <div>
-                    <label class="modal-label">Company Name</label>
-                    <input type="text" name="company_name" class="form-control" placeholder="Acme Inc.">
+            <div class="modern-row">
+                <div class="modern-form-group">
+                    <label class="modern-label">Your Name</label>
+                    <input type="text" name="name" required class="modern-input" placeholder="Jane Doe">
                 </div>
-                <div>
-                    <label class="modal-label">Team Size</label>
-                    <select name="company_size" class="form-control">
+                <div class="modern-form-group">
+                    <label class="modern-label">Work Email</label>
+                    <input type="email" name="email" required class="modern-input" placeholder="jane@company.com">
+                </div>
+            </div>
+
+            <div class="modern-row">
+                <div class="modern-form-group">
+                    <label class="modern-label">Company Name</label>
+                    <input type="text" name="company_name" class="modern-input" placeholder="Acme Inc.">
+                </div>
+                <div class="modern-form-group">
+                    <label class="modern-label">Team Size</label>
+                    <select name="company_size" class="modern-select">
                         <option value="1-10">1–10 members</option>
                         <option value="11-50">11–50 members</option>
                         <option value="51-200">51–200 members</option>
@@ -456,13 +592,13 @@
                 </div>
             </div>
 
-            <div class="modal-field">
-                <label class="modal-label">Message / Questions</label>
-                <textarea name="message" rows="3" class="form-control" placeholder="Tell the vendor team about your use case..."></textarea>
+            <div class="modern-form-group">
+                <label class="modern-label">Message (Optional)</label>
+                <textarea name="message" rows="3" class="modern-textarea" placeholder="Tell the vendor team about your use case..."></textarea>
             </div>
 
-            <button type="submit" class="btn-trial-pink" style="width:100%;justify-content:center;">
-                <i class="fa-solid fa-paper-plane"></i> Send Request to Vendor
+            <button type="submit" class="modern-submit">
+                Submit Request <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
     </div>
@@ -471,45 +607,53 @@
 {{-- ========== REVIEW SUBMISSION MODAL ========== --}}
 <div id="reviewModal" class="modal-lead">
     <div class="modal-lead-content">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <div>
-                <h3 style="font-size:20px;font-weight:800;color:#fff;margin:0 0 4px;">Review {{ $tool->name }}</h3>
-                <p style="font-size:13px;color:#9a8c9e;margin:0;">Share your honest experience with the community.</p>
+        <button type="button" onclick="closeReviewModal()" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div style="margin-bottom: 30px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: rgba(255, 183, 3, 0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #ffb703; font-size: 24px;">
+                <i class="fa-solid fa-star"></i>
             </div>
-            <button type="button" onclick="closeReviewModal()" class="modal-close-btn">&times;</button>
+            <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;">Review {{ $tool->name }}</h3>
+            <p style="font-size: 14px; color: var(--text-secondary);">Share your honest experience and help the community make better decisions.</p>
         </div>
 
         <form action="{{ route('frontend.tools.review', $tool->slug) }}" method="POST">
             @csrf
-            <div class="modal-row-2">
-                <div>
-                    <label class="modal-label">Your Name *</label>
-                    <input type="text" name="reviewer_name" value="{{ auth()->user()->name ?? '' }}" required class="form-control" placeholder="John Doe">
+            
+            <div class="modern-form-group" style="text-align: center; margin-bottom: 24px;">
+                <label class="modern-label" style="text-align: center;">Select Your Rating</label>
+                <div class="star-rating-input" style="justify-content: center;">
+                    <input type="radio" id="star5" name="rating" value="5" required />
+                    <label for="star5"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star4" name="rating" value="4" />
+                    <label for="star4"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star3" name="rating" value="3" />
+                    <label for="star3"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star2" name="rating" value="2" />
+                    <label for="star2"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star1" name="rating" value="1" />
+                    <label for="star1"><i class="fa-solid fa-star"></i></label>
                 </div>
-                <div>
-                    <label class="modal-label">Email *</label>
-                    <input type="email" name="reviewer_email" value="{{ auth()->user()->email ?? '' }}" required class="form-control" placeholder="john@example.com">
+            </div>
+
+            <div class="modern-row">
+                <div class="modern-form-group">
+                    <label class="modern-label">Your Name</label>
+                    <input type="text" name="reviewer_name" value="{{ auth()->user()->name ?? '' }}" required class="modern-input" placeholder="John Doe">
+                </div>
+                <div class="modern-form-group">
+                    <label class="modern-label">Email</label>
+                    <input type="email" name="reviewer_email" value="{{ auth()->user()->email ?? '' }}" required class="modern-input" placeholder="john@example.com">
                 </div>
             </div>
 
-            <div class="modal-field">
-                <label class="modal-label">Rating *</label>
-                <select name="rating" required class="form-control">
-                    <option value="5">★★★★★  5 — Excellent</option>
-                    <option value="4">★★★★☆  4 — Very Good</option>
-                    <option value="3">★★★☆☆  3 — Average</option>
-                    <option value="2">★★☆☆☆  2 — Needs Improvement</option>
-                    <option value="1">★☆☆☆☆  1 — Poor</option>
-                </select>
+            <div class="modern-form-group">
+                <label class="modern-label">Detailed Review</label>
+                <textarea name="comment" rows="4" required minlength="10" class="modern-textarea" placeholder="Describe your experience, what you loved, and what could be improved..."></textarea>
             </div>
 
-            <div class="modal-field">
-                <label class="modal-label">Your Review *</label>
-                <textarea name="comment" rows="4" required minlength="10" class="form-control" placeholder="Describe your experience, what you loved, what could be better..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-trial-pink" style="width:100%;justify-content:center;">
-                <i class="fa-solid fa-check-circle"></i> Submit Verified Review
+            <button type="submit" class="modern-submit">
+                Post Review <i class="fa-solid fa-check"></i>
             </button>
         </form>
     </div>
@@ -525,22 +669,31 @@
     /* --- Modal Controls --- */
     function openLeadModal(intent) {
         document.getElementById('lead_intent_type').value = intent;
-        document.getElementById('leadModal').style.display = 'flex';
+        const modal = document.getElementById('leadModal');
+        modal.style.display = 'flex';
+        // Add a slight delay for the opacity transition
+        setTimeout(() => modal.classList.add('active'), 10);
         document.body.style.overflow = 'hidden';
     }
 
     function closeLeadModal() {
-        document.getElementById('leadModal').style.display = 'none';
+        const modal = document.getElementById('leadModal');
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
         document.body.style.overflow = '';
     }
 
     function openReviewModal() {
-        document.getElementById('reviewModal').style.display = 'flex';
+        const modal = document.getElementById('reviewModal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
         document.body.style.overflow = 'hidden';
     }
 
     function closeReviewModal() {
-        document.getElementById('reviewModal').style.display = 'none';
+        const modal = document.getElementById('reviewModal');
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
         document.body.style.overflow = '';
     }
 
