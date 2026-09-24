@@ -1,10 +1,10 @@
 {
   "menu": [
     {
-      "url": "/",
+      "url": "/dashboard/analytics",
       "name": "Dashboards",
       "icon": "menu-icon icon-base bx bx-home-smile",
-      "slug": "dashboard"
+      "slug": "dashboard.analytics"
     },
     {
       "url": "/admin/categories",
