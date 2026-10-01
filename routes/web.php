@@ -13,6 +13,7 @@ use App\Http\Controllers\backend\admin\IndustryController;
 use App\Http\Controllers\backend\admin\NewsletterController;
 use App\Http\Controllers\backend\admin\PricingTierController;
 use App\Http\Controllers\backend\admin\ReviewController;
+use App\Http\Controllers\backend\admin\ScoringController;
 use App\Http\Controllers\backend\admin\SponsorshipController;
 use App\Http\Controllers\backend\admin\SubmissionController;
 use App\Http\Controllers\backend\admin\ToolController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\backend\vendor\VendorLeadController;
 use App\Http\Controllers\backend\vendor\VendorReviewController;
 use App\Http\Controllers\backend\vendor\VendorToolController;
 use App\Http\Controllers\frontend\PageController;
+use App\Http\Controllers\frontend\VendorCorrectionController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,8 @@ Route::name('frontend.')->group(function () {
     Route::get('/tools', [PageController::class, 'tools'])->name('tools.index');
     Route::get('/tools-list', [PageController::class, 'tools'])->name('tools');
     Route::get('/tools/{slug}', [PageController::class, 'toolDetail'])->name('tools.show');
+    Route::get('/tools/{tool}/correction', [VendorCorrectionController::class, 'create'])->name('tools.correction');
+    Route::post('/tools/{tool}/correction', [VendorCorrectionController::class, 'store'])->name('tools.correction.store');
     Route::get('/compare', [PageController::class, 'compare'])->name('compare');
     Route::get('/compare/export', [PageController::class, 'exportComparison'])->name('compare.export');
     Route::get('/leaderboard', [PageController::class, 'leaderboard'])->name('leaderboard');
@@ -145,6 +149,52 @@ Route::middleware(['auth', 'role:admin,editor'])->group(function () {
         Route::post('users/{user}/force-password-reset', [\App\Http\Controllers\backend\admin\UserController::class, 'forcePasswordReset'])->name('users.force-password-reset');
         Route::post('users/{user}/verify-email', [\App\Http\Controllers\backend\admin\UserController::class, 'verifyEmail'])->name('users.verify-email');
         Route::resource('users', \App\Http\Controllers\backend\admin\UserController::class);
+
+        // TA Scoring Engine
+        Route::prefix('scoring')->name('scoring.')->group(function () {
+            Route::get('/', [ScoringController::class, 'dashboard'])->name('dashboard');
+
+            // Score triggers
+            Route::post('/score-product', [ScoringController::class, 'scoreProduct'])->name('score-product');
+            Route::post('/score-category/{category}', [ScoringController::class, 'scoreCategory'])->name('score-category');
+
+            // Score runs
+            Route::get('/runs/{scoreRun}', [ScoringController::class, 'show'])->name('show');
+            Route::post('/runs/{scoreRun}/publish', [ScoringController::class, 'publish'])->name('runs.publish');
+            Route::post('/runs/{scoreRun}/unpublish', [ScoringController::class, 'unpublish'])->name('runs.unpublish');
+            Route::get('/tools/{tool}/history', [ScoringController::class, 'toolHistory'])->name('tool-history');
+
+            // Exception queue
+            Route::get('/exceptions', [ScoringController::class, 'exceptions'])->name('exceptions');
+            Route::patch('/exceptions/{exception}/resolve', [ScoringController::class, 'resolveException'])->name('exceptions.resolve');
+
+            // Product facts & evidence
+            Route::get('/tools/{tool}/facts', [ScoringController::class, 'facts'])->name('facts');
+            Route::post('/tools/{tool}/facts', [ScoringController::class, 'updateFact'])->name('facts.update');
+            Route::delete('/tools/{tool}/facts/{fact}', [ScoringController::class, 'deleteFact'])->name('facts.delete');
+            Route::post('/tools/{tool}/evidence-sources', [ScoringController::class, 'storeEvidenceSource'])->name('evidence-sources.store');
+            Route::post('/evidence-sources/{source}/items', [ScoringController::class, 'storeEvidenceItem'])->name('evidence-items.store');
+            Route::post('/tools/{tool}/review-aggregates', [ScoringController::class, 'storeReviewAggregate'])->name('review-aggregates.store');
+
+            // Category templates
+            Route::get('/templates', [ScoringController::class, 'templates'])->name('templates');
+            Route::post('/templates', [ScoringController::class, 'storeTemplate'])->name('templates.store');
+
+            // Methodology versions
+            Route::get('/methodology', [ScoringController::class, 'methodology'])->name('methodology');
+            Route::post('/methodology', [ScoringController::class, 'storeMethodology'])->name('methodology.store');
+
+            // Vendor corrections
+            Route::get('/corrections', [ScoringController::class, 'corrections'])->name('corrections');
+            Route::patch('/corrections/{correction}/resolve', [ScoringController::class, 'resolveCorrection'])->name('corrections.resolve');
+
+            // Audit log
+            Route::get('/audit-log', [ScoringController::class, 'auditLog'])->name('audit-log');
+
+            // Rank publishing
+            Route::post('/ranks/{category}/publish', [ScoringController::class, 'publishRanks'])->name('ranks.publish');
+            Route::get('/ranks/{category}/leaderboard', [ScoringController::class, 'leaderboard'])->name('leaderboard');
+        });
     });
 
     // Shared API routes

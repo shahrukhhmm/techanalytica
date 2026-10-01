@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -112,21 +113,94 @@ class Tool extends Model
         return $this->belongsToMany(User::class, 'favorites');
     }
 
-    /**
-     * Product Score = (Avg Rating * 0.5) + (No. of Reviews * 0.3) + (Clicks/Traffic * 0.2)
-     * Normalized to a scale of 0 to 100 for display and leaderboard ranking.
-     */
-    public function getScoreAttribute()
+    // -------------------------------------------------------------------------
+    // TA Scoring Engine relationships
+    // -------------------------------------------------------------------------
+
+    public function scoreRuns()
     {
-        $avgRating = $this->reviews->where('status', 'approved')->avg('rating') ?: 4.0;
+        return $this->hasMany(ScoreRun::class);
+    }
+
+    public function productFacts()
+    {
+        return $this->hasMany(ProductFact::class);
+    }
+
+    public function evidenceSources()
+    {
+        return $this->hasMany(EvidenceSource::class);
+    }
+
+    public function reviewAggregates()
+    {
+        return $this->hasMany(ReviewAggregate::class);
+    }
+
+    // -------------------------------------------------------------------------
+    // Scopes
+    // -------------------------------------------------------------------------
+
+    /**
+     * Only published tools.
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', 'published');
+    }
+
+    // -------------------------------------------------------------------------
+    // Accessors
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the latest published TA Score for this tool's primary category,
+     * falling back to the legacy engagement-based score if no TA Score exists.
+     */
+    public function getScoreAttribute(): float
+    {
+        // Prefer TA Score from most recent published score run
+        $latestRun = $this->scoreRuns()
+            ->where('is_published', true)
+            ->latest('run_at')
+            ->first();
+
+        if ($latestRun) {
+            return $latestRun->public_score;
+        }
+
+        // Legacy fallback (engagement-based)
+        $avgRating  = $this->reviews->where('status', 'approved')->avg('rating') ?: 4.0;
         $ratingPart = ($avgRating / 5.0) * 50.0;
 
         $reviewCount = $this->reviews->where('status', 'approved')->count();
-        $reviewPart = min(30.0, ($reviewCount / 20.0) * 30.0);
+        $reviewPart  = min(30.0, ($reviewCount / 20.0) * 30.0);
 
         $trafficCount = $this->analyticsEvents()->count();
-        $trafficPart = min(20.0, ($trafficCount / 100.0) * 20.0);
+        $trafficPart  = min(20.0, ($trafficCount / 100.0) * 20.0);
 
         return round($ratingPart + $reviewPart + $trafficPart, 1);
+    }
+
+    /**
+     * Get the current TA Score confidence label (High/Moderate/Low) or null.
+     */
+    public function getTaConfidenceLabelAttribute(): ?string
+    {
+        return $this->scoreRuns()
+            ->where('is_published', true)
+            ->latest('run_at')
+            ->value('confidence_label');
+    }
+
+    /**
+     * Get ranking status: ranked / provisional / unranked or null.
+     */
+    public function getTaStatusAttribute(): ?string
+    {
+        return $this->scoreRuns()
+            ->where('is_published', true)
+            ->latest('run_at')
+            ->value('status');
     }
 }
