@@ -704,25 +704,25 @@ html:not(.layout-footer-fixed) .content-wrapper {
     overflow: hidden;
   }
 
-  .layout-overlay {
-    position: fixed;
-    display: none;
-    background: $modal-backdrop-bg;
-    block-size: 100% !important;
-    cursor: pointer;
-    inset-block-start: 0;
-    inset-inline: 0;
-    opacity: $modal-backdrop-opacity;
+  // .layout-overlay {
+  //   position: fixed;
+  //   display: none;
+  //   background: $modal-backdrop-bg;
+  //   block-size: 100% !important;
+  //   cursor: pointer;
+  //   inset-block-start: 0;
+  //   inset-inline: 0;
+  //   opacity: $modal-backdrop-opacity;
 
-    .layout-menu-expanded & {
-      display: block;
-    }
-  }
+  //   .layout-menu-expanded & {
+  //     display: block;
+  //   }
+  // }
 
-  .layout-menu-100vh .layout-menu,
-  .layout-menu-100vh .layout-overlay {
-    block-size: 100dvh !important;
-  }
+  // .layout-menu-100vh .layout-menu,
+  // .layout-menu-100vh .layout-overlay {
+  //   block-size: 100dvh !important;
+  // }
 
   .drag-target {
     position: fixed;
@@ -751,9 +751,9 @@ body:not(.modal-open) {
     z-index: $zindex-layout-mobile;
   }
 
-  .layout-overlay {
-    z-index: $zindex-layout-mobile - 1;
-  }
+  // .layout-overlay {
+  //   z-index: $zindex-layout-mobile - 1;
+  // }
 }
 
 @include media-breakpoint-up($menu-collapsed-layout-breakpoint) {
@@ -836,9 +836,9 @@ body:not(.modal-open) {
 
 @include media-breakpoint-down($menu-collapsed-layout-breakpoint) {
   .layout-transitioning {
-    .layout-overlay {
-      animation: menuAnimation $menu-animation-duration;
-    }
+    // .layout-overlay {
+    //   animation: menuAnimation $menu-animation-duration;
+    // }
 
     .layout-menu {
       transition-duration: $menu-animation-duration;
@@ -911,9 +911,9 @@ body:not(.modal-open) {
     transition: none !important;
     transition-duration: 0s !important;
   }
-  .layout-overlay {
-    animation: none !important;
-  }
+  // .layout-overlay {
+  //   animation: none !important;
+  // }
 }
 
 @include keyframes(menuAnimation) {

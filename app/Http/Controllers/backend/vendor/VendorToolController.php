@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\backend\vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnalyticsEvent;
 use App\Models\Category;
 use App\Models\Industry;
 use App\Models\PricingTier;
 use App\Models\Tool;
 use App\Models\ToolMedia;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class VendorToolController extends Controller
@@ -21,9 +24,54 @@ class VendorToolController extends Controller
         }
 
         $tools = Tool::where('vendor_id', $vendor->id)
-            ->with(['tier'])
+            ->with(['tier', 'categories'])
             ->latest()
             ->get();
+
+        $toolIds = $tools->pluck('id')->toArray();
+
+        // Batch fetch visitor stats — two queries total, zero N+1
+        $todayStart  = Carbon::today()->toDateTimeString();
+        $monthStart  = Carbon::now()->startOfMonth()->toDateTimeString();
+
+        $viewStats = [];
+        $clickStats = [];
+
+        if (!empty($toolIds)) {
+            $viewStats = AnalyticsEvent::whereIn('tool_id', $toolIds)
+                ->where('event_type', 'view')
+                ->select(
+                    'tool_id',
+                    DB::raw('COUNT(*) as total_views'),
+                    DB::raw('COUNT(DISTINCT COALESCE(session_id, id)) as unique_visitors'),
+                    DB::raw("COUNT(CASE WHEN timestamp >= '{$todayStart}' THEN 1 END) as today_views"),
+                    DB::raw("COUNT(CASE WHEN timestamp >= '{$monthStart}' THEN 1 END) as month_views")
+                )
+                ->groupBy('tool_id')
+                ->get()
+                ->keyBy('tool_id');
+
+            $clickStats = AnalyticsEvent::whereIn('tool_id', $toolIds)
+                ->whereIn('event_type', ['cta_click', 'click'])
+                ->select('tool_id', DB::raw('COUNT(*) as total_clicks'))
+                ->groupBy('tool_id')
+                ->pluck('total_clicks', 'tool_id');
+        }
+
+        // Attach visitor stats to each tool as dynamic properties
+        $tools = $tools->map(function ($tool) use ($viewStats, $clickStats) {
+            $v = $viewStats[$tool->id] ?? null;
+            $tool->stat_total_views    = $v ? (int) $v->total_views    : 0;
+            $tool->stat_unique         = $v ? (int) $v->unique_visitors : 0;
+            $tool->stat_today          = $v ? (int) $v->today_views     : 0;
+            $tool->stat_month          = $v ? (int) $v->month_views     : 0;
+            $tool->stat_clicks         = (int) ($clickStats[$tool->id]  ?? 0);
+            $total = $tool->stat_total_views;
+            $tool->stat_conversion     = $total > 0
+                ? round((($tool->stat_clicks) / $total) * 100, 1)
+                : 0.0;
+            return $tool;
+        });
 
         return view('backend.vendor.content.tools.index', compact('tools'));
     }

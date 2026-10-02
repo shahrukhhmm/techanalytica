@@ -78,6 +78,124 @@ class VendorDashboardSeeder extends Seeder
             'created_at' => now()->subDays(15),
         ]);
 
+        // 6. Seed sample visitor telemetry & leads for test vendor tools
+        if (\App\Models\AnalyticsEvent::whereIn('tool_id', [$freeTool->id, $proTool->id])->count() === 0) {
+            $referrers = [
+                'https://www.google.com/search?q=ai+productivity+tools',
+                'https://techanalytica.com/tools',
+                'https://www.linkedin.com/feed',
+                'https://twitter.com/ai_discoveries',
+                'https://news.ycombinator.com',
+                null,
+            ];
+            $userAgents = [
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+                'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
+            ];
+
+            // Pro Tool views over past 6 months
+            for ($monthOffset = 5; $monthOffset >= 0; $monthOffset--) {
+                $baseDate = \Carbon\Carbon::now()->subMonths($monthOffset);
+                $viewCount = ($monthOffset === 0) ? 145 : (50 + (5 - $monthOffset) * 28);
+                $clickCount = (int) round($viewCount * 0.14);
+
+                for ($i = 0; $i < $viewCount; $i++) {
+                    $eventTime = (clone $baseDate)->startOfMonth()->addDays(rand(1, min(27, $baseDate->daysInMonth)))->addHours(rand(1, 23))->addMinutes(rand(1, 59));
+                    if ($eventTime->isFuture()) $eventTime = now()->subHours(rand(1, 48));
+
+                    \App\Models\AnalyticsEvent::create([
+                        'tool_id' => $proTool->id,
+                        'vendor_id' => $vendorProfile->id,
+                        'event_type' => 'view',
+                        'timestamp' => $eventTime,
+                        'referrer' => $referrers[array_rand($referrers)],
+                        'session_id' => 'sess_pro_' . $monthOffset . '_' . ($i % 30),
+                        'device' => $userAgents[array_rand($userAgents)],
+                    ]);
+                }
+
+                for ($c = 0; $c < $clickCount; $c++) {
+                    $eventTime = (clone $baseDate)->startOfMonth()->addDays(rand(1, min(27, $baseDate->daysInMonth)))->addHours(rand(1, 23))->addMinutes(rand(1, 59));
+                    if ($eventTime->isFuture()) $eventTime = now()->subHours(rand(1, 48));
+
+                    \App\Models\AnalyticsEvent::create([
+                        'tool_id' => $proTool->id,
+                        'vendor_id' => $vendorProfile->id,
+                        'event_type' => 'cta_click',
+                        'timestamp' => $eventTime,
+                        'referrer' => 'https://techanalytica.com/tools/' . $proTool->slug,
+                        'session_id' => 'sess_pro_click_' . $monthOffset . '_' . $c,
+                        'device' => $userAgents[array_rand($userAgents)],
+                    ]);
+                }
+            }
+
+            // Free Tool views over past 6 months
+            for ($monthOffset = 5; $monthOffset >= 0; $monthOffset--) {
+                $baseDate = \Carbon\Carbon::now()->subMonths($monthOffset);
+                $viewCount = ($monthOffset === 0) ? 68 : (25 + (5 - $monthOffset) * 12);
+                $clickCount = (int) round($viewCount * 0.08);
+
+                for ($i = 0; $i < $viewCount; $i++) {
+                    $eventTime = (clone $baseDate)->startOfMonth()->addDays(rand(1, min(27, $baseDate->daysInMonth)))->addHours(rand(1, 23))->addMinutes(rand(1, 59));
+                    if ($eventTime->isFuture()) $eventTime = now()->subHours(rand(1, 48));
+
+                    \App\Models\AnalyticsEvent::create([
+                        'tool_id' => $freeTool->id,
+                        'vendor_id' => $vendorProfile->id,
+                        'event_type' => 'view',
+                        'timestamp' => $eventTime,
+                        'referrer' => $referrers[array_rand($referrers)],
+                        'session_id' => 'sess_free_' . $monthOffset . '_' . ($i % 15),
+                        'device' => $userAgents[array_rand($userAgents)],
+                    ]);
+                }
+
+                for ($c = 0; $c < $clickCount; $c++) {
+                    $eventTime = (clone $baseDate)->startOfMonth()->addDays(rand(1, min(27, $baseDate->daysInMonth)))->addHours(rand(1, 23))->addMinutes(rand(1, 59));
+                    if ($eventTime->isFuture()) $eventTime = now()->subHours(rand(1, 48));
+
+                    \App\Models\AnalyticsEvent::create([
+                        'tool_id' => $freeTool->id,
+                        'vendor_id' => $vendorProfile->id,
+                        'event_type' => 'cta_click',
+                        'timestamp' => $eventTime,
+                        'referrer' => 'https://techanalytica.com/tools/' . $freeTool->slug,
+                        'session_id' => 'sess_free_click_' . $monthOffset . '_' . $c,
+                        'device' => $userAgents[array_rand($userAgents)],
+                    ]);
+                }
+            }
+
+            // Seed Sample Leads
+            \App\Models\Lead::create([
+                'tool_id' => $proTool->id,
+                'vendor_id' => $vendorProfile->id,
+                'name' => 'Sarah Jenkins',
+                'email' => 'sarah.j@enterprise-tech.io',
+                'company_name' => 'Enterprise Tech Corp',
+                'company_size' => '50-200',
+                'phone' => '+1 (555) 234-8901',
+                'intent_type' => 'demo',
+                'message' => 'Interested in enterprise seat licensing and custom API rate limits.',
+                'status' => 'new',
+            ]);
+
+            \App\Models\Lead::create([
+                'tool_id' => $proTool->id,
+                'vendor_id' => $vendorProfile->id,
+                'name' => 'Marcus Vance',
+                'email' => 'm.vance@ai-dynamics.com',
+                'company_name' => 'AI Dynamics Labs',
+                'company_size' => '200+',
+                'phone' => '+1 (555) 876-5432',
+                'intent_type' => 'contact',
+                'message' => 'Looking for SOC-2 compliance details and procurement process.',
+                'status' => 'contacted',
+            ]);
+        }
+
         $this->command->info('Vendor Dashboard Test Data Seeded! Login credentials: vendor@gmail.com / 12345678');
     }
 }

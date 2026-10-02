@@ -77,10 +77,9 @@ $container = ($container ?? 'container-xxl');
             <!-- / Layout page -->
         </div>
 
-        @if ($isMenu)
-        <!-- Overlay -->
+        <!-- @if ($isMenu)
         <div class="layout-overlay layout-menu-toggle"></div>
-        @endif
+        @endif -->
         <!-- Drag Target Area To SlideIn Menu On Small Screens -->
         <div class="drag-target"></div>
     </div>

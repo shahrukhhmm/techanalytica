@@ -61,4 +61,9 @@ class Vendor extends Model
     {
         return $this->hasMany(Lead::class);
     }
+
+    public function analyticsEvents()
+    {
+        return $this->hasMany(AnalyticsEvent::class);
+    }
 }

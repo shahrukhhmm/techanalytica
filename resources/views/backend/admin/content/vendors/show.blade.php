@@ -22,7 +22,7 @@
                 <!-- Vendor Profile Card -->
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-body text-center p-5">
-                        <div class="avatar avatar-xl h-auto mx-auto mb-4">
+                        <div class="avatar avatar-xl mx-auto mb-4">
                             <span class="avatar-initial rounded bg-label-primary fs-1 shadow-sm px-4 py-3">
                                 {{ substr($vendor->company_name ?: $vendor->user->name ?? 'V', 0, 1) }}
                             </span>
@@ -86,17 +86,17 @@
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3">
                                 <label class="text-muted small text-uppercase fw-bold">Department</label>
-                                <p class="text-dark fw-medium mb-0">{{ $vendor->department ?: 'Not Specified' }}</p>
+                                <p class="fw-medium mb-0">{{ $vendor->department ?: 'Not Specified' }}</p>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="text-muted small text-uppercase fw-bold">Company Size</label>
-                                <p class="text-dark fw-medium mb-0">{{ $vendor->company_size ?: 'Not Specified' }}</p>
+                                <p class="fw-medium mb-0">{{ $vendor->company_size ?: 'Not Specified' }}</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <label class="text-muted small text-uppercase fw-bold">Billing Details</label>
-                                <div class="bg-light rounded p-3 mt-1">
+                                <div class="rounded p-3 mt-1">
                                     <p class="mb-2"><span class="fw-bold">Email:</span>
                                         {{ $vendor->billing_email ?: 'N/A' }}</p>
                                     <p class="mb-0"><span
@@ -131,9 +131,15 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     @if ($tool->logo_url)
-                                                        <img src="{{ $tool->logo_url }}" alt="{{ $tool->name }}"
-                                                            class="rounded me-2" width="32" height="32"
-                                                            style="object-fit: contain;">
+                                                        <img
+                                                            src="{{ $tool->logo_url }}"
+                                                            alt="{{ $tool->name }}"
+                                                            class="rounded me-2"
+                                                            width="32"
+                                                            height="32"
+                                                            style="object-fit: contain;"
+                                                            onerror="this.onerror=null; this.outerHTML='<i class=&quot;fas fa-tools me-2&quot; style=&quot;font-size: 32px;&quot;></i>';"
+                                                        >
                                                     @endif
                                                     <span class="fw-bold">{{ $tool->name }}</span>
                                                 </div>
@@ -141,7 +147,7 @@
                                             <td>
                                                 @foreach ($tool->categories->take(2) as $category)
                                                     <span
-                                                        class="badge bg-label-secondary badge-xs">{{ $category->name }}</span>
+                                                        class="badge bg-label-primary badge-xs">{{ $category->name }}</span>
                                                 @endforeach
                                             </td>
                                             <td>

@@ -166,6 +166,32 @@ class PageController extends Controller
         return view('frontend.pages.vendors.show', compact('tool', 'relatedTools', 'unclaimedTools', 'categories', 'navIndustries'));
     }
 
+    public function visitTool($slug)
+    {
+        $tool = Tool::where('slug', $slug)->orWhere('id', $slug)->firstOrFail();
+
+        try {
+            AnalyticsEvent::create([
+                'tool_id' => $tool->id,
+                'vendor_id' => $tool->vendor_id,
+                'event_type' => 'cta_click',
+                'timestamp' => now(),
+                'referrer' => request()->header('referer'),
+                'session_id' => session()->getId(),
+                'device' => request()->header('User-Agent'),
+            ]);
+        } catch (\Exception $e) {
+            // Non-blocking telemetry
+        }
+
+        $targetUrl = $tool->cta_url ?: $tool->website_url;
+        if ($targetUrl) {
+            return redirect()->away($targetUrl);
+        }
+
+        return redirect()->route('frontend.tools.show', $tool->slug);
+    }
+
     public function compare(Request $request)
     {
         $allTools = Tool::where('status', 'published')->orderBy('name')->get();

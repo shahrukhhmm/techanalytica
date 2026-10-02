@@ -40,6 +40,7 @@ Route::name('frontend.')->group(function () {
     Route::get('/tools', [PageController::class, 'tools'])->name('tools.index');
     Route::get('/tools-list', [PageController::class, 'tools'])->name('tools');
     Route::get('/tools/{slug}', [PageController::class, 'toolDetail'])->name('tools.show');
+    Route::get('/tools/{slug}/visit', [PageController::class, 'visitTool'])->name('tools.visit');
     Route::get('/tools/{tool}/correction', [VendorCorrectionController::class, 'create'])->name('tools.correction');
     Route::post('/tools/{tool}/correction', [VendorCorrectionController::class, 'store'])->name('tools.correction.store');
     Route::get('/compare', [PageController::class, 'compare'])->name('compare');

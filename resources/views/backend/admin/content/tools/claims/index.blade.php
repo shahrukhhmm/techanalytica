@@ -82,34 +82,31 @@
                                             </form>
                                         </div>
 
-                                        <!-- Reason Modal -->
-                                        <div class="modal fade" id="claimReason{{ $claim->id }}" tabindex="-1"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header border-bottom">
-                                                        <h5 class="modal-title fw-bold">Claim Reason -
-                                                            {{ $claim->tool->name }}
-                                                        </h5>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p class="mb-0">{{ $claim->reason ?: 'No reason provided.' }}</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-secondary"
-                                                            data-bs-dismiss="modal">
-                                                            <i class="bx bx-x me-1"></i> Close
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                @foreach ($claims as $claim)
+                    <div class="modal fade" id="claimReason{{ $claim->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header border-bottom">
+                                    <h5 class="modal-title fw-bold">Claim Reason - {{ $claim->tool->name }}</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="mb-0">{{ $claim->reason ?: 'No reason provided.' }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <i class="bx bx-x me-1"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3 border-top">
                     <div class="text-muted small">
                         Showing {{ $claims->firstItem() ?? 0 }} to {{ $claims->lastItem() ?? 0 }} of {{ $claims->total() }} entries
@@ -125,6 +122,10 @@
 @section('page-script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.modal[id^="claimReason"]').forEach(function(modal) {
+                document.body.appendChild(modal);
+            });
+
             if (document.getElementById('claims-table')) {
                 new DataTable('#claims-table', {
                     paging: false,

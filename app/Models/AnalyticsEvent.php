@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnalyticsEvent extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'tool_id',
         'vendor_id',

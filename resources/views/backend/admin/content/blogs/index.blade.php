@@ -151,7 +151,7 @@
                                                     {{ $blog->title }}
                                                 </a>
                                                 @if($blog->slug)
-                                                    <span style="font-size:11px;color:rgba(255,255,255,0.3);font-family:monospace;">/blogs/{{ $blog->slug }}</span>
+                                                    <span style="font-size:11px;font-family:monospace;">/blogs/{{ $blog->slug }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -170,7 +170,7 @@
                                                 {{ $blog->category->name ?? $blog->category }}
                                             </span>
                                         @else
-                                            <span style="color:rgba(255,255,255,0.25);font-size:13px;">â€”</span>
+                                            <span style="font-size:13px;">â€”</span>
                                         @endif
                                     </td>
                                     <td style="padding:14px 16px;">
@@ -192,11 +192,11 @@
                                     </td>
                                     <td style="padding:14px 16px;">
                                         @if($blog->published_at)
-                                            <span style="font-size:13px;color:rgba(255,255,255,0.6);">{{ $blog->published_at->format('M d, Y') }}</span>
+                                            <span style="font-size:13px;">{{ $blog->published_at->format('M d, Y') }}</span>
                                             <br>
-                                            <span style="font-size:11px;color:rgba(255,255,255,0.3);">{{ $blog->published_at->format('H:i') }}</span>
+                                            <span style="font-size:11px;">{{ $blog->published_at->format('H:i') }}</span>
                                         @else
-                                            <span style="color:rgba(255,255,255,0.25);font-size:13px;">â€”</span>
+                                            <span style="font-size:13px;">â€”</span>
                                         @endif
                                     </td>
                                     <td style="padding:14px 16px; text-align:right;">

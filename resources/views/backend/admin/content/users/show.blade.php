@@ -96,7 +96,7 @@
                                 aria-selected="false">Recent Blogs</button>
                         </li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" style="background: transparent;">
                         <div class="tab-pane fade show active" id="navs-pills-top-vendor" role="tabpanel">
                             @if ($user->vendor)
                                 <div class="row">
